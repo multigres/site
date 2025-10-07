@@ -26,6 +26,7 @@
     "@docusaurus/preset-classic": "3.2.1",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.365.0",
     "posthog-js": "^1.261.0",
     "prism-react-renderer": "^2.3.0",

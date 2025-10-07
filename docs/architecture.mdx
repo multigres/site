@@ -41,6 +41,23 @@ In spite of all precautions, incidents can happen. Multigres will provide a comp
 
 ## Features
 
+import AnimatedSVG from '@site/src/components/AnimatedSVG';
+
+<AnimatedSVG
+  src="/img/site/svgviewer-output.svg"
+  onAnimate={(animator) => {
+    animator
+      //.fadeIn('svg > *', { duration: 1.5, stagger: 0.05 })
+      //.wait(0.1)
+      .morphText('#text-0', 'BBB', { duration: 1 })
+      .drawPath('#path-24', { duration: 2 })
+      .fadeIn('#text-2', { duration: 1 })
+      .fadeIn('#text-3', { duration: 1 });
+  }}
+  autoPlay={true}
+  alt="Multigres consensus and replication diagram"
+/>
+
 A primary goal of Multigres is to provide full Postgres compatibility while enhancing scalability, availability, and performance. Its key features will include:
 
 - Proxy layer and Connection pooling
