@@ -47,14 +47,18 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
   src="/img/site/svgviewer-output.svg"
   onAnimate={(animator) => {
     animator
-      //.fadeIn('svg > *', { duration: 1.5, stagger: 0.05 })
-      //.wait(0.1)
       .morphText('#text-0', 'BBB', { duration: 1 })
-      .drawPath('#path-24', { duration: 2 })
+      .addLabel('step1')
+      .animateArrow('#n4-arrow', { duration: 1 })
+      .animateArrow('#n4-arrow', { duration: 1 })
+      .addLabel('step2')
       .fadeIn('#text-2', { duration: 1 })
-      .fadeIn('#text-3', { duration: 1 });
+      .addLabel('step3')
+      .fadeIn('#text-3', { duration: 1 })
+      .addLabel('step4');
   }}
-  autoPlay={true}
+  autoPlay={false}
+  showControls={true}
   alt="Multigres consensus and replication diagram"
 />
 

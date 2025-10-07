@@ -31,6 +31,8 @@ interface AnimatedSVGProps {
   onAnimate?: (animator: SVGAnimator) => void;
   /** Whether to auto-play the animation on mount */
   autoPlay?: boolean;
+  /** Whether to show manual controls (forward/reverse buttons) */
+  showControls?: boolean;
   /** Additional CSS classes */
   className?: string;
   /** Additional inline styles */
@@ -47,6 +49,7 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   src,
   onAnimate,
   autoPlay = false,
+  showControls = false,
   className = "",
   style = {},
   alt = "Animated SVG",
@@ -56,6 +59,8 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const animatorRef = useRef<SVGAnimator | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [canGoNext, setCanGoNext] = useState(true);
+  const [canGoBack, setCanGoBack] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -109,17 +114,75 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
     };
   }, [src, onAnimate, autoPlay, width, height]);
 
+  const updateButtonStates = () => {
+    if (animatorRef.current) {
+      setCanGoNext(animatorRef.current.hasNextStep());
+      setCanGoBack(animatorRef.current.hasPreviousStep());
+    }
+  };
+
+  const handleNext = () => {
+    if (animatorRef.current) {
+      animatorRef.current.nextStep();
+      updateButtonStates();
+    }
+  };
+
+  const handlePrevious = () => {
+    if (animatorRef.current) {
+      animatorRef.current.previousStep();
+      updateButtonStates();
+    }
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className={`animated-svg-container ${className}`}
-      style={{
-        display: "inline-block",
-        ...style,
-      }}
-      role="img"
-      aria-label={alt}
-    />
+    <div>
+      <div
+        ref={containerRef}
+        className={`animated-svg-container ${className}`}
+        style={{
+          display: "inline-block",
+          ...style,
+        }}
+        role="img"
+        aria-label={alt}
+      />
+      {showControls && isLoaded && (
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "10px",
+            justifyContent: "center",
+          }}
+        >
+          <button
+            onClick={handlePrevious}
+            disabled={!canGoBack}
+            style={{
+              padding: "8px 16px",
+              fontSize: "14px",
+              cursor: canGoBack ? "pointer" : "not-allowed",
+              opacity: canGoBack ? 1 : 0.5,
+            }}
+          >
+            ← Previous
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={!canGoNext}
+            style={{
+              padding: "8px 16px",
+              fontSize: "14px",
+              cursor: canGoNext ? "pointer" : "not-allowed",
+              opacity: canGoNext ? 1 : 0.5,
+            }}
+          >
+            Next →
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

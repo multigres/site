@@ -120,7 +120,7 @@
   <g transform="translate(10 110) rotate(0 22.559974670410156 12.5)">
     <text id="text-acks-14" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Acks</text>
   </g>
-  <g mask="url(#mask-pZkJFV-nr09NukZoCB8lH)" stroke-linecap="round">
+  <g id="n3-arrow" mask="url(#mask-pZkJFV-nr09NukZoCB8lH)" stroke-linecap="round">
     <g transform="translate(310 190) rotate(0 50 -60)">
       <path id="path-21" d="M1.01 -0.43 C17.46 -20.73, 82.71 -100.94, 99.21 -120.89 M0.08 -1.7 C16.87 -21.96, 84.98 -100.29, 101.5 -119.83" stroke="#2f9e44" stroke-width="2" fill="none"/>
     </g>
@@ -138,7 +138,7 @@
   <g transform="translate(323.34002685546875 117.5) rotate(0 37.44933938921429 11.839073076844215)">
     <text id="text-apply-b-15" x="36.65997314453125" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Apply B</text>
   </g>
-  <g mask="url(#mask-LPM7zjium5dEWYrPaWZ4_)" stroke-linecap="round">
+  <g id="n4-arrow" mask="url(#mask-LPM7zjium5dEWYrPaWZ4_)" stroke-linecap="round">
     <g transform="translate(310 190) rotate(0 50 70)">
       <path id="path-24" d="M-0.01 -0.14 C16.61 23.47, 82.46 117.46, 98.94 140.79 M-1.48 -1.26 C15.57 22.09, 83.99 115.37, 101.1 139.08" stroke="#2f9e44" stroke-width="2" fill="none"/>
     </g>
@@ -234,7 +234,7 @@
   <g transform="translate(260.67201995355686 280) rotate(0 28.347415862758652 10.316597883245322)">
     <text id="text-apply-b-22" x="29.327980041503906" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Apply B</text>
   </g>
-  <g transform="translate(10 310) rotate(0 104.19190216064453 20)">
+  <g id="description" transform="translate(10 310) rotate(0 104.19190216064453 20)">
     <text id="text-n1-performs-all-apply-steps-23" x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">N1 performs all apply steps</text>
     <text id="text-for-b-just-as-it-did-for-a-24" x="0" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">for B just as it did for A.</text>
   </g>

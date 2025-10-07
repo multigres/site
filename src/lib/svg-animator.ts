@@ -28,6 +28,8 @@ export interface AnimationOptions {
 export class SVGAnimator {
   private svg: SVGElement | null;
   private timeline: gsap.core.Timeline;
+  private steps: string[] = [];
+  private currentStep: number = -1;
 
   constructor(svgSelector: string | SVGElement) {
     if (typeof svgSelector === "string") {
@@ -40,7 +42,7 @@ export class SVGAnimator {
       console.warn(`SVG element not found: ${svgSelector}`);
     }
 
-    this.timeline = gsap.timeline();
+    this.timeline = gsap.timeline({ paused: true });
   }
 
   /**
@@ -268,6 +270,78 @@ export class SVGAnimator {
   }
 
   /**
+   * Animate an arrow group where first element is the shaft and rest are arrowhead/decorations
+   * The shaft is drawn first, then other elements fade in
+   */
+  animateArrow(groupSelector: string, options: AnimationOptions = {}): this {
+    const groups = this.select(groupSelector);
+    if (groups.length === 0) {
+      console.warn(`No arrow group found for selector: ${groupSelector}`);
+      return this;
+    }
+
+    groups.forEach((group) => {
+      const children = Array.from(group.children);
+      if (children.length === 0) return;
+
+      // First child contains the shaft - find the actual path element
+      const firstChild = children[0];
+      let shaftPath: SVGGeometryElement | null = null;
+
+      // Check if first child is the path itself
+      if (firstChild instanceof SVGGeometryElement) {
+        shaftPath = firstChild;
+      } else {
+        // Look for a path element inside the first child
+        const pathElement = firstChild.querySelector(
+          "path, line, polyline, polygon",
+        );
+        if (pathElement instanceof SVGGeometryElement) {
+          shaftPath = pathElement;
+        }
+      }
+
+      // Animate the shaft using drawPath
+      if (shaftPath) {
+        let shaftSelector = "";
+        if (shaftPath.id) {
+          shaftSelector = `#${shaftPath.id}`;
+        } else {
+          shaftSelector = `${groupSelector} > :first-child path, ${groupSelector} > :first-child line, ${groupSelector} > :first-child polyline, ${groupSelector} > :first-child polygon`;
+        }
+
+        this.drawPath(shaftSelector, {
+          duration: options.duration ?? 1,
+          delay: options.delay ?? 0,
+          ease: options.ease ?? "none",
+          onStart: options.onStart,
+        });
+      }
+
+      // Remaining children are arrowhead/decorations - collect all descendants
+      const restElements: Element[] = [];
+      for (let i = 1; i < children.length; i++) {
+        restElements.push(children[i]);
+        // Also collect nested elements
+        restElements.push(...Array.from(children[i].querySelectorAll("*")));
+      }
+
+      if (restElements.length > 0) {
+        gsap.set(restElements, { opacity: 0 });
+        this.timeline.to(restElements, {
+          opacity: 1,
+          duration: 0,
+          onComplete: options.onComplete,
+        });
+      } else if (options.onComplete) {
+        this.timeline.call(options.onComplete);
+      }
+    });
+
+    return this;
+  }
+
+  /**
    * Add a delay to the timeline
    */
   wait(duration: number): this {
@@ -280,7 +354,61 @@ export class SVGAnimator {
    */
   addLabel(label: string): this {
     this.timeline.addLabel(label);
+    this.steps.push(label);
     return this;
+  }
+
+  /**
+   * Move to the next step in the animation
+   */
+  nextStep(): this {
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+      this.timeline.tweenTo(this.steps[this.currentStep]);
+    }
+    return this;
+  }
+
+  /**
+   * Move to the previous step in the animation
+   */
+  previousStep(): this {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+      this.timeline.tweenTo(this.steps[this.currentStep]);
+    } else if (this.currentStep === 0) {
+      this.currentStep = -1;
+      this.timeline.tweenTo(0);
+    }
+    return this;
+  }
+
+  /**
+   * Get the current step index
+   */
+  getCurrentStep(): number {
+    return this.currentStep;
+  }
+
+  /**
+   * Get the total number of steps
+   */
+  getTotalSteps(): number {
+    return this.steps.length;
+  }
+
+  /**
+   * Check if there's a next step
+   */
+  hasNextStep(): boolean {
+    return this.currentStep < this.steps.length - 1;
+  }
+
+  /**
+   * Check if there's a previous step
+   */
+  hasPreviousStep(): boolean {
+    return this.currentStep >= 0;
   }
 
   /**
