@@ -87,9 +87,16 @@ export class SVGAnimator {
       return this;
     }
 
+    // Collect all child elements as well
+    const allElements: Element[] = [];
+    elements.forEach((element) => {
+      allElements.push(element);
+      allElements.push(...Array.from(element.querySelectorAll("*")));
+    });
+
     // Use a very short duration animation instead of set() so it reverses properly
     this.timeline.to(
-      elements,
+      allElements,
       {
         ...properties,
         duration: 0.01,
@@ -294,7 +301,9 @@ export class SVGAnimator {
 
     elements.forEach((element) => {
       if (element instanceof SVGTextElement) {
-        const originalText = element.textContent || "";
+        // Capture the current text at the time this morphText is called
+        // This is what we'll restore when THIS specific tween reverses
+        const previousText = element.textContent || "";
         const tempObj = { value: 0 };
 
         this.timeline.to(
@@ -320,6 +329,12 @@ export class SVGAnimator {
                 element.style.opacity = String(progress);
                 element.style.transform = `scale(${0.7 + progress * 0.3})`;
               }
+            },
+            onReverseComplete: () => {
+              // Restore the text from before this specific morphText call
+              element.textContent = previousText;
+              element.style.opacity = "1";
+              element.style.transform = "scale(1)";
             },
             onComplete: () => {
               element.style.opacity = "1";

@@ -114,8 +114,8 @@
     <path d="M0 0 C17.4 0, 34.79 0, 80 0 M0 0 C20.65 0, 41.31 0, 80 0 M80 0 C80 15.97, 80 31.94, 80 60 M80 0 C80 14.62, 80 29.25, 80 60 M80 60 C56.15 60, 32.29 60, 0 60 M80 60 C59.49 60, 38.98 60, 0 60 M0 60 C0 47.57, 0 35.14, 0 0 M0 60 C0 38.37, 0 16.74, 0 0" stroke="#1e1e1e" stroke-width="2" fill="none"/>
   </g>
   <g transform="translate(55 155) rotate(0 27.569992065429688 25)">
-    <text id="ackn2" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">N2: B</text>
-    <text id="ackn3" x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">N3: B</text>
+    <text id="n2ack" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">N2:</text>
+    <text id="n3ack" x="0" y="42.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">N3:</text>
   </g>
   <g transform="translate(50 110) rotate(0 22.559974670410156 12.5)">
     <text x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Acks</text>
@@ -190,31 +190,31 @@
     <rect x="191.26002502441406" y="107.5" fill="#000" width="57.479949951171875" height="25" opacity="1"/>
   </mask>
   <g transform="translate(191.26002502441406 107.5) rotate(0 28.739974975585938 12.5)">
-    <text id="bapptext" x="28.739974975585938" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Ack B</text>
+    <text id="bapptext" x="28.739974975585938" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Ack B</text>
   </g>
   <g stroke-linecap="round">
     <g transform="translate(150 150) rotate(0 0 50)">
-      <path id="n1applied" d="M0 0 C0 23.22, 0 46.45, 0 100" stroke="#2f9e44" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
+      <path id="n1applied" d="M0 0 C0 23.22, 0 46.45, 0 100" stroke="#1e1e1e" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
     </g>
   </g>
   <mask/>
   <g transform="translate(110 250) rotate(0 33.60997009277344 12.5)">
-    <text id="n1appliedtext" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Applied</text>
+    <text id="n1appliedtext" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Applied</text>
   </g>
   <g stroke-linecap="round">
     <g transform="translate(450 50) rotate(0 0 170)">
-      <path id="n4applied" d="M0 0 C0 71.17, 0 142.35, 0 340" stroke="#2f9e44" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
+      <path id="n4applied" d="M0 0 C0 71.17, 0 142.35, 0 340" stroke="#1e1e1e" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
     </g>
   </g>
   <mask/>
   <g transform="translate(410 390) rotate(0 33.60997009277344 12.5)">
-    <text id="n4appliedtext" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Applied</text>
+    <text id="n4appliedtext" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Applied</text>
   </g>
   <g stroke-linecap="round" transform="translate(290 370) rotate(0 60 20)">
-    <path d="M0 0 C36.27 0, 72.55 0, 120 0 M0 0 C40.57 0, 81.15 0, 120 0 M120 0 C120 11.21, 120 22.43, 120 40 M120 0 C120 11.66, 120 23.33, 120 40 M120 40 C75.43 40, 30.85 40, 0 40 M120 40 C94.04 40, 68.09 40, 0 40 M0 40 C0 27.45, 0 14.9, 0 0 M0 40 C0 29.09, 0 18.17, 0 0" stroke="#2f9e44" stroke-width="2" fill="none"/>
+    <path d="M0 0 C36.27 0, 72.55 0, 120 0 M0 0 C40.57 0, 81.15 0, 120 0 M120 0 C120 11.21, 120 22.43, 120 40 M120 0 C120 11.66, 120 23.33, 120 40 M120 40 C75.43 40, 30.85 40, 0 40 M120 40 C94.04 40, 68.09 40, 0 40 M0 40 C0 27.45, 0 14.9, 0 0 M0 40 C0 29.09, 0 18.17, 0 0" stroke="#1e1e1e" stroke-width="2" fill="none"/>
   </g>
   <g transform="translate(311.35203552246094 380) rotate(0 38.64796447753906 10)">
-    <text x="38.64796447753906" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Observers</text>
+    <text x="38.64796447753906" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Observers</text>
   </g>
   <g id="n1o" mask="url(#mask-sgcRjFdoIQx6TRmyYoORv)" stroke-linecap="round">
     <g transform="translate(296.3289035922726 210.9999999999999) rotate(0 23.808732561405805 79.00000000000006)">
@@ -253,11 +253,11 @@
     <text id="appatext" x="6.7599945068359375" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">A</text>
   </g>
   <g transform="translate(10 310) rotate(0 124.12789154052734 50)">
-    <text id="desc1" x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">* N2 and N4 Ack A</text>
-    <text id="desc2" x="0" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">* N3 Ack is delayed</text>
-    <text id="desc3" x="0" y="54.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">* N1 records A as acked for N2</text>
-    <text id="desc4" x="0" y="74.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">* Ack from N4 is ignored due to</text>
-    <text id="desc5" x="0" y="94.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">  durability rule</text>
+    <text id="desc1" x="0" y="14.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic"></text>
+    <text id="desc2" x="0" y="34.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic"></text>
+    <text id="desc3" x="0" y="54.096000000000004" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic"></text>
+    <text id="desc4" x="0" y="74.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic"></text>
+    <text id="desc5" x="0" y="94.096" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="16px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic"></text>
   </g>
   <g id="appb" mask="url(#mask-IdWI_6vB9yE8Ah9GYlyQq)" stroke-linecap="round">
     <g transform="translate(230.29998936191214 71.7240450786054) rotate(0 -10 50)">

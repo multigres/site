@@ -5,42 +5,6 @@ description: 'Multigres Architecture Overview'
 
 # Multigres Architecture Overview
 
-## Principles
-
-Multigres will follow a set of principles suited for large scale distributed systems. They are as follows:
-
-### Scalability
-
-In a distributed system, scalability is mainly achieved by removing all possible bottlenecks. Among them, the most challenging one is the database. Multigres will be designed to scale the database horizontally by sharding it across multiple Postgres instances. Multigres will also provide an additional scalability option by managing read replicas.
-
-### High Availability
-
-Multigres strives for enterprise grade availability. To achieve this, it will use a combination of techniques:
-
-- A consensus protocol for leader election and failover management.
-- Fully automated cluster management.
-- No disruption of service during upgrades or maintenance.
-
-### Data Durability
-
-Multigres will ensure that data is durable using a consensus protocol. It will guarantee that a write that has been acknowledged as success to a client must not be lost.
-
-Additionally, it will provide a backup and restore mechanism to ensure that data can be recovered in case of catastrophic failures.
-
-All other metadata will be stored in a distributed key-value store like etcd, which can also be backed up regularly, or can be manually reconstructed.
-
-### Resilience
-
-Multigres will provide resilience against spikes and overloads by employing queuing and load shedding mechanisms.
-
-To protect from cascading failures, it will implement adaptive timeouts and exponential backoffs on retries.
-
-### Observability
-
-In spite of all precautions, incidents can happen. Multigres will provide a comprehensive set of metrics and logs to help diagnose issues.
-
-## Features
-
 import AnimatedSVG from '@site/src/components/AnimatedSVG';
 
 <AnimatedSVG
@@ -78,13 +42,20 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
       .set('#n1o', { autoAlpha: 0 })
       .set('#n1otext', { autoAlpha: 0 })
       .set("#n1a", { fill: "#2f9e44"})
-      .addLabel('step1')
       .animateArrow('#appa', { duration: 1 })
       .show('#appatext', { autoAlpha: 1 })
+      .morphText('#desc1', "* App issues request A", { duration: 0 })
+      .morphText('#desc2', "* N1 saves A to log", { duration: 0 })
+      .morphText('#desc3', "* N1 sends A to all followers", { duration: 0 })
+      .morphText('#desc4', "* Followers save A to their logs", { duration: 0 })
+      .addLabel('step1a')
       .show('#n1a', { autoAlpha: 1 })
-      .addLabel('step2')
+      .addLabel('step1b')
       .group((a) => {
         a
+        .morphText('#n1n2text', 'A', { duration: 0 })
+        .morphText('#n1n3text', 'A', { duration: 0 })
+        .morphText('#n1n4text', 'A', { duration: 0 })
         .show('#n1n2text', { autoAlpha: 1 })
         .show('#n1n3text', { autoAlpha: 1 })
         .show('#n1n4text', { autoAlpha: 1 })
@@ -92,12 +63,83 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
         .animateArrow('#n1n3', { duration: 1 })
         .animateArrow('#n1n4', { duration: 1 })
       })
+      .addLabel('step1c')
+      .set("#n2a", { fill: "#2f9e44"})
+      .show('#n2a', { autoAlpha: 1 })
+      .set("#n3a", { fill: "#2f9e44"})
+      .show('#n3a', { autoAlpha: 1 })
+      .set("#n4a", { fill: "#2f9e44"})
+      .show('#n4a', { autoAlpha: 1 })
+      .addLabel('step1')
+      .show('#n1n2text', { autoAlpha: 0 })
+      .show('#n1n3text', { autoAlpha: 0 })
+      .show('#n1n4text', { autoAlpha: 0 })
+      .show('#n1n2', { autoAlpha: 0 })
+      .show('#n1n3', { autoAlpha: 0 })
+      .show('#n1n4', { autoAlpha: 0 })
+      .show("#n1a", { fill: "#1e1e1e"})
+      .show("#n2a", { fill: "#1e1e1e"})
+      .show("#n3a", { fill: "#1e1e1e"})
+      .show("#n4a", { fill: "#1e1e1e"})
+      .show("#appa", { stroke: "#1e1e1e"})
+      .show("#appatext", { fill: "#1e1e1e"})
+      .morphText('#desc1', "* N2 and N4 ack A", { duration: 0 })
+      .morphText('#desc2', "* N3 ack is delayed", { duration: 0 })
+      .morphText('#desc3', "* N1 records A as acked for N2", { duration: 0 })
+      .morphText('#desc4', "* Ack for N4 ignored", { duration: 0 })
+      .addLabel('step2a')
+      .group((a) => {
+        a
+        .show('#n2n1text', { autoAlpha: 1 })
+        .show('#n4n1text', { autoAlpha: 1 })
+        .animateArrow('#n2n1', { duration: 1 })
+        .animateArrow('#n4n1', { duration: 1 })
+      })
+      .addLabel('step2b')
+      .show("#n2ack", { fill: "#2f9e44"})
+      .morphText('#n2ack', "N2: B", { duration: 0 })
       .addLabel('step2');
   }}
   autoPlay={false}
   showControls={true}
   alt="Multigres consensus and replication diagram"
 />
+
+## Principles
+
+Multigres will follow a set of principles suited for large scale distributed systems. They are as follows:
+
+### Scalability
+
+In a distributed system, scalability is mainly achieved by removing all possible bottlenecks. Among them, the most challenging one is the database. Multigres will be designed to scale the database horizontally by sharding it across multiple Postgres instances. Multigres will also provide an additional scalability option by managing read replicas.
+
+### High Availability
+
+Multigres strives for enterprise grade availability. To achieve this, it will use a combination of techniques:
+
+- A consensus protocol for leader election and failover management.
+- Fully automated cluster management.
+- No disruption of service during upgrades or maintenance.
+
+### Data Durability
+
+Multigres will ensure that data is durable using a consensus protocol. It will guarantee that a write that has been acknowledged as success to a client must not be lost.
+
+Additionally, it will provide a backup and restore mechanism to ensure that data can be recovered in case of catastrophic failures.
+
+All other metadata will be stored in a distributed key-value store like etcd, which can also be backed up regularly, or can be manually reconstructed.
+
+### Resilience
+
+Multigres will provide resilience against spikes and overloads by employing queuing and load shedding mechanisms.
+
+To protect from cascading failures, it will implement adaptive timeouts and exponential backoffs on retries.
+
+### Observability
+
+In spite of all precautions, incidents can happen. Multigres will provide a comprehensive set of metrics and logs to help diagnose issues.
+
+## Features
 
 A primary goal of Multigres is to provide full Postgres compatibility while enhancing scalability, availability, and performance. Its key features will include:
 
