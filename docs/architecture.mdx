@@ -44,18 +44,55 @@ In spite of all precautions, incidents can happen. Multigres will provide a comp
 import AnimatedSVG from '@site/src/components/AnimatedSVG';
 
 <AnimatedSVG
-  src="/img/site/svgviewer-output.svg"
+  src="/img/site/req1.svg"
   onAnimate={(animator) => {
     animator
-      .morphText('#text-0', 'BBB', { duration: 1 })
+      .set('#appa', { autoAlpha: 0 })
+      .set('#appatext', { autoAlpha: 0 })
+      .set('#n1a', { autoAlpha: 0 })
+      .set('#aapp', { autoAlpha: 0 })
+      .set('#aapptext', { autoAlpha: 0 })
+      .set('#appb', { autoAlpha: 0 })
+      .set('#appbtext', { autoAlpha: 0 })
+      .set('#bapp', { autoAlpha: 0 })
+      .set('#bapptext', { autoAlpha: 0 })
+      .set('#n1b', { autoAlpha: 0 })
+      .set('#n1n2', { autoAlpha: 0 })
+      .set('#n1n2text', { autoAlpha: 0 })
+      .set('#n1n3', { autoAlpha: 0 })
+      .set('#n1n3text', { autoAlpha: 0 })
+      .set('#n1n4', { autoAlpha: 0 })
+      .set('#n1n4text', { autoAlpha: 0 })
+      .set('#n2n1', { autoAlpha: 0 })
+      .set('#n2n1text', { autoAlpha: 0 })
+      .set('#n3n1', { autoAlpha: 0 })
+      .set('#n3n1text', { autoAlpha: 0 })
+      .set('#n4n1', { autoAlpha: 0 })
+      .set('#n4n1text', { autoAlpha: 0 })
+      .set('#n2a', { autoAlpha: 0 })
+      .set('#n2b', { autoAlpha: 0 })
+      .set('#n3a', { autoAlpha: 0 })
+      .set('#n3b', { autoAlpha: 0 })
+      .set('#n4a', { autoAlpha: 0 })
+      .set('#n4b', { autoAlpha: 0 })
+      .set('#n1o', { autoAlpha: 0 })
+      .set('#n1otext', { autoAlpha: 0 })
+      .set("#n1a", { fill: "#2f9e44"})
       .addLabel('step1')
-      .animateArrow('#n4-arrow', { duration: 1 })
-      .animateArrow('#n4-arrow', { duration: 1 })
+      .animateArrow('#appa', { duration: 1 })
+      .show('#appatext', { autoAlpha: 1 })
+      .show('#n1a', { autoAlpha: 1 })
       .addLabel('step2')
-      .fadeIn('#text-2', { duration: 1 })
-      .addLabel('step3')
-      .fadeIn('#text-3', { duration: 1 })
-      .addLabel('step4');
+      .group((a) => {
+        a
+        .show('#n1n2text', { autoAlpha: 1 })
+        .show('#n1n3text', { autoAlpha: 1 })
+        .show('#n1n4text', { autoAlpha: 1 })
+        .animateArrow('#n1n2', { duration: 1 })
+        .animateArrow('#n1n3', { duration: 1 })
+        .animateArrow('#n1n4', { duration: 1 })
+      })
+      .addLabel('step2');
   }}
   autoPlay={false}
   showControls={true}

@@ -164,6 +164,10 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
               fontSize: "14px",
               cursor: canGoBack ? "pointer" : "not-allowed",
               opacity: canGoBack ? 1 : 0.5,
+              backgroundColor: canGoBack ? "#2f9e44" : undefined,
+              color: canGoBack ? "white" : undefined,
+              border: canGoBack ? "none" : undefined,
+              borderRadius: "8px",
             }}
           >
             ← Previous
@@ -176,6 +180,10 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
               fontSize: "14px",
               cursor: canGoNext ? "pointer" : "not-allowed",
               opacity: canGoNext ? 1 : 0.5,
+              backgroundColor: canGoNext ? "#2f9e44" : undefined,
+              color: canGoNext ? "white" : undefined,
+              border: canGoNext ? "none" : undefined,
+              borderRadius: "8px",
             }}
           >
             Next →

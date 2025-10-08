@@ -120,7 +120,7 @@
   <g transform="translate(10 110) rotate(0 22.559974670410156 12.5)">
     <text id="text-acks-14" x="0" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Acks</text>
   </g>
-  <g id="n3-arrow" mask="url(#mask-pZkJFV-nr09NukZoCB8lH)" stroke-linecap="round">
+  <g id="n2-arrow" mask="url(#mask-pZkJFV-nr09NukZoCB8lH)" stroke-linecap="round">
     <g transform="translate(310 190) rotate(0 50 -60)">
       <path id="path-21" d="M1.01 -0.43 C17.46 -20.73, 82.71 -100.94, 99.21 -120.89 M0.08 -1.7 C16.87 -21.96, 84.98 -100.29, 101.5 -119.83" stroke="#2f9e44" stroke-width="2" fill="none"/>
     </g>
@@ -156,7 +156,7 @@
   <g transform="translate(323.34002685546875 247.5) rotate(0 36.46975126684646 12.263676480050208)">
     <text id="text-apply-b-16" x="36.65997314453125" y="17.619999999999997" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#2f9e44" text-anchor="middle" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Apply B</text>
   </g>
-  <g mask="url(#mask-GKJoKjC3OXMxdZF1xzA57)" stroke-linecap="round">
+  <g id="n3-arrow" mask="url(#mask-GKJoKjC3OXMxdZF1xzA57)" stroke-linecap="round">
     <g transform="translate(310 190) rotate(0 50 0)">
       <path id="path-27" d="M-1.12 -0.19 C15.7 -0.51, 83.19 -1.08, 99.9 -1.14 M0.49 -1.34 C17.24 -1.63, 82.05 -0.5, 98.9 -0.2" stroke="#2f9e44" stroke-width="2" fill="none"/>
     </g>

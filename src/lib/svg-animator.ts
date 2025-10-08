@@ -30,6 +30,7 @@ export class SVGAnimator {
   private timeline: gsap.core.Timeline;
   private steps: string[] = [];
   private currentStep: number = -1;
+  private groupStartTime: number | null = null;
 
   constructor(svgSelector: string | SVGElement) {
     if (typeof svgSelector === "string") {
@@ -61,6 +62,44 @@ export class SVGAnimator {
   }
 
   /**
+   * Set properties on elements immediately (before timeline starts)
+   */
+  set(selector: string, properties: gsap.TweenVars): this {
+    const elements = this.select(selector);
+    if (elements.length === 0) {
+      console.warn(`No elements found for selector: ${selector}`);
+      return this;
+    }
+
+    // Use immediate gsap.set for initial setup (before timeline plays)
+    gsap.set(elements, properties);
+    return this;
+  }
+
+  /**
+   * Set properties on elements as part of the timeline animation
+   * Uses a very short duration so it works with reverse navigation
+   */
+  show(selector: string, properties: gsap.TweenVars = {}): this {
+    const elements = this.select(selector);
+    if (elements.length === 0) {
+      console.warn(`No elements found for selector: ${selector}`);
+      return this;
+    }
+
+    // Use a very short duration animation instead of set() so it reverses properly
+    this.timeline.to(
+      elements,
+      {
+        ...properties,
+        duration: 0.01,
+      },
+      this.groupStartTime ?? undefined,
+    );
+    return this;
+  }
+
+  /**
    * Fade in elements
    */
   fadeIn(selector: string, options: AnimationOptions = {}): this {
@@ -71,15 +110,19 @@ export class SVGAnimator {
     }
 
     gsap.set(elements, { opacity: 0 });
-    this.timeline.to(elements, {
-      opacity: 1,
-      duration: options.duration ?? 0.5,
-      delay: options.delay ?? 0,
-      ease: options.ease ?? "power2.out",
-      stagger: options.stagger ?? 0,
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        opacity: 1,
+        duration: options.duration ?? 0.5,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "power2.out",
+        stagger: options.stagger ?? 0,
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -91,15 +134,19 @@ export class SVGAnimator {
     const elements = this.select(selector);
     if (elements.length === 0) return this;
 
-    this.timeline.to(elements, {
-      opacity: 0,
-      duration: options.duration ?? 0.5,
-      delay: options.delay ?? 0,
-      ease: options.ease ?? "power2.out",
-      stagger: options.stagger ?? 0,
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        opacity: 0,
+        duration: options.duration ?? 0.5,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "power2.out",
+        stagger: options.stagger ?? 0,
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -111,16 +158,20 @@ export class SVGAnimator {
     const elements = this.select(selector);
     if (elements.length === 0) return this;
 
-    this.timeline.to(elements, {
-      scale,
-      duration: options.duration ?? 0.5,
-      delay: options.delay ?? 0,
-      ease: options.ease ?? "back.out(1.7)",
-      stagger: options.stagger ?? 0,
-      transformOrigin: "center center",
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        scale,
+        duration: options.duration ?? 0.5,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "back.out(1.7)",
+        stagger: options.stagger ?? 0,
+        transformOrigin: "center center",
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -142,15 +193,19 @@ export class SVGAnimator {
       }
     });
 
-    this.timeline.to(elements, {
-      strokeDashoffset: 0,
-      duration: options.duration ?? 1,
-      delay: options.delay ?? 0,
-      ease: options.ease ?? "power2.inOut",
-      stagger: options.stagger ?? 0,
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        strokeDashoffset: 0,
+        duration: options.duration ?? 1,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "power2.inOut",
+        stagger: options.stagger ?? 0,
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -180,17 +235,21 @@ export class SVGAnimator {
       opacity: 0,
     });
 
-    this.timeline.to(elements, {
-      x: 0,
-      y: 0,
-      opacity: 1,
-      duration: options.duration ?? 0.8,
-      delay: options.delay ?? 0,
-      ease: options.ease ?? "power3.out",
-      stagger: options.stagger ?? 0,
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        duration: options.duration ?? 0.8,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "power3.out",
+        stagger: options.stagger ?? 0,
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -202,18 +261,22 @@ export class SVGAnimator {
     const elements = this.select(selector);
     if (elements.length === 0) return this;
 
-    this.timeline.to(elements, {
-      scale: 1.1,
-      duration: (options.duration ?? 0.6) / 2,
-      delay: options.delay ?? 0,
-      ease: "power2.inOut",
-      yoyo: true,
-      repeat: 1,
-      stagger: options.stagger ?? 0,
-      transformOrigin: "center center",
-      onComplete: options.onComplete,
-      onStart: options.onStart,
-    });
+    this.timeline.to(
+      elements,
+      {
+        scale: 1.1,
+        duration: (options.duration ?? 0.6) / 2,
+        delay: options.delay ?? 0,
+        ease: "power2.inOut",
+        yoyo: true,
+        repeat: 1,
+        stagger: options.stagger ?? 0,
+        transformOrigin: "center center",
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
 
     return this;
   }
@@ -234,35 +297,39 @@ export class SVGAnimator {
         const originalText = element.textContent || "";
         const tempObj = { value: 0 };
 
-        this.timeline.to(tempObj, {
-          value: 1,
-          duration: options.duration ?? 0.8,
-          delay: options.delay ?? 0,
-          ease: options.ease ?? "power2.inOut",
-          onUpdate: () => {
-            // Fade out and scale down
-            if (tempObj.value < 0.5) {
-              const progress = tempObj.value * 2; // 0 to 1 in first half
-              element.style.opacity = String(1 - progress);
-              element.style.transform = `scale(${1 - progress * 0.3})`;
-            } else {
-              // Change text at midpoint
-              if (element.textContent !== newText) {
-                element.textContent = newText;
+        this.timeline.to(
+          tempObj,
+          {
+            value: 1,
+            duration: options.duration ?? 0.8,
+            delay: options.delay ?? 0,
+            ease: options.ease ?? "power2.inOut",
+            onUpdate: () => {
+              // Fade out and scale down
+              if (tempObj.value < 0.5) {
+                const progress = tempObj.value * 2; // 0 to 1 in first half
+                element.style.opacity = String(1 - progress);
+                element.style.transform = `scale(${1 - progress * 0.3})`;
+              } else {
+                // Change text at midpoint
+                if (element.textContent !== newText) {
+                  element.textContent = newText;
+                }
+                // Fade in and scale up
+                const progress = (tempObj.value - 0.5) * 2; // 0 to 1 in second half
+                element.style.opacity = String(progress);
+                element.style.transform = `scale(${0.7 + progress * 0.3})`;
               }
-              // Fade in and scale up
-              const progress = (tempObj.value - 0.5) * 2; // 0 to 1 in second half
-              element.style.opacity = String(progress);
-              element.style.transform = `scale(${0.7 + progress * 0.3})`;
-            }
+            },
+            onComplete: () => {
+              element.style.opacity = "1";
+              element.style.transform = "scale(1)";
+              if (options.onComplete) options.onComplete();
+            },
+            onStart: options.onStart,
           },
-          onComplete: () => {
-            element.style.opacity = "1";
-            element.style.transform = "scale(1)";
-            if (options.onComplete) options.onComplete();
-          },
-          onStart: options.onStart,
-        });
+          this.groupStartTime ?? undefined,
+        );
       }
     });
 
@@ -283,6 +350,17 @@ export class SVGAnimator {
     groups.forEach((group) => {
       const children = Array.from(group.children);
       if (children.length === 0) return;
+
+      // We assume elements are hidden initially.
+      // Make them visible.
+      this.timeline.to(
+        group,
+        {
+          autoAlpha: 1,
+          duration: 0.01,
+        },
+        this.groupStartTime ?? undefined,
+      );
 
       // First child contains the shaft - find the actual path element
       const firstChild = children[0];
@@ -328,6 +406,7 @@ export class SVGAnimator {
 
       if (restElements.length > 0) {
         gsap.set(restElements, { opacity: 0 });
+        // Don't use groupStartTime - arrowhead should appear AFTER shaft
         this.timeline.to(restElements, {
           opacity: 1,
           duration: 0,
@@ -337,6 +416,23 @@ export class SVGAnimator {
         this.timeline.call(options.onComplete);
       }
     });
+
+    return this;
+  }
+
+  /**
+   * Group animations to run simultaneously
+   * Creates a nested timeline where all animations in the callback run at the same time
+   */
+  group(callback: (animator: SVGAnimator) => void): this {
+    // Mark the start position for the group
+    this.groupStartTime = this.timeline.duration();
+
+    // Execute the callback - all animations will be added at groupStartTime
+    callback(this);
+
+    // Reset groupStartTime so subsequent animations continue sequentially
+    this.groupStartTime = null;
 
     return this;
   }
