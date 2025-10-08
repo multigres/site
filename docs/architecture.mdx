@@ -87,9 +87,11 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
       .morphText('#desc2', "* N3 ack is delayed", { duration: 0 })
       .morphText('#desc3', "* N1 records A as acked for N2", { duration: 0 })
       .morphText('#desc4', "* Ack for N4 ignored", { duration: 0 })
+      .morphText('#desc5', "* Durability requirements not met", { duration: 0 })
       .addLabel('step2a')
       .group((a) => {
         a
+        .morphText('#desc5', "* Durability requirements not met", { duration: 0 })
         .show('#n2n1text', { autoAlpha: 1 })
         .show('#n4n1text', { autoAlpha: 1 })
         .animateArrow('#n2n1', { duration: 1 })
@@ -97,7 +99,7 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
       })
       .addLabel('step2b')
       .show("#n2ack", { fill: "#2f9e44"})
-      .morphText('#n2ack', "N2: B", { duration: 0 })
+      .morphText('#n2ack', "N2: A", { duration: 0 })
       .addLabel('step2');
   }}
   autoPlay={false}

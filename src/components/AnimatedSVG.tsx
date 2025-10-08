@@ -60,7 +60,6 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   const animatorRef = useRef<SVGAnimator | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canGoNext, setCanGoNext] = useState(true);
-  const [canGoBack, setCanGoBack] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -117,7 +116,6 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   const updateButtonStates = () => {
     if (animatorRef.current) {
       setCanGoNext(animatorRef.current.hasNextStep());
-      setCanGoBack(animatorRef.current.hasPreviousStep());
     }
   };
 
@@ -128,11 +126,57 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
     }
   };
 
-  const handlePrevious = () => {
+  const handleReset = () => {
+    // Reload the component by toggling isLoaded
+    setIsLoaded(false);
+    setCanGoNext(true);
+
+    // Re-trigger the useEffect by incrementing a key would be cleaner,
+    // but we can also just re-run the SVG loading logic
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Kill existing animator
     if (animatorRef.current) {
-      animatorRef.current.previousStep();
-      updateButtonStates();
+      animatorRef.current.kill();
+      animatorRef.current = null;
     }
+
+    // Reload SVG
+    const loadSVG = async () => {
+      try {
+        const response = await fetch(src);
+        const svgText = await response.text();
+        container.innerHTML = svgText;
+
+        const svgElement = container.querySelector("svg");
+        if (!svgElement) {
+          console.error("No SVG element found in the loaded content");
+          return;
+        }
+
+        // Set dimensions if provided
+        if (width)
+          svgElement.style.width =
+            typeof width === "number" ? `${width}px` : width;
+        if (height)
+          svgElement.style.height =
+            typeof height === "number" ? `${height}px` : height;
+
+        // Create animator instance
+        animatorRef.current = new SVGAnimator(svgElement);
+        setIsLoaded(true);
+
+        // Call animation callback
+        if (onAnimate && animatorRef.current) {
+          onAnimate(animatorRef.current);
+        }
+      } catch (error) {
+        console.error("Error loading SVG:", error);
+      }
+    };
+
+    loadSVG();
   };
 
   return (
@@ -157,20 +201,18 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
           }}
         >
           <button
-            onClick={handlePrevious}
-            disabled={!canGoBack}
+            onClick={handleReset}
             style={{
               padding: "8px 16px",
               fontSize: "14px",
-              cursor: canGoBack ? "pointer" : "not-allowed",
-              opacity: canGoBack ? 1 : 0.5,
-              backgroundColor: canGoBack ? "#2f9e44" : undefined,
-              color: canGoBack ? "white" : undefined,
-              border: canGoBack ? "none" : undefined,
+              cursor: "pointer",
+              backgroundColor: "#6c757d",
+              color: "white",
+              border: "none",
               borderRadius: "8px",
             }}
           >
-            ← Previous
+            ↺ Reset
           </button>
           <button
             onClick={handleNext}
