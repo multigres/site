@@ -262,6 +262,56 @@ export class SVGAnimator {
   }
 
   /**
+   * Move element from one point to another
+   * @param selector - CSS selector for elements to move
+   * @param from - Starting position {x, y} or null to move from current position
+   * @param to - Ending position {x, y}
+   * @param options - Animation options
+   */
+  moveTo(
+    selector: string,
+    from: { x: number; y: number } | null,
+    to: { x: number; y: number },
+    options: AnimationOptions = {},
+  ): this {
+    const elements = this.select(selector);
+    if (elements.length === 0) {
+      console.warn(`No elements found for selector: ${selector}`);
+      return this;
+    }
+
+    // Set initial position if provided
+    if (from !== null) {
+      this.timeline.set(
+        elements,
+        {
+          x: from.x,
+          y: from.y,
+        },
+        this.groupStartTime ?? undefined,
+      );
+    }
+
+    // Animate to target position
+    this.timeline.to(
+      elements,
+      {
+        x: to.x,
+        y: to.y,
+        duration: options.duration ?? 1,
+        delay: options.delay ?? 0,
+        ease: options.ease ?? "power2.inOut",
+        stagger: options.stagger ?? 0,
+        onComplete: options.onComplete,
+        onStart: options.onStart,
+      },
+      this.groupStartTime ?? undefined,
+    );
+
+    return this;
+  }
+
+  /**
    * Highlight element with pulse animation
    */
   pulse(selector: string, options: AnimationOptions = {}): this {
