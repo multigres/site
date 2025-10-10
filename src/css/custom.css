@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
 
 /* CSS Variables converted from SCSS */
 :root {
@@ -37,16 +37,16 @@
   --docusaurus-highlighted-code-line-bg: rgba(63, 141, 66, 0.1);
 
   --ifm-font-family-base:
-    'Inter', 'IBM Plex Sans', BlinkMacSystemFont, -apple-system, 'Segoe UI',
-    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    "Inter", "IBM Plex Sans", BlinkMacSystemFont, -apple-system, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
-  --ifm-heading-font-family: 'IBM Plex Sans';
-  --ifm-font-family-monospace: 'IBM Plex Mono', monospace;
+  --ifm-heading-font-family: "IBM Plex Sans";
+  --ifm-font-family-monospace: "IBM Plex Mono", monospace;
 }
 
 /* Dark mode is now the default */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: var(--green-500);
   --ifm-color-primary-dark: #368e39;
   --ifm-color-primary-darker: #338936;
@@ -91,4 +91,49 @@
   text-align: left;
   font-size: 0.8rem;
   padding-top: 1rem;
+}
+
+/* Custom nested list numbering: 1, 1.a, 1.a.(i) */
+.markdown ol {
+  counter-reset: item;
+  list-style-type: none;
+}
+
+.markdown ol > li {
+  counter-increment: item;
+  position: relative;
+  padding-left: 2em;
+}
+
+.markdown ol > li::before {
+  content: counter(item) ". ";
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+/* Second level: 1a, 1b, etc */
+.markdown ol ol {
+  counter-reset: subitem;
+}
+
+.markdown ol ol > li {
+  counter-increment: subitem;
+}
+
+.markdown ol ol > li::before {
+  content: counter(subitem, lower-alpha) ". ";
+}
+
+/* Third level: 1a(i), 1a(ii), etc */
+.markdown ol ol ol {
+  counter-reset: subsubitem;
+}
+
+.markdown ol ol ol > li {
+  counter-increment: subsubitem;
+}
+
+.markdown ol ol ol > li::before {
+  content: "(" counter(subsubitem, lower-roman) "). ";
 }

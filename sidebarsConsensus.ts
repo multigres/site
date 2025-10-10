@@ -1,0 +1,13 @@
+import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
+
+const sidebars: SidebarsConfig = {
+  consensusSidebar: [
+    {
+      type: "category",
+      label: "A Generalization of Consensus Protocols",
+      items: ["part-01", "part-02", "part-03", "part-04"],
+    },
+  ],
+};
+
+export default sidebars;

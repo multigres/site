@@ -67,18 +67,14 @@ const config: Config = {
 
   plugins: [
     [
-      "@docusaurus/plugin-content-blog",
+      require.resolve("@docusaurus/plugin-content-docs"),
       {
         id: "consensus",
+        path: "consensus",
         routeBasePath: "consensus",
-        path: "./consensus",
-        blogTitle: "A Generalization of Consensus Protocols",
-        blogDescription:
-          "An in-depth series exploring consensus protocol theory",
-        blogSidebarTitle: "All posts",
-        blogSidebarCount: "ALL",
-        showReadingTime: true,
+        sidebarPath: require.resolve("./sidebarsConsensus.ts"),
         editUrl: "https://github.com/multigres/multigres/tree/main/site/",
+        sidebarCollapsed: false,
       },
     ],
   ],
