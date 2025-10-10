@@ -436,6 +436,97 @@ export class SVGAnimator {
   }
 
   /**
+   * Reverse of animateArrow - fades out arrowhead first, then un-draws the shaft
+   */
+  unanimateArrow(groupSelector: string, options: AnimationOptions = {}): this {
+    const groups = this.select(groupSelector);
+    if (groups.length === 0) {
+      console.warn(`No arrow group found for selector: ${groupSelector}`);
+      return this;
+    }
+
+    groups.forEach((group) => {
+      const children = Array.from(group.children);
+      if (children.length === 0) return;
+
+      // First child contains the shaft - find the actual path element
+      const firstChild = children[0];
+      let shaftPath: SVGGeometryElement | null = null;
+
+      // Check if first child is the path itself
+      if (firstChild instanceof SVGGeometryElement) {
+        shaftPath = firstChild;
+      } else {
+        // Look for a path element inside the first child
+        const pathElement = firstChild.querySelector(
+          "path, line, polyline, polygon",
+        );
+        if (pathElement instanceof SVGGeometryElement) {
+          shaftPath = pathElement;
+        }
+      }
+
+      // Remaining children are arrowhead/decorations - collect all descendants
+      const restElements: Element[] = [];
+      for (let i = 1; i < children.length; i++) {
+        restElements.push(children[i]);
+        // Also collect nested elements
+        restElements.push(...Array.from(children[i].querySelectorAll("*")));
+      }
+
+      // First, fade out the arrowhead
+      if (restElements.length > 0) {
+        this.timeline.to(
+          restElements,
+          {
+            opacity: 0,
+            duration: 0.001,
+            onStart: options.onStart,
+          },
+          this.groupStartTime ?? undefined,
+        );
+      }
+
+      // Then un-draw the shaft
+      if (shaftPath) {
+        let shaftSelector = "";
+        if (shaftPath.id) {
+          shaftSelector = `#${shaftPath.id}`;
+        } else {
+          shaftSelector = `${groupSelector} > :first-child path, ${groupSelector} > :first-child line, ${groupSelector} > :first-child polyline, ${groupSelector} > :first-child polygon`;
+        }
+
+        const elements = this.select(shaftSelector);
+        elements.forEach((element) => {
+          if (element instanceof SVGGeometryElement) {
+            const length = element.getTotalLength();
+            // Animate from drawn (offset 0) back to hidden (offset = length)
+            this.timeline.to(
+              element,
+              {
+                strokeDashoffset: length,
+                duration: options.duration ?? 1,
+                delay: options.delay ?? 0,
+                ease: options.ease ?? "none",
+              },
+              this.groupStartTime ?? undefined,
+            );
+          }
+        });
+      }
+
+      // Finally, hide the entire group
+      this.timeline.to(group, {
+        autoAlpha: 0,
+        duration: 0.01,
+        onComplete: options.onComplete,
+      });
+    });
+
+    return this;
+  }
+
+  /**
    * Group animations to run simultaneously
    * Creates a nested timeline where all animations in the callback run at the same time
    */
