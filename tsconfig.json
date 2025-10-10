@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "types": ["node"],
+    "lib": ["ES2020", "DOM"],
     "paths": {
       "@site/*": ["./*"]
     }
