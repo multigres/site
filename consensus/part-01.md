@@ -6,6 +6,14 @@ slug: /
 
 # Part 1: Defining the Problem
 
+import Author from '@site/src/components/Author';
+
+<Author
+  name="Sugu Sougoumarane"
+  title="Creator of Multigres, Vitess"
+  imageUrl="https://github.com/sougou.png"
+/>
+
 In this blog series, I have the following goals:
 
 - Propose an alternate and more approachable definition of consensus.

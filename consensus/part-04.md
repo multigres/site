@@ -5,6 +5,14 @@ title: "Part 4: Fulfilling Requests"
 
 # Part 4: Fulfilling Requests
 
+import Author from '@site/src/components/Author';
+
+<Author
+  name="Sugu Sougoumarane"
+  title="Creator of Multigres, Vitess"
+  imageUrl="https://github.com/sougou.png"
+/>
+
 Let’s restate the subset of rules that are relevant to this section:
 
 1. Durability: Every decision is a distributed decision.

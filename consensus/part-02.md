@@ -5,6 +5,14 @@ title: "Part 2: Building the Foundation"
 
 # Part 2: Building the Foundation
 
+import Author from '@site/src/components/Author';
+
+<Author
+  name="Sugu Sougoumarane"
+  title="Creator of Multigres, Vitess"
+  imageUrl="https://github.com/sougou.png"
+/>
+
 In our previous post, we came up with an informal definition :
 
 *A consensus system must ensure that every request is saved elsewhere before it is completed and acknowledged. If there is a failure after the acknowledgment, the system must have the ability to find the saved requests, complete them, and resume operations from that point.*
