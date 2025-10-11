@@ -8,6 +8,7 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
+    "deploy-preview": "npm run build && cd build && rm -f CNAME && git init && git checkout -b gh-pages && git add -A && git commit -m 'Deploy preview' && git push -f git@github.com:sougou/site.git gh-pages:gh-pages",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",

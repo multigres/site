@@ -58,9 +58,10 @@ The figure below shows a step-by-step animation of how requests get fulfilled by
 
 import AnimatedSVG from '@site/src/components/AnimatedSVG';
 import { requestProcessing } from '@site/src/components/requestProcessing';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 <AnimatedSVG
-  src="/img/consensus/requestProcessing.svg"
+  src={useBaseUrl('/img/consensus/requestProcessing.svg')}
   onAnimate={requestProcessing}
   autoPlay={false}
   showControls={true}
