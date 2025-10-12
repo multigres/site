@@ -10,7 +10,7 @@ export default function Author({
   name,
   title,
   imageUrl,
-}: AuthorProps): JSX.Element {
+}: AuthorProps): React.ReactElement {
   return (
     <div
       style={{

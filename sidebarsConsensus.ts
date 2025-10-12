@@ -5,7 +5,7 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "A Generalization of Consensus Protocols",
-      items: ["part-00", "part-01", "part-02", "part-03", "part-04"],
+      items: ["part-00", "part-01", "part-02", "part-03", "part-04", "part-05"],
     },
   ],
 };
