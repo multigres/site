@@ -392,7 +392,7 @@
   <mask/>
   <g id="n1n3" mask="url(#mask-E6HeOtLpqLkLkqa52GAea)" stroke-linecap="round">
     <g transform="translate(1090 250) rotate(0 60 40)">
-      <path d="M-0.7 -0.08 C19.38 13.5, 99.57 66.89, 119.84 80.27" stroke="#e03131" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
+      <path d="M-0.7 -0.08 C19.38 13.5, 99.57 66.89, 119.84 80.27" stroke="#e03131" stroke-width="2.5" fill="none" />
     </g>
     <g transform="translate(1090 250) rotate(0 60 40)">
       <path d="M95.54 74.41 C101.42 75.74, 108.06 79.01, 119.84 80.27" stroke="#e03131" stroke-width="2.5" fill="none"/>

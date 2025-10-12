@@ -267,7 +267,7 @@
   </g>
   <g id="c6n5fail" mask="url(#mask-i3FQSPf9Pi9NBqWWcDQsa)" stroke-linecap="round">
     <g transform="translate(469.27012482138616 428.8106580089777) rotate(0 -59.63506241069308 -29.405329004488863)">
-      <path d="M0.79 -0.28 C-19.03 -9.9, -98.8 -47.84, -118.76 -57.62" stroke="#e03131" stroke-width="2.5" fill="none" stroke-dasharray="8 10"/>
+      <path d="M0.79 -0.28 C-19.03 -9.9, -98.8 -47.84, -118.76 -57.62" stroke="#e03131" stroke-width="2.5" fill="none" />
     </g>
     <g transform="translate(469.27012482138616 428.8106580089777) rotate(0 -59.63506241069308 -29.405329004488863)">
       <path d="M-93.89 -55.12 C-102.17 -54.89, -107.55 -55.99, -118.76 -57.62" stroke="#e03131" stroke-width="2.5" fill="none"/>
