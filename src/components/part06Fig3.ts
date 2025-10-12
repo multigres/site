@@ -1,14 +1,38 @@
 /**
- * Animation configuration for Part 6 Figure 3 - All possible leaders
+ * Animation configuration for Part 6 Figure 3 - All possible leaders (NEW VERSION)
  */
 
 import type { SVGAnimator } from "../lib/svg-animator";
+
+// Color constants
+const COLORS = {
+  active: "#2f9e44",
+  inactive: "#1e1e1e",
+} as const;
 
 // Common animation durations
 const DURATION = {
   instant: 0,
   normal: 1,
   fast: 0.5,
+  slow: 2,
+} as const;
+
+// Relative offsets for moving elements between sections
+// Revocation (top-left) -> Target (right): move right and down
+// Calculated from: n1 source (50, 112.738) -> target worked at (825, 435)
+// Relative offset: (825-50, 435-112.738) = (775, 322.262)
+const REVOCATION_TO_TARGET_OFFSET = {
+  x: 775,
+  y: 322.262,
+} as const;
+
+// Candidacy (bottom-left) -> Target (right): move right and UP
+// Calculated from: n4n6 source (338.934, 1233.763) -> target works at (1113.934, 813.763)
+// Relative offset: (775, -420)
+const CANDIDACY_TO_TARGET_OFFSET = {
+  x: 775, // Same horizontal movement as Revocation->Target
+  y: -420, // Move up (negative) to reach Target section
 } as const;
 
 // Helper function to hide multiple elements
@@ -17,81 +41,200 @@ const hideElements = (animator: SVGAnimator, elements: string[]) => {
   return animator;
 };
 
+// Helper function to calculate target position from source + offset
+const addOffset = (
+  source: { x: number; y: number },
+  offset: { x: number; y: number },
+) => ({
+  x: source.x + offset.x,
+  y: source.y + offset.y,
+});
+
+// Helper function to extract position from SVG element's transform attribute
+const getElementPosition = (selector: string): { x: number; y: number } => {
+  const element = document.querySelector(selector);
+  if (!element) {
+    console.warn(`Element not found: ${selector}`);
+    return { x: 0, y: 0 };
+  }
+
+  const transform = element.getAttribute("transform");
+  if (!transform) {
+    return { x: 0, y: 0 };
+  }
+
+  // Extract translate(x, y) from transform attribute
+  const translateMatch = transform.match(/translate\(([^,\s]+)[\s,]+([^)]+)\)/);
+  if (translateMatch) {
+    return {
+      x: parseFloat(translateMatch[1]),
+      y: parseFloat(translateMatch[2]),
+    };
+  }
+
+  return { x: 0, y: 0 };
+};
+
 /**
- * Animation sequence for part06-fig3.svg - All possible leaders
+ * Animation sequence for part06-fig3.svg - All possible leaders (NEW VERSION)
  */
 export const part06Fig3 = (animator: SVGAnimator) => {
-  // Initial state: Hide all arrows
-  hideElements(animator, [
-    "#blue",
-    "#blue1",
-    "#blue2",
-    "#blue3",
-    "#blue4",
-    "#purple",
-    "#purple1",
-    "#purple2",
-    "#purple3",
-    "#purple4",
-    "#green",
-    "#green1",
-    "#green2",
-    "#green3",
-    "#green4",
-    "#green5",
-    "#green6",
-  ]);
+  // Initial state: Hide elements
+  hideElements(animator, ["#blue", "#purple", "#green"]);
 
-  // Step 1: Animate blue arrows (revocation for N1)
-  animator
-    .animateArrow("#blue1", { duration: DURATION.normal })
-    .animateArrow("#blue2", { duration: DURATION.normal })
-    .animateArrow("#blue3", { duration: DURATION.normal })
-    .animateArrow("#blue4", { duration: DURATION.normal })
-    .show("#blue", { autoAlpha: 1 })
-    .addLabel("step1");
+  // Step 1: Move elements from Revocation and Candidacy to Target section
 
-  // Step 2: Animate purple arrows (revocation for N4)
-  // Hide blue arrows first
-  animator
-    .show("#blue1", { autoAlpha: 0 })
-    .show("#blue2", { autoAlpha: 0 })
-    .show("#blue3", { autoAlpha: 0 })
-    .show("#blue4", { autoAlpha: 0 });
+  // Get source positions from SVG
+  const n1Source = getElementPosition("#n1");
+  const n4Source = getElementPosition("#n4");
+  const n4n6Source = getElementPosition("#n4n6");
 
-  animator
-    .animateArrow("#purple1", { duration: DURATION.normal })
-    .animateArrow("#purple2", { duration: DURATION.normal })
-    .animateArrow("#purple3", { duration: DURATION.normal })
-    .animateArrow("#purple4", { duration: DURATION.normal })
-    .show("#purple", { autoAlpha: 1 })
-    .addLabel("step2");
+  // Move n1 from Revocation to Target using relative offset
+  animator.moveTo(
+    "#n1",
+    null,
+    addOffset(n1Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
 
-  // Step 3: Animate green arrows (candidacy for N4)
-  // Hide purple arrows first
-  animator
-    .show("#purple1", { autoAlpha: 0 })
-    .show("#purple2", { autoAlpha: 0 })
-    .show("#purple3", { autoAlpha: 0 })
-    .show("#purple4", { autoAlpha: 0 });
+  // Move n4 from Revocation to Target using relative offset
+  animator.moveTo(
+    "#n4",
+    null,
+    addOffset(n4Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
 
-  animator
-    .animateArrow("#green1", { duration: DURATION.normal })
-    .animateArrow("#green2", { duration: DURATION.normal })
-    .animateArrow("#green3", { duration: DURATION.normal })
-    .animateArrow("#green4", { duration: DURATION.normal })
-    .animateArrow("#green5", { duration: DURATION.normal })
-    .animateArrow("#green6", { duration: DURATION.normal })
-    .show("#green", { autoAlpha: 1 })
-    .addLabel("step3");
+  // Move n4n6 from Candidacy to Target using Candidacy-specific offset
+  animator.moveTo(
+    "#n4n6",
+    null,
+    addOffset(n4n6Source, CANDIDACY_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
 
-  // Step 4: Hide green arrows
-  animator
-    .show("#green1", { autoAlpha: 0 })
-    .show("#green2", { autoAlpha: 0 })
-    .show("#green3", { autoAlpha: 0 })
-    .show("#green4", { autoAlpha: 0 })
-    .show("#green5", { autoAlpha: 0 })
-    .show("#green6", { autoAlpha: 0 })
-    .addLabel("step4");
+  // Show blue text/label
+  animator.show("#blue", { autoAlpha: 1 });
+
+  animator.addLabel("step1");
+
+  // Step 2: Restore step1 elements and move new set of elements to Target
+
+  // First, quickly restore step1 elements to their original positions
+  animator.group((a: SVGAnimator) => {
+    a.moveTo("#n1", null, n1Source, { duration: DURATION.fast });
+    a.moveTo("#n4", null, n4Source, { duration: DURATION.fast });
+    a.moveTo("#n4n6", null, n4n6Source, { duration: DURATION.fast });
+  });
+
+  // Get source positions from SVG for step2 elements
+  const n3Source = getElementPosition("#n3");
+  const n4n5Source = getElementPosition("#n4n5");
+
+  // Move n3 from Revocation to Target
+  animator.moveTo(
+    "#n3",
+    null,
+    addOffset(n3Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Move n4 from Revocation to Target (same as step1)
+  animator.moveTo(
+    "#n4",
+    null,
+    addOffset(n4Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Move n4n5 from Candidacy to Target
+  animator.moveTo(
+    "#n4n5",
+    null,
+    addOffset(n4n5Source, CANDIDACY_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Show purple text/label
+  animator.show("#purple", { autoAlpha: 1 });
+
+  animator.addLabel("step2");
+
+  // Step 3: Restore step2 elements and move final set of elements to Target
+
+  // First, quickly restore step2 elements to their original positions
+  animator.group((a: SVGAnimator) => {
+    a.moveTo("#n3", null, n3Source, { duration: DURATION.fast });
+    a.moveTo("#n4", null, n4Source, { duration: DURATION.fast });
+    a.moveTo("#n4n5", null, n4n5Source, { duration: DURATION.fast });
+  });
+
+  // Get source positions from SVG for step3 elements
+  const n5n6Source = getElementPosition("#n5n6");
+  const n1n2n3Source = getElementPosition("#n1n2n3");
+
+  // Move n1 from Revocation to Target
+  animator.moveTo(
+    "#n1",
+    null,
+    addOffset(n1Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Move n5n6 from Revocation to Target
+  animator.moveTo(
+    "#n5n6",
+    null,
+    addOffset(n5n6Source, REVOCATION_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Move n1n2n3 from Candidacy to Target
+  animator.moveTo(
+    "#n1n2n3",
+    null,
+    addOffset(n1n2n3Source, CANDIDACY_TO_TARGET_OFFSET),
+    {
+      duration: DURATION.slow,
+      ease: "power2.inOut",
+    },
+  );
+
+  // Show green text/label
+  animator.show("#green", { autoAlpha: 1 });
+
+  animator.addLabel("step3");
+
+  // Step 4: Restore all step3 elements to their original positions
+  animator.group((a: SVGAnimator) => {
+    a.moveTo("#n1", null, n1Source, { duration: DURATION.fast });
+    a.moveTo("#n5n6", null, n5n6Source, { duration: DURATION.fast });
+    a.moveTo("#n1n2n3", null, n1n2n3Source, { duration: DURATION.fast });
+  });
+
+  animator.addLabel("step4");
 };

@@ -191,6 +191,25 @@ import { part06Fig2Scenario3 } from '@site/src/components/part06Fig2Scenario3';
 
 ### All possible leaders
 
+So far, we targeted specific nodes for revocation and candidacy. This was mainly to illustrate the logic. As explained before, a coordinator must actually attempt to revoke all possible leaderships in the cohort. To achieve this, it must recruit a combination from each group:
+
+For N1:
+- N1
+- N2
+- N3
+
+For N4:
+- N4
+- N5, N6
+
+For example, N1, N4 is a valid combination. N1, N5, N6 is also a valid combination, etc.
+
+To recruit for leadership:
+- For N1, it must recruit N1, N2, N3.
+- For N4, it must recruit N4, N5 or N4, N6.
+
+To perform a leadership change to N4, a coordinator must recruit for both revocation and candidacy. This would be any combination from the first set and a combination needed for N4’s leadership. A valid set would be: N3, N4, and N5, which is illustrated in scenario 1. The animation below shows a few examples of valid combinations:
+
 import { part06Fig3 } from '@site/src/components/part06Fig3';
 
 <div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
@@ -205,30 +224,6 @@ import { part06Fig3 } from '@site/src/components/part06Fig3';
     style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-450px)'}}
   />
 </div>
-
-So far, we targeted specific nodes for revocation and candidacy. This was mainly to illustrate the logic. As explained before, a coordinator must actually attempt to revoke all possible leaderships in the cohort.
-
-To achieve this, it must recruit a combination from each group:
-
-For N1:
-
-- N1
-- N2
-- N3
-
-For N4:
-
-- N4
-- N5, N6
-
-For example, N1, N4 is a valid combination. N1, N5, N6 is also a valid combination, etc.
-
-To recruit for leadership:
-
-- For N1, it must recruit N1, N2, N3.
-- For N4, it must recruit N4, N5 or N4, N6.
-
-To perform a leadership change to N4, a coordinator must recruit for both revocation and candidacy. This would be any combination from the first set and a combination needed for N4’s leadership. A valid set would be: N3, N4, and N5, which is illustrated in scenario 1.
 
 # Summarizing the rules
 
