@@ -319,8 +319,18 @@ export const requestProcessing = (animator: SVGAnimator) => {
   animator.group((a: SVGAnimator) => {
     a.show("#n1applied", { stroke: COLORS.active })
       .show("#n1appliedtext", { fill: COLORS.active })
-      .moveTo("#n1applied", null, { x: 40 }, { duration: DURATION.normal })
-      .moveTo("#n1appliedtext", null, { x: 40 }, { duration: DURATION.normal });
+      .moveTo(
+        "#n1applied",
+        null,
+        { x: 40, y: 0 },
+        { duration: DURATION.normal },
+      )
+      .moveTo(
+        "#n1appliedtext",
+        null,
+        { x: 40, y: 0 },
+        { duration: DURATION.normal },
+      );
   });
 
   updateDescriptions(animator, {

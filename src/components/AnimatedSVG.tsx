@@ -33,6 +33,8 @@ interface AnimatedSVGProps {
   autoPlay?: boolean;
   /** Whether to show manual controls (forward/reverse buttons) */
   showControls?: boolean;
+  /** Whether to show restart button only */
+  showRestartButton?: boolean;
   /** Additional CSS classes */
   className?: string;
   /** Additional inline styles */
@@ -50,6 +52,7 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   onAnimate,
   autoPlay = false,
   showControls = false,
+  showRestartButton = false,
   className = "",
   style = {},
   alt = "Animated SVG",
@@ -170,6 +173,11 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
         // Call animation callback
         if (onAnimate && animatorRef.current) {
           onAnimate(animatorRef.current);
+
+          // Auto-play if enabled
+          if (autoPlay) {
+            animatorRef.current.play();
+          }
         }
       } catch (error) {
         console.error("Error loading SVG:", error);
@@ -229,6 +237,30 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
             }}
           >
             Next →
+          </button>
+        </div>
+      )}
+      {showRestartButton && !showControls && isLoaded && (
+        <div
+          style={{
+            display: "flex",
+            marginTop: "10px",
+            justifyContent: "center",
+          }}
+        >
+          <button
+            onClick={handleReset}
+            style={{
+              padding: "8px 16px",
+              fontSize: "14px",
+              cursor: "pointer",
+              backgroundColor: "#6c757d",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+            }}
+          >
+            ↺ Replay
           </button>
         </div>
       )}

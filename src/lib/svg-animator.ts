@@ -77,6 +77,40 @@ export class SVGAnimator {
   }
 
   /**
+   * Set text content immediately without adding to timeline
+   */
+  setText(selector: string, text: string): this {
+    const elements = this.select(selector);
+    if (elements.length === 0) {
+      console.warn(`No elements found for selector: ${selector}`);
+      return this;
+    }
+
+    elements.forEach((element) => {
+      if (element instanceof SVGTextElement) {
+        element.textContent = text;
+      }
+    });
+    return this;
+  }
+
+  /**
+   * Change text with animation: clear, set color, then morph to new text
+   * Common pattern: clear text -> set color -> morph to new text
+   */
+  changeText(
+    selector: string,
+    text: string,
+    fill: string,
+    duration: number = 0.5,
+  ): this {
+    this.morphText(selector, "", { duration: 0 })
+      .show(selector, { fill })
+      .morphText(selector, text, { duration });
+    return this;
+  }
+
+  /**
    * Set properties on elements as part of the timeline animation
    * Uses a very short duration so it works with reverse navigation
    */

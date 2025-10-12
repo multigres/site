@@ -47,7 +47,20 @@ To revoke an existing leadership, a coordinator can:
 
 Performing one of these actions will satisfy rule 2a.
 
-![image.png](attachment:8ca11923-2ae9-4af5-9ca3-d8b90747b8bd:image.png)
+import AnimatedSVG from '@site/src/components/AnimatedSVG';
+import { part06Fig1 } from '@site/src/components/part06Fig1';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+<AnimatedSVG
+  src={useBaseUrl('/img/consensus/part06-fig1.svg')}
+  onAnimate={part06Fig1}
+  autoPlay={true}
+  showRestartButton={true}
+  alt="Figure 1: Revocation methods"
+  width={900}
+  height={300}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+/>
 
 Recruiting the leader, if reachable, gives us the advantage of a clean shutdown. The leader can ensure that in-flight requests are completed. It could inform its callers of an impending change in leadership, among other things.
 
@@ -115,11 +128,22 @@ For the following scenarios, we will assume that N3 has been recruited by C6 for
 
 ### Scenario 1: no race
 
-C6 must now satisfy 2a(i) by recruiting the nodes needed for candidacy. Let us assume that it chose N4 to be the candidate. Then it must recruit N4 and N5, or N4 and N6, or all three. After the recruitment, those nodes will be on term 6. In Figure 2 below, C6 recruits N4 and N5, which is sufficient for candidacy. This action is sufficient even if the other three nodes, N1, N2, and N6, are not reachable.
+C6 must now satisfy 2a(i) by recruiting the nodes needed for candidacy. Let us assume that it chose N4 to be the candidate. Then it must recruit N4 and N5, or N4 and N6, or all three. After the recruitment, those nodes will be on term 6. In the animation below, C6 recruits N4 and N5, which is sufficient for candidacy. This action is sufficient even if the other three nodes, N1, N2, and N6, are not reachable.
 
 If the network partition was what caused C6 to act, then N1 might not have known that N3 was recruited and may still think that it is the leader. But it would not be able to fulfill any requests.
 
-![image.png](attachment:c2865baa-03f5-455d-af61-2305e9bf5b28:image.png)
+import { part06Fig2Scenario1 } from '@site/src/components/part06Fig2Scenario1';
+
+<AnimatedSVG
+  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+  onAnimate={part06Fig2Scenario1}
+  autoPlay={false}
+  showControls={true}
+  alt="Figure 2: Scenario 1 - No race"
+  width={1200}
+  height={400}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+/>
 
 ### Scenario 2: newer term steals the nodes
 
@@ -127,7 +151,18 @@ If a different coordinator decides on a newer term 7 (C7), it must attempt to re
 
 If this happens before C6 reaches these nodes, then C6 will fail to recruit them due to them being on a higher term.
 
-![image.png](attachment:6d6f21e7-438f-4433-afb0-d036fc9e5f4a:image.png)
+import { part06Fig2Scenario2 } from '@site/src/components/part06Fig2Scenario2';
+
+<AnimatedSVG
+  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+  onAnimate={part06Fig2Scenario2}
+  autoPlay={false}
+  showControls={true}
+  alt="Figure 2: Scenario 2 - Newer term steals nodes"
+  width={1200}
+  height={400}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+/>
 
 In the above example, C7 revokes N1’s leadership by recruiting N2, which is different from what C6 recruited. This is acceptable because it is still a successful revocation of N1’s leadership. C7 also revokes the candidacy for N4 by recruiting N5 and N6, which is different from what C6 recruited. This is also sufficient because C6 will fail to make progress. After all, N5, which it recruited, is now in term 7.
 
@@ -141,9 +176,35 @@ C6 could have completed the rest of the actions needed to establish the new lead
 
 The result of scenario 3 would look the same as the result of scenario 2.
 
+import { part06Fig2Scenario3 } from '@site/src/components/part06Fig2Scenario3';
+
+<AnimatedSVG
+  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+  onAnimate={part06Fig2Scenario3}
+  autoPlay={false}
+  showControls={true}
+  alt="Figure 2: Scenario 3 - Newer term starts after scenario 1"
+  width={1200}
+  height={400}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+/>
+
 ### All possible leaders
 
-![image.png](attachment:d51f76bb-24fc-4aae-89a9-be6686ac6123:image.png)
+import { part06Fig3 } from '@site/src/components/part06Fig3';
+
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part06-fig3.svg')}
+    onAnimate={part06Fig3}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 3: All possible leaders"
+    width={2000}
+    height={700}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-450px)'}}
+  />
+</div>
 
 So far, we targeted specific nodes for revocation and candidacy. This was mainly to illustrate the logic. As explained before, a coordinator must actually attempt to revoke all possible leaderships in the cohort.
 
