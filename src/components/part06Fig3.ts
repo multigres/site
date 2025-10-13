@@ -4,12 +4,6 @@
 
 import type { SVGAnimator } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-} as const;
-
 // Common animation durations
 const DURATION = {
   instant: 0,
