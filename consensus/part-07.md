@@ -136,8 +136,8 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   autoPlay={false}
   showControls={true}
   alt="Figure 3: Raft timeline propagation"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
@@ -151,7 +151,7 @@ However, the rule is valid, and Raft follows it. The reason: Raft has an addendu
 
 In other words, from a new term’s perspective, events from all previous terms are considered non-durable. They only become durable when a new event using the current term is appended to the logs. This requires the entire timeline to become durable under the new term before it can be applied.
 
-On Step 4, a new request with term 7 is created and replicated. This is what makes the timeline meet the term number matching requirement for durability. Once the necessary followers have also received the amended timeline, it can be safely applied. This behavior meets the requirements of rule 2b(ii).
+On Step 3, a new request with term 7 is created and replicated. This is what makes the timeline meet the term number matching requirement for durability. Once the necessary followers have also received the amended timeline, it can be safely applied. This behavior meets the requirements of rule 2b(ii).
 
 We intentionally left a gap to accommodate a complication that term 6 might have brought in, which term 7 is not unaware of. We will cover this in a later section.
 
@@ -206,8 +206,8 @@ We will analyze these scenarios assuming that we are using the Raft method of pr
   autoPlay={false}
   showControls={false}
   alt="Figure 4: Initial state"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
@@ -235,8 +235,8 @@ import { part07Fig3Scenario2 } from '@site/src/components/part07Fig3Scenario2';
   autoPlay={false}
   showControls={true}
   alt="Figure 5: Scenario 2"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
@@ -244,19 +244,11 @@ C6 recruits N3, N4 and N5:
 - N3 & N4 for revocation
 - N4 & N5 for candidacy of N4
 
-C7 recruited N1, N4 and N6:
-- N1 & N4 for revocation
-- N4 & N6 for candidacy of N4
-
-Note that N4 is common between the two coordinators. But C7 would have superseded C6 in the recruitment.
-
-If C6 failed after completing step 6.3, this would be scenario 2. For it to complete its work, it still needed to replicate the requests to N4.
+C6 crashes after propagating N3 to N5.
 
 ### Scenario 3
 
 *A coordinator may attempt a timeline that is different from the previous one, try to propagate it, and fail.*
-
-Looking at Figure 5 again, C7 did not discover any of C6’s activity. Based on what it discovered, it decided to propagate N1 to N6. If C7 failed after completing step 7.4, this would be scenario 3.
 
 import { part07Fig3Scenario3 } from '@site/src/components/part07Fig3Scenario3';
 
@@ -266,25 +258,22 @@ import { part07Fig3Scenario3 } from '@site/src/components/part07Fig3Scenario3';
   autoPlay={false}
   showControls={true}
   alt="Figure 6: Scenario 3"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
+C7 recruits N1, N4 and N6:
+- N1 & N4 for revocation
+- N4 & N6 for candidacy of N4
+
+In this scenario, C7 did not discover any of C6’s activity. Based on what it discovered, it decides to propagate N1 to N6.
+
+C7 crashes at this point.
 
 ### Scenario 4
 
-*A coordinator may succeed at propagating a timeline, may apply it to the leader, but fail before applying it to the followers.*
-
-Let us now assume that Coordinator 8 (C8) attempts another leadership role. Let us also assume that it recruits the same nodes that C6 recruited. It will discover the following terms in the timeline:
-
-- N3: 556
-- N5: 556
-- N4: 55
-
-From this, C8 infers that C6 tried to propagate timeline AB (55), which makes it a legitimate decision. It propagates `6:ok` to N4. Following this, it appends `8:ok` to N5, and propagates it to N3 and N4.
-
-This action makes the timeline durable. C8 can delegate leadership to N4, which can then apply this timeline and request that N5 and N3 apply it as well.
+*A coordinator may succeed at propagating a timeline, but fail before promoting the leader.*
 
 import { part07Fig3Scenario4 } from '@site/src/components/part07Fig3Scenario4';
 
@@ -294,23 +283,26 @@ import { part07Fig3Scenario4 } from '@site/src/components/part07Fig3Scenario4';
   autoPlay={false}
   showControls={true}
   alt="Figure 7: Scenario 4"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
+Let us now assume that Coordinator 8 (C8) attempts another leadership change. Let us also assume that it recruits the same nodes that C6 recruited. It will discover the following terms in the timeline:
+
+- N3: 556
+- N5: 556
+- N4: 55
+
+From this, C8 infers that C6 tried to propagate timeline AB (55), which makes it a legitimate decision. It propagates `6:ok` to N4. Following this, it appends `8:ok` to N5, and propagates it to N3 and N4.
+
+This action makes the timeline durable. C8 can delegate leadership to N4, which can then apply this timeline and request that N5 and N3 apply it as well.
+
+But let us assume that C8 crashes at this point.
 
 ### Scenario 5
 
 *A final coordinator may see all these attempts and must make a decision that does not compromise safety.*
-
-After scenario 4, the cluster’s state is as shown in Scenario 5, which shows three distinct timelines.
-
-In this particular scenario, the coordinator C9 sees all the nodes. It can see that N6 has a more progressed timeline. However, its term is lower than the highest term so far, which is 8.
-
-It could make a "smart" inference and choose N6's timeline. However, the most safe decision would be to choose the timeline with the highest term. This is because choosing the highest term can never be wrong.
-
-The animation below shows the outcome of C9 choosing the timeline of N4 that is on term 8. You will also notice that the propagation overwrites any conflicting timelines by truncating the logs of the targets as needed.
 
 import { part07Fig3Scenario5 } from '@site/src/components/part07Fig3Scenario5';
 
@@ -320,15 +312,23 @@ import { part07Fig3Scenario5 } from '@site/src/components/part07Fig3Scenario5';
   autoPlay={false}
   showControls={true}
   alt="Figure 8: Scenario 5"
-  width={800}
-  height={400}
+  width={1000}
+  height={500}
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
+
+After scenario 4, the cluster’s state is as shown in the animation above, which shows three distinct timelines.
+
+In this particular scenario, the coordinator C9 sees all the nodes. It can see that N6 has a more progressed timeline. However, its term is lower than the highest term so far, which is 8.
+
+It could make a "smart" inference and choose N6's timeline. However, the most safe decision would be to choose the timeline with the highest term. This is because choosing the highest term can never be wrong.
+
+The animation shows the outcome of C9 choosing the timeline of N4 that is on term 8. You will also notice that the propagation overwrites any conflicting timelines by truncating the logs of the targets as needed.
 
 
 Let us repeat the reasoning from above using this specific example:
 
-- When C6 made its decision, that decision was based on its visibility. This means that C6 had a chance to reach quorum and get applied.
+- When C6 made its decision, that decision was based on its visibility. Even though it did not discover the most progressed timeline, its decision was valid because it satisfied the requirements of revocation and candidacy, which transitively satisfies the durability requirements.
 - C7 also made a decision, but it did not discover the actions of C6. That means that C6 failed at reaching quorum. C7 had the authority to choose the most progressed timeline among the nodes it recruited, which it propagated to N6.
 - C8 discovered artifacts of C6, but not of C7. That only means that C7 also failed at reaching quorum. However, C8 does not know that there was even a C7. From its point of view, it sees the work by C6. For safety, it has to assume that C6 might have reached quorum. So, it must honor every action taken by term 6. This time, C8 succeeds at reaching quorum.
 - We finally come to C9, which may discover any combination of the above nodes. However, every combination is guaranteed to include the work done by C8.

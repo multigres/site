@@ -102,6 +102,10 @@ export const part07Fig3Scenario2 = (animator: SVGAnimator) => {
     "#n5n3text",
     "#n5n4",
     "#n5n4text",
+    // Quorums
+    "#quorum1",
+    "#quorum2",
+    "#quorum3",
     // Descriptions
     "#desc1",
     "#desc2",
@@ -115,6 +119,7 @@ export const part07Fig3Scenario2 = (animator: SVGAnimator) => {
     .show("#n3", { fill: COLORS.active })
     .show("#n4", { fill: COLORS.active })
     .show("#n5", { fill: COLORS.active })
+    .show("#quorum1", { autoAlpha: 1 })
     .morphText("#desc1", "* C6 recruits N3, N4 and N5")
     .show("#desc1", { autoAlpha: 1, fill: COLORS.active });
 

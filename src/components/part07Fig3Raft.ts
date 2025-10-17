@@ -101,6 +101,10 @@ export const part07Fig3Raft = (animator: SVGAnimator) => {
     "#n5n3text",
     "#n5n4",
     "#n5n4text",
+    // Quorums
+    "#quorum1",
+    "#quorum2",
+    "#quorum3",
     // Descriptions
     "#desc1",
     "#desc2",

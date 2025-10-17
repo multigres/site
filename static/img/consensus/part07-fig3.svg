@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680" filter="invert(93%) hue-rotate(180deg)">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-100 -50 1400 850" width="1400" height="850" filter="invert(93%) hue-rotate(180deg)">
 <!--svg-source:excalidraw-->
   <metadata/>
   <defs>
@@ -561,4 +561,22 @@
     <text id="desc4" x="0" y="92.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Text4</text>
     <text id="desc5" x="0" y="117.62" font-family="Excalifont, Xiaolai, sans-serif, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;" direction="ltr" dominant-baseline="alphabetic">Text5</text>
   </g>
+  <g stroke-linecap="round">
+    <g transform="translate(126.66793789488838 384.3452854835127) rotate(0 390 80)">
+      <path id="quorum1" d="M-109.33 -35.27 C-122.5 -18.52, -252.21 -1.8, -188.97 65.08 C-125.72 131.97, 166.83 332.89, 270.15 366.05 C373.47 399.2, 404.37 327.62, 430.96 264.01 C457.56 200.4, 376.66 37.41, 429.7 -15.6 C482.74 -68.61, 709.03 -10.67, 749.2 -54.05 C789.37 -97.43, 773.85 -275.58, 670.71 -275.88 C567.58 -276.18, 260.47 -96.05, 130.4 -55.83 C0.34 -15.62, -69.64 -38.01, -109.68 -34.6" stroke="#2f9e44" stroke-width="4.5" fill="none" stroke-dasharray="8 12"/>
+    </g>
+  </g>
+  <mask/>
+  <g stroke-linecap="round">
+    <g transform="translate(146.66793789488838 184.34528548351273) rotate(0 380 200)">
+      <path id="quorum2" d="M-110.03 -35.56 C-123.45 -22.09, -179.77 -17.67, -189.86 45.95 C-199.95 109.57, -323.81 293.13, -170.55 346.17 C-17.29 399.2, 582.94 387.63, 729.7 364.17 C876.45 340.7, 849.9 271.71, 709.99 205.36 C570.08 139, 26.94 6.21, -109.75 -33.96" stroke="#1971c2" stroke-width="4.5" fill="none" stroke-dasharray="8 12"/>
+    </g>
+  </g>
+  <mask/>
+  <g stroke-linecap="round">
+    <g transform="translate(406.6679378948884 24.345285483512725) rotate(0 130 370)">
+      <path id="quorum3" d="M-110.81 -34.24 C-160.86 -0.68, -356.22 79.48, -409.49 166.08 C-462.76 252.69, -483.49 398.87, -430.42 485.4 C-377.35 571.92, -181.23 648.6, -91.07 685.24 C-0.92 721.88, 17.01 742.09, 110.49 705.24 C203.98 668.39, 413.34 554.07, 469.82 464.15 C526.3 374.23, 505.96 248.86, 449.38 165.74 C402.8 82.62, 223.71 -1.25, 130.32 -34.6 C36.93 -67.95, -70.99 -34.31, -110.97 -34.36" stroke="#6741d9" stroke-width="4.5" fill="none" stroke-dasharray="8 12"/>
+    </g>
+  </g>
+  <mask/>
 </svg>
