@@ -97,6 +97,12 @@ export const part08Fig3a = (animator: SVGAnimator) => {
     .show("#n3t2", { autoAlpha: 1, fill: COLORS.orange })
     .morphText("#n3v2", "rs2", { duration: DURATION.instant })
     .show("#n3v2", { autoAlpha: 1, fill: COLORS.orange })
+    .morphText("#n1term", "6", { duration: DURATION.instant })
+    .show("#n1term", { fill: COLORS.orange })
+    .morphText("#n2term", "6", { duration: DURATION.instant })
+    .show("#n2term", { fill: COLORS.orange })
+    .morphText("#n3term", "6", { duration: DURATION.instant })
+    .show("#n3term", { fill: COLORS.orange })
     .morphText("#desc2", "* C6 appends 6-rs2 to N1, N2, N3", {
       duration: DURATION.instant,
     })

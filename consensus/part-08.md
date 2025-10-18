@@ -76,7 +76,11 @@ Let's consider a scenario where a different coordinator (C7) assumes the system 
 
 There are two possibilities here:
 
-- C7 recruits N2 and discovers a more progressed timeline. It must therefore propagate it instead of N3’s timeline. In this case, it can use rs2 because the ruleset change has already been applied. At this point, it will realize that the minimum conditions are already met, and it could delegate leadership of the 7th term back to N1. N1 will eventually propagate the changes to N3. This scenario is shown in Figure 3.
+#### Scenario 1
+
+After the new ruleset rs2 became durable, N1 gets promoted and completes additional requests. But it just uses N2 for its acks, which is sufficient to satisfy rs2.
+
+C7 assumes rs1 is currently active. It recruits N2, which it thinks is sufficient to revoke N1’s leadership. However, it notices the ruleset change in the unapplied logs. Therefore, it must continue its revocation and also recruit N2. Recruitment of N2 leads to the discovery of a more progressed timeline. It must therefore propagate N2's timeline instead of N3’s timeline. In this case, it can use rs2 because the ruleset change has already been applied. At this point, it will realize that the minimum conditions are already met, and it could delegate leadership of the 7th term back to N1. N1 will eventually propagate the changes to N3. This scenario is shown in the animation below:
 
 import { part08Fig3b } from '@site/src/components/part08Fig3b';
 
@@ -91,9 +95,24 @@ import { part08Fig3b } from '@site/src/components/part08Fig3b';
   style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
 />
 
-- C7 recruits N2 and discovers that the timelines have not progressed. It appends a completion event for the 7th term. However, the log now contains a mix of events from both rulesets. Therefore, it must use the combined ruleset and must propagate the new term to N1, N2, and N3. This scenario is shown in Figure 4.
+#### Scenario 2
 
-    ![image.png](attachment:028cb910-c5b6-4cf3-b518-f90c685ac2f3:image.png)
+In this scenario, let us assume that no further progress was made after rs2 became durable.
+
+The story starts off the same as scenario 1: C7 recruits N3, discovers the ruleset change, which makes it recruit N2. This time, it discovers the same timeline as N3. This allows it to append a completion event for the 7th term. However, the log now contains a mix of events from both rulesets. Therefore, its propagation must satisfy both rulesets: the requests must reach N1, N2 and N3. This scenario is shown in the animation below:
+
+import { part08Fig3c } from '@site/src/components/part08Fig3c';
+
+<AnimatedSVG
+  src={useBaseUrl('/img/consensus/part08-fig3.svg')}
+  onAnimate={part08Fig3c}
+  autoPlay={false}
+  showControls={true}
+  alt="Figure 3c: Ruleset change scenario 3"
+  width={800}
+  height={400}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+/>
 
 
 In reality, the coordinator would try to recruit all nodes. We presented it as a two-step process to demonstrate safety. If it could only recruit N3 and not N2, it would mean N2 was unreachable, which would cause the attempt to fail.
