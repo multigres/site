@@ -16,6 +16,8 @@ const sidebars: SidebarsConfig = {
         "part-07",
         "part-08",
         "part-09",
+        "part-10",
+        "part-11",
       ],
     },
   ],
