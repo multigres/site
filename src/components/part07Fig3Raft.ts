@@ -2,31 +2,10 @@
  * Animation configuration for Part 7 Figure 3 - Raft timeline propagation
  */
 
-import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-  blue: "#1971c2",
-  orange: "#f08c00",
-  purple: "#6741d9",
-  red: "#ff0000",
-} as const;
-
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-  fast: 0.5,
-  slow: 2,
-} as const;
-
-// Helper function to hide multiple elements
-const hideElements = (animator: SVGAnimator, elements: string[]) => {
-  elements.forEach((el) => animator.set(el, { autoAlpha: 0 }));
-  return animator;
-};
+const COLORS = SVGAnimator.COLORS;
+const DURATION = SVGAnimator.DURATION;
 
 /**
  * Animation sequence for part07-fig3.svg - Raft timeline propagation
@@ -43,7 +22,7 @@ const hideElements = (animator: SVGAnimator, elements: string[]) => {
  */
 export const part07Fig3Raft = (animator: SVGAnimator) => {
   // Initial state: Hide all elements except N1 slots 3 and 4
-  hideElements(animator, [
+  animator.hideElements([
     // N1 elements (slots 3 and 4 are visible initially, only hide slot 5)
     "#n1t5",
     "#n1v5",

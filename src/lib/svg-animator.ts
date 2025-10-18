@@ -26,6 +26,40 @@ export interface AnimationOptions {
 }
 
 export class SVGAnimator {
+  /**
+   * Color palette for animations
+   * - active: Green - active/success state
+   * - inactive: Dark gray - inactive state
+   * - blue: Blue - coordinator/term color
+   * - orange: Orange - coordinator/term color
+   * - purple: Purple - coordinator/term color
+   * - red: Red - error/crash state
+   */
+  static readonly COLORS = {
+    active: "#2f9e44",
+    inactive: "#1e1e1e",
+    blue: "#1971c2",
+    orange: "#f08c00",
+    purple: "#6741d9",
+    red: "#ff0000",
+  } as const;
+
+  /**
+   * Animation duration presets in seconds
+   * - instant: No animation
+   * - fast: Quick transitions
+   * - normal: Standard animation speed
+   * - pause: Short pause between steps
+   * - slow: Slow, emphasized animations
+   */
+  static readonly DURATION = {
+    instant: 0,
+    fast: 0.5,
+    normal: 1,
+    pause: 0.5,
+    slow: 2,
+  } as const;
+
   private svg: SVGElement | null;
   private timeline: gsap.core.Timeline;
   private steps: string[] = [];
@@ -73,6 +107,18 @@ export class SVGAnimator {
 
     // Use immediate gsap.set for initial setup (before timeline plays)
     gsap.set(elements, properties);
+    return this;
+  }
+
+  /**
+   * Hide multiple SVG elements by setting autoAlpha to 0
+   * Common pattern for setting up initial state of animations
+   *
+   * @param selectors - Array of CSS selectors for elements to hide
+   * @returns The animator instance for chaining
+   */
+  hideElements(selectors: string[]): this {
+    selectors.forEach((selector) => this.set(selector, { autoAlpha: 0 }));
     return this;
   }
 

@@ -2,35 +2,17 @@
  * Animation configuration for Part 6 Figure 2 - Scenario 2: newer term steals nodes
  */
 
-import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-  blue: "#1971c2",
-  red: "#e03131",
-} as const;
-
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-  fast: 0.5,
-} as const;
-
-// Helper function to hide multiple elements
-const hideElements = (animator: SVGAnimator, elements: string[]) => {
-  elements.forEach((el) => animator.set(el, { autoAlpha: 0 }));
-  return animator;
-};
+const COLORS = SVGAnimator.COLORS;
+const DURATION = SVGAnimator.DURATION;
 
 /**
  * Animation sequence for part06-fig2.svg - Scenario 2
  */
 export const part06Fig2Scenario2 = (animator: SVGAnimator) => {
   // Initial state: Hide all arrows and their text
-  hideElements(animator, [
+  animator.hideElements([
     "#c6n3",
     "#c6n3text",
     "#c6n4",

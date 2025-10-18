@@ -2,33 +2,17 @@
  * Animation configuration for Part 6 Figure 1 - Revocation methods
  */
 
-import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-} as const;
-
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-  pause: 0.5,
-} as const;
-
-// Helper function to hide multiple elements
-const hideElements = (animator: SVGAnimator, elements: string[]) => {
-  elements.forEach((el) => animator.set(el, { autoAlpha: 0 }));
-  return animator;
-};
+const COLORS = SVGAnimator.COLORS;
+const DURATION = SVGAnimator.DURATION;
 
 /**
  * Animation sequence for part06-fig1.svg
  */
 export const part06Fig1 = (animator: SVGAnimator) => {
   // Initial state: Hide specified elements
-  hideElements(animator, [
+  animator.hideElements([
     "#n1text1",
     "#n1text2",
     "#n1n3",

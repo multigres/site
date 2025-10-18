@@ -2,15 +2,9 @@
  * Animation configuration for Part 6 Figure 3 - All possible leaders (NEW VERSION)
  */
 
-import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator } from "../lib/svg-animator";
 
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-  fast: 0.5,
-  slow: 2,
-} as const;
+const DURATION = SVGAnimator.DURATION;
 
 // Relative offsets for moving elements between sections
 // Revocation (top-left) -> Target (right): move right and down
@@ -28,12 +22,6 @@ const CANDIDACY_TO_TARGET_OFFSET = {
   x: 775, // Same horizontal movement as Revocation->Target
   y: -420, // Move up (negative) to reach Target section
 } as const;
-
-// Helper function to hide multiple elements
-const hideElements = (animator: SVGAnimator, elements: string[]) => {
-  elements.forEach((el) => animator.set(el, { autoAlpha: 0 }));
-  return animator;
-};
 
 // Helper function to calculate target position from source + offset
 const addOffset = (
@@ -74,7 +62,7 @@ const getElementPosition = (selector: string): { x: number; y: number } => {
  */
 export const part06Fig3 = (animator: SVGAnimator) => {
   // Initial state: Hide elements
-  hideElements(animator, ["#blue", "#purple", "#green"]);
+  animator.hideElements(["#blue", "#purple", "#green"]);
 
   // Step 1: Move elements from Revocation and Candidacy to Target section
 

@@ -2,31 +2,10 @@
  * Animation configuration for Part 7 Figure 3 - Scenario 4
  */
 
-import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-  blue: "#1971c2",
-  orange: "#f08c00",
-  purple: "#6741d9",
-  red: "#ff0000",
-} as const;
-
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-  fast: 0.5,
-  slow: 2,
-} as const;
-
-// Helper function to hide multiple elements
-const hideElements = (animator: SVGAnimator, elements: string[]) => {
-  elements.forEach((el) => animator.set(el, { autoAlpha: 0 }));
-  return animator;
-};
+const COLORS = SVGAnimator.COLORS;
+const DURATION = SVGAnimator.DURATION;
 
 /**
  * Animation sequence for part07-fig3.svg - Scenario 4
@@ -46,7 +25,7 @@ export const part07Fig3Scenario4 = (animator: SVGAnimator) => {
   // Initial state: Ending state of Scenario 3 (after C7 propagates to N6)
   // N1 has slots 3, 4, 5 (C, D, 7-ok), N2 has slot 3, N3 has slot 3 (6-ok),
   // N5 has slots 2 and 3 (5-B and 6-ok), N6 has slots 3, 4, 5 (C, D, 7-ok)
-  hideElements(animator, [
+  animator.hideElements([
     // N1 elements (slots 3, 4, and 5 are visible initially)
     // N2 elements (slot 3 is visible initially)
     "#n2t4",
