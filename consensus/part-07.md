@@ -1,9 +1,9 @@
 ---
 sidebar_position: 7
-title: "Part 7: Discovering and Honoring Requests"
+title: "Part 7: Discovery and Propagation"
 ---
 
-# Part 7: Discovering and Honoring Requests
+# Part 7: Discovery and Propagation
 
 import Author from '@site/src/components/Author';
 
