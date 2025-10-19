@@ -13,7 +13,7 @@ import Author from '@site/src/components/Author';
   imageUrl="https://github.com/sougou.png"
 />
 
-Many people have reviewed this series and provided valuable feedback. My heartfelt thanks goes to the following members of the multigres maintainer team, who went above and beyond to ensure the series is clear and approachable:
+Many people from the community have reviewed this series and provided valuable feedback. It will be hard to name all of them. My heartfelt thanks go to the following members of the multigres maintainer team, who went above and beyond to ensure the series is clear and approachable:
 
 <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem'}}>
   <div style={{display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: 'var(--ifm-background-surface-color)', borderRadius: '8px'}}>

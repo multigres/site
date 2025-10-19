@@ -44,7 +44,7 @@ The ruleset data structure would conceptually look like this:
 - List of eligible primaries, each containing:
     - A list of node groups, where each node group is a valid durability combination
 
-It may be possible to add more flexibility to the rules, but we thinkfeel like this is sufficient for most of today’s requirements.
+It may be possible to add more flexibility to the rules, but we think this is sufficient for most of today’s requirements.
 
 # Governing Rules
 

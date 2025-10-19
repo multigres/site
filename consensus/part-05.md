@@ -111,23 +111,23 @@ Raft offers a better approach: have the coordinators visit a set of overlapping 
 
 # The term number
 
-The assignment of an order between two independent nodes deciding to act is what Paxos calls a proposal number, and Raft calls a term number. This number must be universally unique, and is expected to increase monotonically. For clarity, we will use the RAFT terminology and refer to it as the term number.
+The assignment of an order between two independent nodes deciding to act is what Paxos calls a proposal number, and Raft calls a term number. This number must be universally unique, and is expected to increase monotonically. For clarity, we will use the RAFT terminology and refer to it as the term number. The rules around term numbers apply to all agents. This includes coordinators as well as leaders.
 
-To handle coordinators acting out of sequence, we’ll specify that a newer coordinator always supersedes an older one. This is a prerequisite for Rule 2a(i). To achieve this, we will make coordinators `recruit` nodes into their term:
+To handle agents acting out of sequence, we’ll specify that a newer agent always supersedes an older one. This is a prerequisite for Rule 2a(i). To achieve this, we will make agents `recruit` nodes into their term:
 
-- An existing coordinator is expected to give instructions to a node using its current term number as authority.
-- A newer coordinator can use its term number as authority and instruct those nodes to stop accepting further requests from the existing coordinator.
+- An existing agent is expected to give instructions to a node using its current term number as authority.
+- A newer agent can use its term number as authority and instruct those nodes to stop accepting further requests from the existing agent.
 
 ![Figure 2: Term number rules](/img/consensus/part05-fig2.svg)
 
 For this to work correctly, the nodes should obey the following rules, also shown in Figure 2:
 
 - Every node in the cohort must have a persistent term number.
-- A node must honor requests from a coordinator with a matching term number.
-- A node must reject requests from a coordinator with a lower term number.
+- A node must honor requests from an agent with a matching term number.
+- A node must reject requests from an agent with a lower term number.
 - A node can be recruited into a term whose number is higher than the current one.
 
-In Figure 2, the last example shows a coordinator implicitly recruiting a node that is from a lower term. This is allowed because it is equivalent to a recruitment followed by a request.
+In Figure 2, the last example shows an agent implicitly recruiting a node that is from a lower term. This is allowed because it is equivalent to a recruitment followed by a request.
 
 *The term number must be persisted to survive restarts. Otherwise, a restarted node that does not remember the term number it last agreed to may accept requests from a coordinator with a lower term and break rule 2a.*
 
