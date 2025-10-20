@@ -218,7 +218,7 @@ Raft requires that you can commit only when the log's term number matches the cu
 
 Propagation succeeds when the quorum rules for the candidate are met.
 
-### Establisment
+### Establishment
 
 The coordinator moves the applied index to the end of the log and delegates its term number to the candidate. At this point, the candidate becomes the new leader.
 

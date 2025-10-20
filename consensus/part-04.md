@@ -76,7 +76,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   alt="Multigres consensus and replication diagram"
 />
 
-When a leader receives a request, it appends it to the log and also sends it out to all the nodes of the cohort. Every node that receives the event appends the request to its own log and responds with an acknowledgement (ack) stating that the event has been received. At this point, nothing has been applied.
+When a leader receives a request, it appends it to the log and also sends it out in sequential order to all the nodes of the cohort. Every node that receives the event appends the request to its own log and responds with an acknowledgement (ack) stating that the event has been received. At this point, nothing has been applied.
 
 The leader may receive other requests while waiting for an ack. If so, it can continue to append them to the log and transmit them to the followers.
 

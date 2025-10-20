@@ -15,9 +15,9 @@ import Author from '@site/src/components/Author';
 
 As we solve the problem of durability, we will realize that there is a simple set of governing rules that we will be applying repetitively. We will develop these as we progress in our design. However, we will share their entirety upfront.
 
-If you followed these rules, you should actually be able to implement any kind of consensus system. They are as follows:
+If you followed these rules, you should actually be able to implement any kind of consensus system. Here are some definitions and rules:
 
-Some definitions first:
+### Definitions
 
 - A consensus system executes a series of consistent distributed decisions made by multiple agents.
 - A `decision` is an intent to make a change to the state of the system.

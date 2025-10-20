@@ -107,7 +107,7 @@ We need an algorithm that can withstand this unpredictability. The best approach
 
 Assigning an approximate timestamp when a coordinator decides to act can satisfy these requirements as long as we can ensure that the timestamps don’t collide. Additionally, we need to consider rogue clocks.
 
-Raft offers a better approach: have the coordinators visit a set of overlapping nodes and use that information to determine a sequence. The benefit of this method is that it is precise due to the usage of encounter ordering. The clever part of this approach is that it does this before taking any action, meeting the above constraints. We will explain this later.
+Raft offers a better approach: have the coordinators visit a set of overlapping nodes and use that information to determine a sequence. The benefit of this method is that it is precise due to the usage of encounter ordering. The clever part of this approach is that it does this before taking any action, meeting the above constraints. We will explain this in part 10.
 
 # The term number
 
