@@ -1,125 +1,144 @@
-import { themes as prismThemes } from 'prism-react-renderer'
-import type { Config } from '@docusaurus/types'
-import type * as Preset from '@docusaurus/preset-classic'
-import * as dotenv from 'dotenv'
+import { themes as prismThemes } from "prism-react-renderer";
+import type { Config } from "@docusaurus/types";
+import type * as Preset from "@docusaurus/preset-classic";
+import * as dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 const config: Config = {
-  title: 'Multigres',
-  tagline: 'Multigres: Vitess for Postgres',
-  favicon: 'img/favicon.ico',
+  title: "Multigres",
+  tagline: "Multigres: Vitess for Postgres",
+  favicon: "favicon.ico",
 
   customFields: {
     POSTHOG_API_KEY:
-      process.env.NODE_ENV === 'development'
+      process.env.NODE_ENV === "development"
         ? process.env.NEXT_PUBLIC_POSTHOG_STAGING_KEY
-        : process.env.NEXT_PUBLIC_POSTHOG_KEY || '',
+        : process.env.NEXT_PUBLIC_POSTHOG_KEY || "",
     POSTHOG_API_HOST:
-      process.env.NODE_ENV === 'development'
+      process.env.NODE_ENV === "development"
         ? process.env.NEXT_PUBLIC_POSTHOG_STAGING_HOST
-        : process.env.NEXT_PUBLIC_POSTHOG_HOST || '',
+        : process.env.NEXT_PUBLIC_POSTHOG_HOST || "",
   },
 
   // Set the production url of your site here
-  url: 'https://multigres.com',
+  url: "https://multigres.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'multigres', // Usually your GitHub org/user name.
-  projectName: 'multigres.com', // Usually your repo name.
-  deploymentBranch: 'gh-pages',
+  organizationName: "multigres", // Usually your GitHub org/user name.
+  projectName: "multigres.com", // Usually your repo name.
+  deploymentBranch: "gh-pages",
   trailingSlash: false,
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       {
         docs: {
-          sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/multigres/multigres/tree/main/site/',
+          sidebarPath: "./sidebars.ts",
+          editUrl: "https://github.com/multigres/multigres/tree/main/site/",
           sidebarCollapsed: false,
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/multigres/multigres/tree/main/site/',
+          editUrl: "https://github.com/multigres/multigres/tree/main/site/",
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: "./src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
   ],
 
+  plugins: [
+    [
+      require.resolve("@docusaurus/plugin-content-docs"),
+      {
+        id: "consensus",
+        path: "consensus",
+        routeBasePath: "consensus",
+        sidebarPath: require.resolve("./sidebarsConsensus.ts"),
+        editUrl: "https://github.com/multigres/multigres/tree/main/site/",
+        sidebarCollapsed: false,
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/og-image.png',
-    defaultMode: 'dark',
+    image: "img/og-image.png",
+    defaultMode: "dark",
     colorMode: {
-      defaultMode: 'dark',
+      defaultMode: "dark",
       disableSwitch: true,
       respectPrefersColorScheme: false,
     },
     navbar: {
       // title: "Multigres",
       logo: {
-        alt: 'Multigres',
-        src: 'img/logo-horizontal.png',
+        alt: "Multigres",
+        src: "img/logo-horizontal.png",
       },
       items: [
-        { to: '/docs', label: 'Docs', position: 'right' },
-        { to: '/blog', label: 'Blog', position: 'right' },
+        { to: "/docs", label: "Docs", position: "right" },
+        { to: "/blog", label: "Blog", position: "right" },
+        { to: "/consensus", label: "Consensus Series", position: "right" },
         {
-          href: 'https://github.com/multigres/multigres',
-          label: 'GitHub',
-          position: 'right',
+          href: "https://github.com/multigres/multigres",
+          label: "GitHub",
+          position: "right",
         },
       ],
     },
     stylesheets: [
       {
-        rel: 'preconnect',
-        href: 'https://fonts.googleapis.com',
+        rel: "preconnect",
+        href: "https://fonts.googleapis.com",
       },
       {
-        rel: 'preconnect',
-        href: 'https://fonts.gstatic.com',
-        crossorigin: 'anonymous',
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
       },
       {
-        href: 'https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap',
-        type: 'text/css',
-        crossorigin: 'anonymous',
+        href: "https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap",
+        type: "text/css",
+        crossorigin: "anonymous",
       },
     ],
 
     footer: {
-      style: 'dark',
+      style: "dark",
       links: [
         {
-          title: 'Site',
+          title: "Site",
           items: [
             {
-              label: 'Docs',
-              to: '/docs',
+              label: "Docs",
+              to: "/docs",
             },
             {
-              label: 'Blog',
-              to: '/blog',
+              label: "Blog",
+              to: "/blog",
+            },
+            {
+              label: "Consensus Series",
+              to: "/consensus",
             },
             {
               label: 'Privacy Policy',
@@ -128,41 +147,26 @@ const config: Config = {
           ],
         },
         {
-          title: 'Community',
+          title: "Community",
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/multigres/multigres',
+              label: "GitHub",
+              href: "https://github.com/multigres/multigres",
             },
             {
-              label: 'Twitter',
-              href: 'https://twitter.com/multigres',
+              label: "Twitter",
+              href: "https://twitter.com/multigres",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Supabase Inc`,
+      copyright: `Copyright © ${new Date().getFullYear()} Supabase Inc. Licensed under the Apache License, Version 2.0.`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
-    plugins: [
-      [
-        '@docusaurus/plugin-content-docs',
-        {
-          id: 'docs-intro',
-          path: 'docs',
-          routeBasePath: '/docs',
-          configureWebpack: () => ({
-            resolve: {
-              symlinks: true,
-            },
-          }),
-        },
-      ],
-    ],
   } satisfies Preset.ThemeConfig,
-}
+};
 
-export default config
+export default config;
