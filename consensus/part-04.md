@@ -17,7 +17,7 @@ Let’s restate the subset of rules that are relevant to this section:
 
 1. Durability: Every decision is a distributed decision.
     1. A distributed decision must be made durable.
-    2. A decision that has been made durable can be finalized.
+    2. A decision that has been made durable can be applied.
 
 # Definitions
 
@@ -88,7 +88,7 @@ We call this method of replication “Two-Phase Sync”.
 
 - Acks from any nodes other than N2 and N3 do not count towards the durability criteria, and must be ignored by N1.
 - If N4 were the leader, a single ack from either N5 or N6 would be sufficient.
-- Other nodes are still required to apply the logs as they receive the finalizations.
+- Other nodes are still required to apply the logs as they receive the apply messages.
 - While N1 is the leader, acks from N4, N5, and N6 do not count. They could optionally be configured as observers for as long as N1 is the leader. However, as we will see much later, there are some advantages to them continuing to act as followers, and have N1 ignore their acks instead.
 
 ### Followers
@@ -101,7 +101,7 @@ A follower can be in one of these states:
 
 ### Observers
 
-Observers only receive finalized requests.
+Observers only receive finalized apply requests.
 
 # Validation
 
@@ -112,8 +112,8 @@ Let us now validate if the above algorithm follows Rule 1. In this scenario, the
 
 There are other replication modes, but they don’t follow rule 1:
 
-- Async replication: The leader appends and finalizes the request, and asynchronously sends the events to the followers. This breaks rules 1a and 1b. This can lead to data loss if the leader node crashes.
-- Synchronous replication: The leader sends the request to the followers as final. The followers apply the change and send an ack to the leader. The leader applies the change when the ack is received. This follows rule 1a, but breaks rule 1b. This is because the followers apply the change before the request is finalized. This can lead to inconsistent “split-brain” states.
+- Async replication: The leader appends and applies the request, and asynchronously sends the events to the followers. This breaks rules 1a and 1b. This can lead to data loss if the leader node crashes.
+- Synchronous replication: The leader sends the request to the followers as final. The followers apply the change and send an ack to the leader. The leader applies the change when the ack is received. This follows rule 1a, but breaks rule 1b. This is because the followers apply the change before the request has met the durability criteria. This can lead to inconsistent “split-brain” states.
 
 *Postgres can rewind transactions. When a split-brain scenario happens, it is possible to identify the transactions that must be rewound to restore system consistency. Using this approach, it is possible to design a system that meets the necessary durability criteria. Details about this are covered in our earlier [blog post](https://multigres.com/blog/postgres-ha-full-sync#existing-replication-pitfalls).*
 

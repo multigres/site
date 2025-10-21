@@ -182,7 +182,7 @@ The reasoning is as follows:
 - Every previous decision that was made was a safe one for that term. This applies recursively back to the oldest decision.
 - The last discovered decision might have reached durability. It is even possible that some nodes have started applying that decision. This possibility makes all decisions previous to the last one unsafe.
 
-What if we encounter a timeline that is more progressed than a newer decision? This only means that the timeline did not reach durability. Otherwise, the newer decision would have honored it. But now, we have to discard that progressed timeline because there is a chance that the newer decision has been finalized already.
+What if we encounter a timeline that is more progressed than a newer decision? This only means that the timeline did not reach durability. Otherwise, the newer decision would have honored it. But now, we have to discard that progressed timeline because there is a chance that the newer decision has been applied already.
 
 What if there exists a decision that is newer, but we don’t see it among the recruited nodes? If so, the decision did not reach durability, and need not be honored. We can choose the most appropriate timeline among those we discovered, and make sure to propagate it as the newest decision.
 
