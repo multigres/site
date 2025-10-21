@@ -61,9 +61,24 @@ Raft uses a clever method that lets nodes compete by using the same term number.
 
 Those who do not win must wait for a timeout period and then try again using a higher term number. If the cluster is healed by that time, they have no action to take. This approach provides a mitigation for the livelock problem, where nodes can continuously race with each other, preventing anyone from succeeding.
 
+import AnimatedSVG from '@site/src/components/AnimatedSVG';
+import { part06Fig3 } from '@site/src/components/part06Fig3';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-<img src={useBaseUrl('/img/consensus/part10-fig1.svg')} alt="Figure 1: Term number competition" style={{display: 'block', margin: '1rem 0'}} />
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part06-fig3.svg')}
+    onAnimate={part06Fig3}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 1: Term number competition"
+    width={2000}
+    height={700}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-450px)'}}
+  />
+</div>
+
+The animation above is a reproduction of the one from the section on Revocation and Candidacy.
 
 Applying the same approach to our pluggable durability, the coordinators do not need to reach a majority. If you examine the rightmost recruitment options, you will see that each option  shares at least one node with every other option. This is a necessary property of recruitment.
 
