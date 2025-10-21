@@ -10,6 +10,8 @@ In order to achieve High Availability (HA) in Postgres, we need to have at least
 
 High Availability also requires us to solve the problem of distributed durability. After all, we have to make sure that no transactions are lost when we failover to a standby. So, if we can make this work, we can avoid the need for an external system like a mounted cloud drive or other exotic solutions to ensure that we don’t lose data. We could just have all the servers use their local NVME drive for storage. This will serendipitously improve performance due to the drives being an order of magnitude faster than the network, and reduce costs since disk I/O does not incur network cost.
 
+<!--truncate-->
+
 ## Multigres features
 
 We plan to support HA by configuring Postgres in full-sync replication mode, mainly because this is a widely used feature. However, there are some pitfalls to watch out for. We will cover these in the next section.

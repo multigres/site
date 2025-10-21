@@ -8,6 +8,8 @@ date: 2025-10-20
 
 Today, we're releasing a series that presents a fresh perspective on consensus algorithms. Rather than treating consensus as a monolithic black box, we propose a conceptual framework that makes these systems more approachable, adaptable, and flexible.
 
+<!--truncate-->
+
 ## Why Another Take on Consensus?
 
 Consensus algorithms like Paxos and Raft have been foundational to distributed systems for decades. Paxos, while powerful, has been notoriously difficult to understand. Raft improved accessibility but remains a monolithic algorithm that's risky to modify. This has effectively limited our flexibility in adapting consensus systems to modern cloud architectures.
