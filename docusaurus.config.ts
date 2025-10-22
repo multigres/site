@@ -141,8 +141,8 @@ const config: Config = {
               to: "/consensus",
             },
             {
-              label: 'Privacy Policy',
-              to: '/privacy',
+              label: "Privacy Policy",
+              to: "/privacy",
             },
           ],
         },
@@ -156,6 +156,10 @@ const config: Config = {
             {
               label: "Twitter",
               href: "https://twitter.com/multigres",
+            },
+            {
+              label: "RSS Feed",
+              href: "https://multigres.com/blog/rss.xml",
             },
           ],
         },
