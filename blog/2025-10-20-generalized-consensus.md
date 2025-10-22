@@ -93,5 +93,3 @@ The series is designed to be read sequentially, with each part building on previ
 [Start with Part 1: Defining the Problem](/consensus)
 
 We believe this framework opens new possibilities for consensus systems that can adapt to modern cloud architectures while maintaining the safety guarantees we depend on.
-
-_If you have comments or questions, please start a discussion on the [Multigres GitHub](https://github.com/multigres/multigres/discussions) repository._
