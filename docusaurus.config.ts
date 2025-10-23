@@ -94,7 +94,6 @@ const config: Config = {
       items: [
         { to: "/docs", label: "Docs", position: "right" },
         { to: "/blog", label: "Blog", position: "right" },
-        { to: "/consensus", label: "Consensus Series", position: "right" },
         {
           href: "https://github.com/multigres/multigres",
           label: "GitHub",
@@ -132,10 +131,6 @@ const config: Config = {
             {
               label: "Blog",
               to: "/blog",
-            },
-            {
-              label: "Consensus Series",
-              to: "/consensus",
             },
             {
               label: "Privacy Policy",
