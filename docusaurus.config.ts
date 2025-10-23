@@ -51,12 +51,10 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/multigres/multigres/tree/main/site/",
           sidebarCollapsed: false,
         },
         blog: {
           showReadingTime: true,
-          editUrl: "https://github.com/multigres/multigres/tree/main/site/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -73,7 +71,6 @@ const config: Config = {
         path: "consensus",
         routeBasePath: "consensus",
         sidebarPath: require.resolve("./sidebarsConsensus.ts"),
-        editUrl: "https://github.com/multigres/multigres/tree/main/site/",
         sidebarCollapsed: false,
       },
     ],
