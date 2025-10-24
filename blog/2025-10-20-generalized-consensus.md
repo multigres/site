@@ -65,7 +65,7 @@ The series isn't purely theoretical. We demonstrate:
 The series consists of 11 parts:
 
 1. **[Defining the Problem](/blog/generalized-consensus-part1)** - Reframing consensus around distributed durability
-2. **Understanding the Requirements** - Log replication, durability requirements, and pluggable policies
+2. **[Setting the Requirements](/blog/generalized-consensus-part2)** - Log replication, durability requirements, and pluggable policies
 3. **Governing Rules** - The core rules every consensus system must follow
 4. **Fulfilling Requests** - How leaders process and durably commit requests
 5. **Before and After** - Finding a way to order events consistently
