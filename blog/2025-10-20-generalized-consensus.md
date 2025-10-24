@@ -64,8 +64,8 @@ The series isn't purely theoretical. We demonstrate:
 
 The series consists of 11 parts:
 
-1. **Defining the Problem** - Reframing consensus around distributed durability
-2. **Building the Foundation** - Log replication, durability requirements, and pluggable policies
+1. **[Defining the Problem](/blog/generalized-consensus-part1)** - Reframing consensus around distributed durability
+2. **[Setting the Requirements](/blog/generalized-consensus-part2)** - Log replication, durability requirements, and pluggable policies
 3. **Governing Rules** - The core rules every consensus system must follow
 4. **Fulfilling Requests** - How leaders process and durably commit requests
 5. **Before and After** - Finding a way to order events consistently
@@ -90,6 +90,6 @@ By building on this generalized framework, Multigres will support:
 
 The series is designed to be read sequentially, with each part building on previous concepts. Familiarity with Raft or Paxos will be beneficial, though not required.
 
-[Start with Part 1: Defining the Problem](/consensus)
+[Start with: Defining the Problem](/blog/generalized-consensus-part1)
 
 We believe this framework opens new possibilities for consensus systems that can adapt to modern cloud architectures while maintaining the safety guarantees we depend on.
