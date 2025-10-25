@@ -49,6 +49,12 @@ function parseFrontmatter(content: string): Frontmatter | null {
   }
 }
 
+// Extract title from first markdown heading
+function extractHeadingTitle(content: string): string | null {
+  const headingMatch = content.match(/^#+\s+(.+)$/m);
+  return headingMatch ? headingMatch[1].trim() : null;
+}
+
 // Extract summary from markdown (text before <!--truncate--> or first 200 chars)
 function extractSummary(content: string): string {
   const parts = content.split("<!--truncate-->");
@@ -99,9 +105,13 @@ function getBlogPosts(): BlogPost[] {
 
     if (!frontmatter) continue;
 
+    // Use frontmatter title, fall back to first heading, then slug
+    const title =
+      frontmatter.title || extractHeadingTitle(content) || frontmatter.slug;
+
     posts.push({
       slug: frontmatter.slug,
-      title: frontmatter.title || frontmatter.slug,
+      title,
       authors: frontmatter.authors || [],
       date: new Date(frontmatter.date),
       summary: extractSummary(content),
