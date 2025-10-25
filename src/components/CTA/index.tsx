@@ -1,16 +1,16 @@
-import React from 'react'
-import clsx from 'clsx'
-import Link from '@docusaurus/Link'
+import React from "react";
+import clsx from "clsx";
+import Link from "@docusaurus/Link";
 
-import styles from './styles.module.css'
+import styles from "./styles.module.css";
 
 export default function HomepageSections(): React.JSX.Element {
   return (
-    <div className={clsx('hero hero--primary', styles.heroBanner)}>
+    <div className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
         <div className="row">
           <div className="col col--8 padding--lg">
-            <p className={clsx('hero__subtitle', styles.heroSubtitle)}>
+            <p className={clsx("hero__subtitle", styles.heroSubtitle)}>
               Multigres is Vitess for Postgres: a horizontally scalable Postgres
               architecture that supports multi-tenant, highly-available and
               globally distributed deployments, all while staying true to
@@ -30,5 +30,5 @@ export default function HomepageSections(): React.JSX.Element {
         </div>
       </div>
     </div>
-  )
+  );
 }
