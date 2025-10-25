@@ -8,6 +8,5 @@
       "permanent": true
     }
   ],
-  "rewrites": [
-    { "source": "/blog(/.*)?", "destination": "/index.html" }  ]
+  "rewrites": [{ "source": "/blog(/.*)?", "destination": "/index.html" }]
 }
