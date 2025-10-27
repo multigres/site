@@ -2,6 +2,7 @@
 slug: generalized-consensus-part3
 authors: [sugu]
 date: 2025-10-27
+tags: [planetpg, consensus, distributed-systems, durability]
 ---
 
 # Generalized Consensus: Governing Rules

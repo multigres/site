@@ -2,6 +2,7 @@
 slug: generalized-consensus-part1
 authors: [sugu]
 date: 2025-10-23
+tags: [planetpg, consensus, distributed-systems, durability]
 ---
 
 # Generalized Consensus: Defining the Problem
