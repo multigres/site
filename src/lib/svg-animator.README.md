@@ -11,23 +11,23 @@ GSAP is already installed in this project. No additional dependencies needed!
 ### Basic Usage
 
 ```typescript
-import { createSVGAnimator } from '@site/src/lib/svg-animator';
+import { createSVGAnimator } from "@site/src/lib/svg-animator";
 
 // Create animator instance
-const animator = createSVGAnimator('#my-svg');
+const animator = createSVGAnimator("#my-svg");
 
 // Chain animations
 animator
-  .fadeIn('.node', { duration: 1, stagger: 0.2 })
-  .drawPath('.arrow', { duration: 2 })
-  .pulse('.highlight', { duration: 0.5 })
+  .fadeIn(".node", { duration: 1, stagger: 0.2 })
+  .drawPath(".arrow", { duration: 2 })
+  .pulse(".highlight", { duration: 0.5 })
   .play();
 ```
 
 ### Using with React Component
 
 ```tsx
-import AnimatedSVG from '@site/src/components/AnimatedSVG';
+import AnimatedSVG from "@site/src/components/AnimatedSVG";
 
 function MyDiagram() {
   return (
@@ -35,8 +35,8 @@ function MyDiagram() {
       src="/img/my-diagram.svg"
       onAnimate={(animator) => {
         animator
-          .fadeIn('.nodes', { duration: 1, stagger: 0.2 })
-          .drawPath('.connections', { duration: 1.5 })
+          .fadeIn(".nodes", { duration: 1, stagger: 0.2 })
+          .drawPath(".connections", { duration: 1.5 })
           .play();
       }}
       autoPlay={true}
@@ -50,6 +50,7 @@ function MyDiagram() {
 ### SVGAnimator Class
 
 #### Constructor
+
 ```typescript
 new SVGAnimator(svgSelector: string | SVGElement)
 ```
@@ -57,79 +58,85 @@ new SVGAnimator(svgSelector: string | SVGElement)
 #### Methods
 
 ##### `fadeIn(selector: string, options?: AnimationOptions)`
+
 Fade in elements from opacity 0 to 1.
 
 ```typescript
-animator.fadeIn('.node', { 
-  duration: 1, 
-  delay: 0.5, 
-  stagger: 0.2 
+animator.fadeIn(".node", {
+  duration: 1,
+  delay: 0.5,
+  stagger: 0.2,
 });
 ```
 
 ##### `fadeOut(selector: string, options?: AnimationOptions)`
+
 Fade out elements from opacity 1 to 0.
 
 ##### `scale(selector: string, scale: number, options?: AnimationOptions)`
+
 Scale elements with a bounce effect.
 
 ```typescript
-animator.scale('.node', 1.5, { 
+animator.scale(".node", 1.5, {
   duration: 0.8,
-  ease: 'back.out(1.7)' 
+  ease: "back.out(1.7)",
 });
 ```
 
 ##### `drawPath(selector: string, options?: AnimationOptions)`
+
 Animate SVG paths/arrows using stroke-dasharray technique.
 
 ```typescript
-animator.drawPath('.arrow', { 
+animator.drawPath(".arrow", {
   duration: 2,
-  ease: 'power2.inOut' 
+  ease: "power2.inOut",
 });
 ```
 
 ##### `slideIn(selector: string, direction: 'left' | 'right' | 'top' | 'bottom', options?: AnimationOptions)`
+
 Slide elements in from a direction.
 
 ```typescript
-animator.slideIn('.node', 'left', { 
+animator.slideIn(".node", "left", {
   duration: 0.8,
-  stagger: 0.15 
+  stagger: 0.15,
 });
 ```
 
 ##### `pulse(selector: string, options?: AnimationOptions)`
+
 Create a pulsing highlight effect.
 
 ```typescript
-animator.pulse('.active-node', { duration: 0.6 });
+animator.pulse(".active-node", { duration: 0.6 });
 ```
 
 ##### `wait(duration: number)`
+
 Add a pause in the animation timeline.
 
 ```typescript
-animator
-  .fadeIn('.node-1')
-  .wait(0.5)
-  .fadeIn('.node-2');
+animator.fadeIn(".node-1").wait(0.5).fadeIn(".node-2");
 ```
 
 ##### `addLabel(label: string)`
+
 Add a label to the timeline for seeking to specific points.
 
 ```typescript
 animator
-  .addLabel('start')
-  .fadeIn('.nodes')
-  .addLabel('connections')
-  .drawPath('.arrows')
-  .seek('connections'); // Jump to connections label
+  .addLabel("start")
+  .fadeIn(".nodes")
+  .addLabel("connections")
+  .drawPath(".arrows")
+  .seek("connections"); // Jump to connections label
 ```
 
 ##### Playback Controls
+
 - `play()` - Play the animation
 - `pause()` - Pause the animation
 - `restart()` - Restart from beginning
@@ -141,12 +148,12 @@ animator
 
 ```typescript
 interface AnimationOptions {
-  duration?: number;      // Animation duration in seconds (default: 0.5-1)
-  delay?: number;         // Delay before animation starts (default: 0)
-  ease?: string;          // GSAP easing function (default: varies)
-  stagger?: number;       // Time between each element (default: 0)
+  duration?: number; // Animation duration in seconds (default: 0.5-1)
+  delay?: number; // Delay before animation starts (default: 0)
+  ease?: string; // GSAP easing function (default: varies)
+  stagger?: number; // Time between each element (default: 0)
   onComplete?: () => void; // Callback when animation completes
-  onStart?: () => void;    // Callback when animation starts
+  onStart?: () => void; // Callback when animation starts
 }
 ```
 
@@ -167,11 +174,11 @@ interface AnimationOptions {
 
 ```typescript
 animator
-  .fadeIn('.node-1', { duration: 0.5 })
-  .fadeIn('.node-2', { duration: 0.5 })
-  .fadeIn('.node-3', { duration: 0.5 })
-  .drawPath('.arrow-1-2', { duration: 1 })
-  .drawPath('.arrow-2-3', { duration: 1 })
+  .fadeIn(".node-1", { duration: 0.5 })
+  .fadeIn(".node-2", { duration: 0.5 })
+  .fadeIn(".node-3", { duration: 0.5 })
+  .drawPath(".arrow-1-2", { duration: 1 })
+  .drawPath(".arrow-2-3", { duration: 1 })
   .play();
 ```
 
@@ -179,10 +186,10 @@ animator
 
 ```typescript
 animator
-  .fadeIn('.grid-item', { 
-    duration: 0.3, 
+  .fadeIn(".grid-item", {
+    duration: 0.3,
     stagger: 0.05,
-    ease: 'power2.out'
+    ease: "power2.out",
   })
   .play();
 ```
@@ -191,10 +198,10 @@ animator
 
 ```typescript
 animator
-  .fadeIn('.all-nodes', { duration: 0.5, stagger: 0.1 })
+  .fadeIn(".all-nodes", { duration: 0.5, stagger: 0.1 })
   .wait(0.5)
-  .pulse('.data-flow', { duration: 0.8 })
-  .drawPath('.flow-arrow', { duration: 1.5 })
+  .pulse(".data-flow", { duration: 0.8 })
+  .drawPath(".flow-arrow", { duration: 1.5 })
   .play();
 ```
 
@@ -219,10 +226,10 @@ function InteractiveDiagram() {
         onAnimate={(animator) => {
           animatorRef.current = animator;
           animator
-            .addLabel('step1')
-            .fadeIn('.nodes', { duration: 1 })
-            .addLabel('step2')
-            .drawPath('.connections', { duration: 1.5 });
+            .addLabel("step1")
+            .fadeIn(".nodes", { duration: 1 })
+            .addLabel("step2")
+            .drawPath(".connections", { duration: 1.5 });
         }}
         autoPlay={false}
       />
@@ -236,14 +243,12 @@ function InteractiveDiagram() {
 ### Example 5: Using Helper Functions
 
 ```typescript
-import { animations } from '@site/src/lib/svg-animator';
+import { animations } from "@site/src/lib/svg-animator";
 
-animations.sequentialReveal(
-  animator,
-  '.node',
-  '.arrow',
-  { nodeDelay: 0.5, arrowDelay: 1 }
-);
+animations.sequentialReveal(animator, ".node", ".arrow", {
+  nodeDelay: 0.5,
+  arrowDelay: 1,
+});
 ```
 
 ## Adding IDs to SVG Elements
@@ -263,8 +268,9 @@ To make elements easier to target, add unique `id` attributes:
 ```
 
 Then select with:
+
 ```typescript
-animator.fadeIn('#node-1', { duration: 1 });
+animator.fadeIn("#node-1", { duration: 1 });
 ```
 
 ## Tips and Best Practices
@@ -282,7 +288,7 @@ animator.fadeIn('#node-1', { duration: 1 });
 6. **CSS Classes**: Add temporary classes during animations for additional styling:
    ```typescript
    animator.getTimeline().call(() => {
-     element.classList.add('highlighted');
+     element.classList.add("highlighted");
    });
    ```
 
@@ -318,13 +324,13 @@ timeline.yoyo(true); // Reverse on repeat
 ### Custom GSAP Animations
 
 ```typescript
-import gsap from 'gsap';
+import gsap from "gsap";
 
 animator.getTimeline().add(() => {
-  gsap.to('#custom-element', {
+  gsap.to("#custom-element", {
     rotation: 360,
     duration: 2,
-    transformOrigin: 'center'
+    transformOrigin: "center",
   });
 });
 ```
