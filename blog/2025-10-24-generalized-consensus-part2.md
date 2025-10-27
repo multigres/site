@@ -107,5 +107,5 @@ We will focus on leader-based consensus systems. I am aware of the existence of 
 In the next part, we'll establish the governing rules that every consensus system must follow to maintain safety guarantees.
 
 * Previous: [Part 1: Defining the Problem](/blog/generalized-consensus-part1)
-* Next: Part 3: Governing Rules (coming soon)
+* Next: [Part 3: Governing Rules](/blog/generalized-consensus-part3)
 * [Full Series Overview](/blog/generalized-consensus)
