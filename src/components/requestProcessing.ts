@@ -4,18 +4,11 @@
  */
 
 import type { SVGAnimator } from "../lib/svg-animator";
+import { SVGAnimator as SVGAnimatorClass } from "../lib/svg-animator";
 
-// Color constants
-const COLORS = {
-  active: "#2f9e44",
-  inactive: "#1e1e1e",
-} as const;
-
-// Common animation durations
-const DURATION = {
-  instant: 0,
-  normal: 1,
-} as const;
+// Reuse constants from SVGAnimator
+const COLORS = SVGAnimatorClass.COLORS;
+const DURATION = SVGAnimatorClass.DURATION;
 
 // Helper function to hide multiple elements
 const hideElements = (animator: SVGAnimator, elements: string[]) => {
