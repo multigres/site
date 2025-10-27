@@ -100,5 +100,5 @@ With all the groundwork laid out, it’s time to jump into the actual algorithms
 In the next part, we'll look at how to fulfill requests.
 
 * Previous: [Part 2: Setting the Requirements](/blog/generalized-consensus-part2)
-* Next: Part 4: Fulfilling Requests (coming soon)
+* Next: [Part 4: Fulfilling Requests](/blog/generalized-consensus-part4)
 * [Full Series Overview](/blog/generalized-consensus)
