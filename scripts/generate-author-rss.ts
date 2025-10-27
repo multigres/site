@@ -19,6 +19,7 @@ interface Frontmatter {
   title?: string;
   authors?: string[];
   date: string;
+  tags?: string[];
 }
 
 interface Author {
@@ -34,6 +35,7 @@ interface BlogPost {
   authors: string[];
   date: Date;
   summary: string;
+  tags: string[];
 }
 
 // Parse YAML frontmatter from markdown files
@@ -115,6 +117,7 @@ function getBlogPosts(): BlogPost[] {
       authors: frontmatter.authors || [],
       date: new Date(frontmatter.date),
       summary: extractSummary(content),
+      tags: frontmatter.tags || [],
     });
   }
 
@@ -139,8 +142,10 @@ function generateAuthorFeed(
     generator: "generate-author-rss.ts",
   });
 
-  // Filter posts by author
-  const authorPosts = posts.filter((post) => post.authors.includes(author));
+  // Filter posts by author and planetpg tag
+  const authorPosts = posts.filter(
+    (post) => post.authors.includes(author) && post.tags.includes("planetpg"),
+  );
 
   for (const post of authorPosts) {
     feed.addItem({

@@ -2,6 +2,7 @@
 slug: generalized-consensus-part2
 authors: [sugu]
 date: 2025-10-24
+tags: [planetpg, consensus, distributed-systems, durability]
 ---
 
 # Generalized Consensus: Setting the Requirements

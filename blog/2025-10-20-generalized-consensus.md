@@ -2,6 +2,7 @@
 slug: generalized-consensus
 authors: [sugu]
 date: 2025-10-20
+tags: [planetpg, consensus, distributed-systems, durability]
 ---
 
 # Introducing Generalized Consensus: An Alternate Approach to Distributed Durability
