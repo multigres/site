@@ -1,6 +1,6 @@
 ---
 slug: generalized-consensus-part4
-authors: [sugu]
+authors: [sougou]
 date: 2025-10-28
 tags: [planetpg, consensus, distributed-systems, durability]
 ---

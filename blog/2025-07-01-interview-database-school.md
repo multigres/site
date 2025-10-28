@@ -1,7 +1,7 @@
 ---
 slug: database-school
 title: 'Interview: Multigres on Database School'
-authors: [sugu]
+authors: [sougou]
 date: 2025-07-01
 tags: [postgres, multigres, interview, database]
 ---
