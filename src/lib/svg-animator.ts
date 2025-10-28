@@ -37,11 +37,11 @@ export class SVGAnimator {
    */
   static readonly COLORS = {
     active: "#2f9e44",
-    inactive: "#1e1e1e",
-    blue: "#1971c2",
-    orange: "#f08c00",
-    purple: "#6741d9",
-    red: "#ff0000",
+    inactive: "#ddd",
+    blue: "#70bafb",
+    orange: "#af5900",
+    purple: "#e99cfe",
+    red: "#f97f81",
   } as const;
 
   /**
