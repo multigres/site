@@ -1,7 +1,7 @@
 ---
 slug: postgres-fm-interview
 title: 'Interview: Multigres on Postgres.FM'
-authors: [sugu]
+authors: [sougou]
 date: 2025-07-11
 tags: [postgres, multigres, interview, sharding]
 ---
