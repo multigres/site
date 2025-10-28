@@ -152,6 +152,7 @@ function generateAuthorFeed(
       title: post.title,
       id: `${SITE_URL}/blog/${post.slug}`,
       link: `${SITE_URL}/blog/${post.slug}`,
+      description: post.summary,
       date: post.date,
       author: [
         {
@@ -194,10 +195,14 @@ function main(): void {
     const filePath = path.join(BUILD_DIR, filename);
 
     let rssContent = feed.rss2();
-    // Remove CDATA tags from title elements
+    // Remove CDATA tags from title and description elements
     rssContent = rssContent.replace(
       /<title><!\[CDATA\[(.*?)\]\]><\/title>/g,
       "<title>$1</title>",
+    );
+    rssContent = rssContent.replace(
+      /<description><!\[CDATA\[(.*?)\]\]><\/description>/gs,
+      "<description>$1</description>",
     );
 
     fs.writeFileSync(filePath, rssContent);
