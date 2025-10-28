@@ -152,7 +152,6 @@ function generateAuthorFeed(
       title: post.title,
       id: `${SITE_URL}/blog/${post.slug}`,
       link: `${SITE_URL}/blog/${post.slug}`,
-      description: post.summary,
       date: post.date,
       author: [
         {
@@ -194,7 +193,14 @@ function main(): void {
     const filename = `planetpg-${authorKey}-rss.xml`;
     const filePath = path.join(BUILD_DIR, filename);
 
-    fs.writeFileSync(filePath, feed.rss2());
+    let rssContent = feed.rss2();
+    // Remove CDATA tags from title elements
+    rssContent = rssContent.replace(
+      /<title><!\[CDATA\[(.*?)\]\]><\/title>/g,
+      "<title>$1</title>",
+    );
+
+    fs.writeFileSync(filePath, rssContent);
     console.log(`✓ Created ${filename} (${feed.items.length} posts)`);
   }
 
