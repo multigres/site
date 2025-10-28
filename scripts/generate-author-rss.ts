@@ -243,6 +243,20 @@ function main(): void {
       `$1\n${atomLink}`,
     );
 
+    // Reorder item fields to match Supabase format: guid, title, link, description, pubDate
+    rssContent = rssContent.replace(
+      /<item>\s+<title>(.*?)<\/title>\s+<link>(.*?)<\/link>\s+<guid>(.*?)<\/guid>\s+<pubDate>(.*?)<\/pubDate>\s+<description>(.*?)<\/description>\s+<\/item>/gs,
+      (match, title, link, guid, pubDate, description) => {
+        return `<item>
+            <guid>${guid}</guid>
+            <title>${title}</title>
+            <link>${link}</link>
+            <description>${description}</description>
+            <pubDate>${pubDate}</pubDate>
+        </item>`;
+      },
+    );
+
     fs.writeFileSync(filePath, rssContent);
     console.log(`✓ Created ${filename} (${feed.items.length} posts)`);
   }
