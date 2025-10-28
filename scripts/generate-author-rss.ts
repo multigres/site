@@ -5,6 +5,7 @@ import path from "path";
 import { Feed } from "feed";
 import yaml from "js-yaml";
 import { fileURLToPath } from "url";
+import dayjs from "dayjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -202,6 +203,30 @@ function main(): void {
     rssContent = rssContent.replace(
       /<description><!\[CDATA\[(.*?)\]\]><\/description>/gs,
       "<description>$1</description>",
+    );
+
+    // Replace date format with custom format
+    rssContent = rssContent.replace(
+      /<pubDate>(.*?)<\/pubDate>/g,
+      (match, dateStr) => {
+        const date = dayjs(dateStr);
+        const formattedDate = date
+          .startOf("day")
+          .format("ddd, DD MMM YYYY HH:mm:ss [-0700]");
+        return `<pubDate>${formattedDate}</pubDate>`;
+      },
+    );
+
+    // Replace lastBuildDate format with custom format
+    rssContent = rssContent.replace(
+      /<lastBuildDate>(.*?)<\/lastBuildDate>/g,
+      (match, dateStr) => {
+        const date = dayjs(dateStr);
+        const formattedDate = date
+          .startOf("day")
+          .format("ddd, DD MMM YYYY HH:mm:ss [-0700]");
+        return `<lastBuildDate>${formattedDate}</lastBuildDate>`;
+      },
     );
 
     fs.writeFileSync(filePath, rssContent);
