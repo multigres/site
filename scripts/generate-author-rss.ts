@@ -137,9 +137,6 @@ function generateAuthorFeed(
     id: `${SITE_URL}/blog/authors/${author}/`,
     link: `${SITE_URL}/blog`,
     language: "en",
-    image: authorData.image_url,
-    favicon: `${SITE_URL}/favicon.ico`,
-    generator: "generate-author-rss.ts",
   });
 
   // Filter posts by author and planetpg tag
@@ -227,6 +224,23 @@ function main(): void {
           .format("ddd, DD MMM YYYY HH:mm:ss [-0700]");
         return `<lastBuildDate>${formattedDate}</lastBuildDate>`;
       },
+    );
+
+    // Remove docs and generator tags
+    rssContent = rssContent.replace(/<docs>.*?<\/docs>\n\s*/g, "");
+    rssContent = rssContent.replace(/<generator>.*?<\/generator>\n\s*/g, "");
+
+    // Add Atom namespace to RSS tag
+    rssContent = rssContent.replace(
+      /<rss version="2.0">/,
+      '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+    );
+
+    // Add atom:link self-reference after language tag
+    const atomLink = `        <atom:link href="${SITE_URL}/blog/${filename}" rel="self" type="application/rss+xml"/>\n`;
+    rssContent = rssContent.replace(
+      /(<language>en<\/language>)\n/,
+      `$1\n${atomLink}`,
     );
 
     fs.writeFileSync(filePath, rssContent);
