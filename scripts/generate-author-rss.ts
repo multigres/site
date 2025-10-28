@@ -138,7 +138,6 @@ function generateAuthorFeed(
     language: "en",
     image: authorData.image_url,
     favicon: `${SITE_URL}/favicon.ico`,
-    copyright: `Copyright © ${new Date().getFullYear()} Supabase Inc. Licensed under the Apache License, Version 2.0.`,
     generator: "generate-author-rss.ts",
   });
 
