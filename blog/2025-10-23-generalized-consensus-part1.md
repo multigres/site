@@ -76,6 +76,4 @@ To restate in simple words:
 
 With the problem defined this way, we will work on a focused solution. As we progress, we will learn concepts and establish rules. We will also explore different implementation options. Then, we can verify the current algorithms against these rules.
 
-* Previous: [Introduction](/blog/generalized-consensus)
-* Next: [Part 2: Setting the Requirements](/blog/generalized-consensus-part2)
 * [Full Series Overview](/blog/generalized-consensus)

@@ -7,13 +7,15 @@ tags: [planetpg, consensus, distributed-systems, durability]
 
 # Generalized Consensus: Setting the Requirements
 
+This section sets the requirements for a generalized consensus system.
+
+<!--truncate-->
+
 In our previous post, we came up with an informal definition :
 
 *A consensus system must ensure that every request is saved elsewhere before it is completed and acknowledged. If there is a failure after the acknowledgment, the system must have the ability to find the saved requests, complete them, and resume operations from that point.*
 
 Let us stick to this definition and expand on some of these rules.
-
-<!--truncate-->
 
 # Single value vs log replication
 
@@ -107,6 +109,4 @@ We will focus on leader-based consensus systems. I am aware of the existence of 
 
 In the next part, we'll establish the governing rules that every consensus system must follow to maintain safety guarantees.
 
-* Previous: [Part 1: Defining the Problem](/blog/generalized-consensus-part1)
-* Next: [Part 3: Governing Rules](/blog/generalized-consensus-part3)
 * [Full Series Overview](/blog/generalized-consensus)

@@ -7,13 +7,15 @@ tags: [planetpg, consensus, distributed-systems, durability]
 
 # Generalized Consensus: Fulfilling Requests
 
+In this section we will cover how to fulfill requests in a generalized consensus system.
+
+<!--truncate-->
+
 Let’s restate the subset of rules that are relevant to this section:
 
 1. Durability: Every decision is a distributed decision.
     1. A distributed decision must be made durable.
     2. A decision that has been made durable can be applied.
-
-<!--truncate-->
 
 # Definitions
 
@@ -153,6 +155,4 @@ We have also shown that the rules allow for an alternate way to meet the durabil
 
 In the next part, we'll look at how to order events consistently.
 
-* Previous: [Part 3: Governing Rules](/blog/generalized-consensus-part3)
-* Next: Part 5: Ordering Decisions (coming soon)
 * [Full Series Overview](/blog/generalized-consensus)
