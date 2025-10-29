@@ -7,11 +7,13 @@ tags: [planetpg, consensus, distributed-systems, durability]
 
 # Generalized Consensus: Governing Rules
 
+This section discusses the fundamental governing rules of any consensus system.
+
+<!--truncate-->
+
 As we solve the problem of durability, we will realize that there is a simple set of governing rules that we will be applying repetitively. We will develop these as we progress in our design. However, we will share their entirety upfront.
 
 If you followed these rules, you should actually be able to implement any kind of consensus system. Here are some definitions and rules:
-
-<!--truncate-->
 
 ### Definitions
 
@@ -99,6 +101,4 @@ With all the groundwork laid out, it’s time to jump into the actual algorithms
 
 In the next part, we'll look at how to fulfill requests.
 
-* Previous: [Part 2: Setting the Requirements](/blog/generalized-consensus-part2)
-* Next: [Part 4: Fulfilling Requests](/blog/generalized-consensus-part4)
 * [Full Series Overview](/blog/generalized-consensus)

@@ -55,6 +55,7 @@ const config: Config = {
         },
         blog: {
           showReadingTime: true,
+          blogSidebarCount: 15,
         },
         theme: {
           customCss: "./src/css/custom.css",
