@@ -58,7 +58,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   alt="Figure 1: Revocation methods"
   width={900}
   height={300}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-50px)'}}
 />
 
 Recruiting the leader, if reachable, gives us the advantage of a clean shutdown. The leader can ensure that in-flight requests are completed. It could inform its callers of an impending change in leadership, among other things.
@@ -141,7 +141,7 @@ import { part06Fig2Scenario1 } from '@site/src/components/part06Fig2Scenario1';
   alt="Figure 2: Scenario 1 - No race"
   width={1200}
   height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-120px)'}}
 />
 
 ### Scenario 2: newer term steals the nodes
@@ -160,7 +160,7 @@ import { part06Fig2Scenario2 } from '@site/src/components/part06Fig2Scenario2';
   alt="Figure 2: Scenario 2 - Newer term steals nodes"
   width={1200}
   height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-170px)'}}
 />
 
 In the above example, C7 revokes N1’s leadership by recruiting N2, which is different from what C6 recruited. This is acceptable because it is still a successful revocation of N1’s leadership. C7 also revokes the candidacy for N4 by recruiting N5 and N6, which is different from what C6 recruited. This is also sufficient because C6 will fail to make progress. After all, N5, which it recruited, is now in term 7.
@@ -185,7 +185,7 @@ import { part06Fig2Scenario3 } from '@site/src/components/part06Fig2Scenario3';
   alt="Figure 2: Scenario 3 - Newer term starts after scenario 1"
   width={1200}
   height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-200px)'}}
 />
 
 ### All possible leaders
@@ -211,7 +211,7 @@ To perform a leadership change to N4, a coordinator must recruit for both revoca
 
 import { part06Fig3 } from '@site/src/components/part06Fig3';
 
-<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+<div style={{textAlign: 'center', width: '100%', maxWidth: '100%', overflow: 'hidden', position: 'relative'}}>
   <AnimatedSVG
     src={useBaseUrl('/img/consensus/part06-fig3.svg')}
     onAnimate={part06Fig3}
@@ -220,7 +220,7 @@ import { part06Fig3 } from '@site/src/components/part06Fig3';
     alt="Figure 3: All possible leaders"
     width={2000}
     height={700}
-    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-450px)'}}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'hidden', transform: 'translateX(-700px)'}}
   />
 </div>
 
