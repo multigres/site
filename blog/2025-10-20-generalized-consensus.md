@@ -67,10 +67,10 @@ The series consists of 11 parts:
 
 1. **[Defining the Problem](/blog/generalized-consensus-part1)** - Reframing consensus around distributed durability
 2. **[Setting the Requirements](/blog/generalized-consensus-part2)** - Log replication, durability requirements, and pluggable policies
-3. **Governing Rules** - The core rules every consensus system must follow
-4. **Fulfilling Requests** - How leaders process and durably commit requests
-5. **Ordering Decisions** - Finding a way to order events consistently
-6. **Revocation and Candidacy** - Satisfying the prerequisites for a leader change
+3. **[Governing Rules](/blog/generalized-consensus-part3)** - The core rules every consensus system must follow
+4. **[Fulfilling Requests](/blog/generalized-consensus-part4)** - How leaders process and durably commit requests
+5. **[Ordering Decisions](/blog/generalized-consensus-part5)** - Finding a way to order events consistently
+6. **[Revocation and Candidacy](/blog/generalized-consensus-part6)** - Satisfying the prerequisites for a leader change
 7. **Discovery and Propagation** - Finding and honoring previously committed decisions
 8. **Changing the Rules** - Changing the ruleset dynamically
 9. **Consistent Reads** - How to serve consistent reads
