@@ -312,7 +312,7 @@ import { part07Fig3Scenario5 } from '@site/src/components/part07Fig3Scenario5';
   alt="Figure 8: Scenario 5"
   width={1000}
   height={500}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible'}}
+  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-100px)'}}
 />
 
 After scenario 4, the cluster’s state is as shown in the animation above, which shows three distinct timelines.

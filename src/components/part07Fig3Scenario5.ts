@@ -84,7 +84,7 @@ export const part07Fig3Scenario5 = (animator: SVGAnimator) => {
     .show("#n6", { fill: COLORS.purple })
     .show("#quorum3", { autoAlpha: 1 })
     .morphText("#desc1", "* C9 discovers all nodes")
-    .show("#desc1", { autoAlpha: 1, fill: COLORS.purple });
+    .show("#desc1", { autoAlpha: 1, fill: COLORS.purple, attr: { dx: -90, dy: -120 } });
 
   animator.addLabel("step1");
 
@@ -126,9 +126,9 @@ export const part07Fig3Scenario5 = (animator: SVGAnimator) => {
         .changeText("#n6v3", "ok", COLORS.active, DURATION.fast);
     })
     .morphText("#desc2", "* N4 appends 6-ok to N1, N2 and N6")
-    .show("#desc2", { autoAlpha: 1, fill: COLORS.purple })
+    .show("#desc2", { autoAlpha: 1, fill: COLORS.purple, attr: { dx: -90, dy: -120 } })
     .morphText("#desc3", "  truncating logs as needed")
-    .show("#desc3", { autoAlpha: 1, fill: COLORS.purple });
+    .show("#desc3", { autoAlpha: 1, fill: COLORS.purple, attr: { dx: -90, dy: -120 } });
 
   animator.addLabel("step2");
 
@@ -161,7 +161,7 @@ export const part07Fig3Scenario5 = (animator: SVGAnimator) => {
         .changeText("#n6v4", "ok", COLORS.orange, DURATION.fast);
     })
     .morphText("#desc4", "* N4 appends 8-ok to N1, N2 and N6")
-    .show("#desc4", { autoAlpha: 1, fill: COLORS.purple });
+    .show("#desc4", { autoAlpha: 1, fill: COLORS.purple, attr: { dx: -90, dy: -120 } });
 
   animator.addLabel("step3");
 
@@ -212,7 +212,7 @@ export const part07Fig3Scenario5 = (animator: SVGAnimator) => {
     .changeText("#n6t5", "9", COLORS.purple, DURATION.instant)
     .changeText("#n6v5", "ok", COLORS.purple, DURATION.instant)
     .morphText("#desc5", "* N4 appends 9-ok to itself and transmits")
-    .show("#desc5", { autoAlpha: 1, fill: COLORS.purple });
+    .show("#desc5", { autoAlpha: 1, fill: COLORS.purple, attr: { dx: -90, dy: -120 } });
 
   animator.addLabel("step4");
 };

@@ -95,7 +95,7 @@ export const part07Fig3Scenario3 = (animator: SVGAnimator) => {
     .show("#n6", { fill: COLORS.blue })
     .show("#quorum2", { autoAlpha: 1 })
     .morphText("#desc1", "* C7 recruits N1, N4 and N6")
-    .show("#desc1", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc1", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -200, dy: -60 } });
 
   animator.addLabel("step1");
 
@@ -108,7 +108,7 @@ export const part07Fig3Scenario3 = (animator: SVGAnimator) => {
     .show("#n6t3", { autoAlpha: 1 })
     .show("#n6v3", { autoAlpha: 1 })
     .morphText("#desc2", "* Step 2: Append 5-C")
-    .show("#desc2", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc2", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -200, dy: -60 } });
 
   animator.addLabel("step2");
 
@@ -123,7 +123,7 @@ export const part07Fig3Scenario3 = (animator: SVGAnimator) => {
     .show("#n6t4", { autoAlpha: 1 })
     .show("#n6v4", { autoAlpha: 1 })
     .morphText("#desc3", "* Step 3: Append 5-D")
-    .show("#desc3", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc3", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -200, dy: -60 } });
 
   animator.addLabel("step3");
 
@@ -141,14 +141,14 @@ export const part07Fig3Scenario3 = (animator: SVGAnimator) => {
     .show("#n6t5", { autoAlpha: 1 })
     .show("#n6v5", { autoAlpha: 1 })
     .morphText("#desc4", "* Step 4: Append 7-ok to N1 and transmit")
-    .show("#desc4", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc4", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -200, dy: -60 } });
 
   animator.addLabel("step4");
 
   // Step 5: C7 crashes
   animator
     .morphText("#desc5", "* C7 crashes")
-    .show("#desc5", { autoAlpha: 1, fill: COLORS.red });
+    .show("#desc5", { autoAlpha: 1, fill: COLORS.red, attr: { dx: -200, dy: -60 } });
 
   animator.addLabel("step5");
 };
