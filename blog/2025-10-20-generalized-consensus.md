@@ -72,10 +72,10 @@ The series consists of 11 parts:
 5. **[Ordering Decisions](/blog/generalized-consensus-part5)** - Finding a way to order events consistently
 6. **[Revocation and Candidacy](/blog/generalized-consensus-part6)** - Satisfying the prerequisites for a leader change
 7. **[Discovery and Propagation](/blog/generalized-consensus-part7)** - Finding and honoring previously committed decisions
-8. **Changing the Rules** - Changing the ruleset dynamically
-9. **Consistent Reads** - How to serve consistent reads
-10. **Addenda** - Topics we deferred, like health checks, term numbers, etc.
-11. **Recap** - Bringing it all together with a complete Raft-inspired implementation
+8. **[Changing the Rules](/blog/generalized-consensus-part8)** - Changing the ruleset dynamically
+9. **[Consistent Reads](/blog/generalized-consensus-part9)** - How to serve consistent reads
+10. **[Addenda](/blog/generalized-consensus-part10)** - Topics we deferred, like health checks, term numbers, etc.
+11. **Recap** - Bringing it all together with a complete Raft-inspired design
 
 ## Why This Matters for Multigres
 
