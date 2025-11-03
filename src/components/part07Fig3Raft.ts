@@ -92,6 +92,7 @@ export const part07Fig3Raft = (animator: SVGAnimator) => {
     "#desc5",
   ]);
 
+  
   // Step 1: N1 propagates C (with term 5) to N6
   animator
     .animateArrow("#n1n6", { duration: DURATION.normal })
@@ -100,7 +101,7 @@ export const part07Fig3Raft = (animator: SVGAnimator) => {
     .show("#n6t3", { autoAlpha: 1 })
     .show("#n6v3", { autoAlpha: 1 })
     .morphText("#desc1", "* Step 1: Append 5-C")
-    .show("#desc1", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc1", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -80, dy: -60 } });
 
   animator.addLabel("step1");
 
@@ -115,7 +116,7 @@ export const part07Fig3Raft = (animator: SVGAnimator) => {
     .show("#n6t4", { autoAlpha: 1 })
     .show("#n6v4", { autoAlpha: 1 })
     .morphText("#desc2", "* Step 2: Append 5-D")
-    .show("#desc2", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc2", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -80, dy: -60 } });
 
   animator.addLabel("step2");
 
@@ -133,9 +134,10 @@ export const part07Fig3Raft = (animator: SVGAnimator) => {
     .show("#n6t5", { autoAlpha: 1 })
     .show("#n6v5", { autoAlpha: 1 })
     .morphText("#desc3", "* Step 3: Append 7-ok to N1")
-    .show("#desc3", { autoAlpha: 1, fill: COLORS.blue })
+    .show("#desc3", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -80, dy: -60 } })
     .morphText("#desc4", "  and transmit to N7")
-    .show("#desc4", { autoAlpha: 1, fill: COLORS.blue });
+    .show("#desc4", { autoAlpha: 1, fill: COLORS.blue, attr: { dx: -80, dy: -60 } });
 
   animator.addLabel("step3");
+
 };

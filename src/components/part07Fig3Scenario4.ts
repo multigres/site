@@ -88,7 +88,7 @@ export const part07Fig3Scenario4 = (animator: SVGAnimator) => {
     .show("#n5", { fill: COLORS.orange })
     .show("#quorum1", { autoAlpha: 1, stroke: COLORS.orange })
     .morphText("#desc1", "* C8 recruits N3, N4 and N5")
-    .show("#desc1", { autoAlpha: 1, fill: COLORS.orange });
+    .show("#desc1", { autoAlpha: 1, fill: COLORS.orange, attr: { dx: -300, dy: 450 } });
 
   animator.addLabel("step1");
 
@@ -101,7 +101,7 @@ export const part07Fig3Scenario4 = (animator: SVGAnimator) => {
     .show("#n4t3", { autoAlpha: 1 })
     .show("#n4v3", { autoAlpha: 1 })
     .morphText("#desc2", "* N5 appends 6-ok to N4")
-    .show("#desc2", { autoAlpha: 1, fill: COLORS.orange });
+    .show("#desc2", { autoAlpha: 1, fill: COLORS.orange, attr: { dx: -300, dy: 450 } });
 
   animator.addLabel("step2");
 
@@ -128,9 +128,9 @@ export const part07Fig3Scenario4 = (animator: SVGAnimator) => {
     .show("#n4t4", { autoAlpha: 1 })
     .show("#n4v4", { autoAlpha: 1 })
     .morphText("#desc3", "* N5 appends 8-ok to itself")
-    .show("#desc3", { autoAlpha: 1, fill: COLORS.orange })
+    .show("#desc3", { autoAlpha: 1, fill: COLORS.orange, attr: { dx: -300, dy: 450 } })
     .morphText("#desc4", "  and propagates to N3 and N4")
-    .show("#desc4", { autoAlpha: 1, fill: COLORS.orange });
+    .show("#desc4", { autoAlpha: 1, fill: COLORS.orange, attr: { dx: -300, dy: 450 } });
 
   animator.addLabel("step3");
 
@@ -138,7 +138,7 @@ export const part07Fig3Scenario4 = (animator: SVGAnimator) => {
   animator
     .wait(DURATION.fast)
     .morphText("#desc5", "* Durability reached, but C8 crashes")
-    .show("#desc5", { autoAlpha: 1, fill: COLORS.red });
+    .show("#desc5", { autoAlpha: 1, fill: COLORS.red, attr: { dx: -300, dy: 450 } });
 
   animator.addLabel("step4");
 };
