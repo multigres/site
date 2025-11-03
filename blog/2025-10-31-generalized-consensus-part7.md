@@ -304,16 +304,18 @@ But let us assume that C8 crashes at this point.
 
 import { part07Fig3Scenario5 } from '@site/src/components/part07Fig3Scenario5';
 
-<AnimatedSVG
-  src={useBaseUrl('/img/consensus/part07-fig3.svg')}
-  onAnimate={part07Fig3Scenario5}
-  autoPlay={false}
-  showControls={true}
-  alt="Figure 8: Scenario 5"
-  width={1000}
-  height={500}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-100px)'}}
-/>
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part07-fig3.svg')}
+    onAnimate={part07Fig3Scenario5}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 8: Scenario 5"
+    width={1000}
+    height={500}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-100px)', clipPath: 'inset(0 0 0 65px)'}}
+  />
+</div>
 
 After scenario 4, the cluster’s state is as shown in the animation above, which shows three distinct timelines.
 
