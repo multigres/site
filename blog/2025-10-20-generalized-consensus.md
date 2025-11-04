@@ -75,7 +75,7 @@ The series consists of 11 parts:
 8. **[Changing the Rules](/blog/generalized-consensus-part8)** - Changing the ruleset dynamically
 9. **[Consistent Reads](/blog/generalized-consensus-part9)** - How to serve consistent reads
 10. **[Addenda](/blog/generalized-consensus-part10)** - Topics we deferred, like health checks, term numbers, etc.
-11. **Recap** - Bringing it all together with a complete Raft-inspired design
+11. **[Recap](/blog/generalized-consensus-part11)** - Bringing it all together with a complete Raft-inspired design
 
 ## Why This Matters for Multigres
 
