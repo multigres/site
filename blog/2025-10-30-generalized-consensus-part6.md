@@ -133,16 +133,18 @@ If the network partition was what caused C6 to act, then N1 might not have known
 
 import { part06Fig2Scenario1 } from '@site/src/components/part06Fig2Scenario1';
 
-<AnimatedSVG
-  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
-  onAnimate={part06Fig2Scenario1}
-  autoPlay={false}
-  showControls={true}
-  alt="Figure 2: Scenario 1 - No race"
-  width={1200}
-  height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-120px)'}}
-/>
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+    onAnimate={part06Fig2Scenario1}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 2: Scenario 1 - No race"
+    width={1200}
+    height={400}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-120px)', clipPath: 'inset(0 0 0 300px)'}}
+  />
+</div>
 
 ### Scenario 2: newer term steals the nodes
 
@@ -152,16 +154,18 @@ If this happens before C6 reaches these nodes, then C6 will fail to recruit them
 
 import { part06Fig2Scenario2 } from '@site/src/components/part06Fig2Scenario2';
 
-<AnimatedSVG
-  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
-  onAnimate={part06Fig2Scenario2}
-  autoPlay={false}
-  showControls={true}
-  alt="Figure 2: Scenario 2 - Newer term steals nodes"
-  width={1200}
-  height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-170px)'}}
-/>
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+    onAnimate={part06Fig2Scenario2}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 2: Scenario 2 - Newer term steals nodes"
+    width={1200}
+    height={400}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-170px)', clipPath: 'inset(0 0 0 300px)'}}
+  />
+</div>
 
 In the above example, C7 revokes N1’s leadership by recruiting N2, which is different from what C6 recruited. This is acceptable because it is still a successful revocation of N1’s leadership. C7 also revokes the candidacy for N4 by recruiting N5 and N6, which is different from what C6 recruited. This is also sufficient because C6 will fail to make progress. After all, N5, which it recruited, is now in term 7.
 
@@ -177,16 +181,18 @@ The result of scenario 3 would look the same as the result of scenario 2.
 
 import { part06Fig2Scenario3 } from '@site/src/components/part06Fig2Scenario3';
 
-<AnimatedSVG
-  src={useBaseUrl('/img/consensus/part06-fig2.svg')}
-  onAnimate={part06Fig2Scenario3}
-  autoPlay={false}
-  showControls={true}
-  alt="Figure 2: Scenario 3 - Newer term starts after scenario 1"
-  width={1200}
-  height={400}
-  style={{display: 'block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-200px)'}}
-/>
+<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+  <AnimatedSVG
+    src={useBaseUrl('/img/consensus/part06-fig2.svg')}
+    onAnimate={part06Fig2Scenario3}
+    autoPlay={false}
+    showControls={true}
+    alt="Figure 2: Scenario 3 - Newer term starts after scenario 1"
+    width={1200}
+    height={400}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-200px)', clipPath: 'inset(0 0 0 300px)'}}
+  />
+</div>
 
 ### All possible leaders
 

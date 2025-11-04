@@ -63,7 +63,7 @@ import AnimatedSVG from '@site/src/components/AnimatedSVG';
 import { part06Fig3 } from '@site/src/components/part06Fig3';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-<div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
+<div style={{textAlign: 'center', width: '100%', maxWidth: '100%', overflow: 'hidden', position: 'relative'}}>
   <AnimatedSVG
     src={useBaseUrl('/img/consensus/part06-fig3.svg')}
     onAnimate={part06Fig3}
@@ -72,7 +72,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
     alt="Figure 1: Term number competition"
     width={2000}
     height={700}
-    style={{display: 'inline-block', margin: '1rem 0', overflow: 'visible', transform: 'translateX(-450px)'}}
+    style={{display: 'inline-block', margin: '1rem 0', overflow: 'hidden', transform: 'translateX(-700px)'}}
   />
 </div>
 
