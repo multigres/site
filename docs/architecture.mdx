@@ -54,7 +54,7 @@ Multigres can be deployed to suit different needs. We will introduce you to the 
 
 In a single database deployment, Multigres will act as a proxy layer in front of a single PostgreSQL instance. This setup will be ideal for small applications or development environments where simplicity is key.
 
-![Single database deployment](/img/site/arch-single-db.png)
+<img src="/img/site/arch-single-db.svg" alt="Single database deployment" width="750"/>
 
 The main components involved will be:
 
@@ -72,7 +72,7 @@ For a Multigres cluster to operate, two other components will be required:
 
 Unlike a traditional Postgres server, every Multigres database will be created in a brand new Postgres instance coupled with its own MultiPooler.
 
-![Multiple database deployment](/img/site/arch-multi-db.png)
+<img src="/img/site/arch-multi-db.svg" alt="Multiple database deployment" width="750"/>
 
 The MultiGateways will be scalable independently based on resource needs. The application will connect to any MultiGateway, which will route the queries to the appropriate MultiPooler based on the database name.
 
@@ -84,7 +84,7 @@ The figure does not show the Topo Server and Provisioner components, but they wi
 
 Multigres can be configured to add replicas as standbys. In this setup, we introduce the `MultiOrch` component, which manages the health of replication across replicas. It monitors replication, repairs broken streams, and coordinates failover, ensuring replicas remain in sync with the primary database.
 
-![High Availability and Performance](/img/site/arch-ha.png)
+![High Availability and Performance](/img/site/arch-ha.svg)
 
 MultiOrch will implement a distributed consensus algorithm that will provide the following benefits:
 
@@ -104,7 +104,7 @@ A Multigres cluster will be deployable across multiple zones or geographical reg
 
 In Multigres parlance, a cell will be a user-defined grouping of components. It will represent a zone or a region.
 
-![Cluster management](/img/site/arch-cluster.png)
+![Cluster management](/img/site/arch-cluster.svg)
 
 ### Topo Servers
 
@@ -142,7 +142,7 @@ In reality, a Multigres database will be distributable across multiple Postgres 
 
 You will also be able to create separate unsharded TableGroups.
 
-![Cluster management](/img/site/arch-sharded.png)
+![Cluster management](/img/site/arch-sharded.svg)
 
 In the above example:
 

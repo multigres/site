@@ -5,9 +5,6 @@ description: "Vitess for Postgres."
 
 # Multigres Upcoming features
 
-<!-- This file is symlinked from the root README.mdx.
-Do not add any markdown links as they will appear broken in the README. -->
-
 Multigres is a project to build an adaptation of Vitess for Postgres.
 
 This document is a loosely ordered tentative list of features we intend to build or import from Vitess.
@@ -20,7 +17,7 @@ Multigres will have a two-level proxy layer. In the case of a single small serve
 
 MultiGateway is the top layer. In its simplest form, it will masquerade as a Postgres server. When it receives a query, it will forward the request to the next (MultiPooler) layer. In the case of a single Postgres server, its primary usefulness is to shield the clients from restarts or failovers that may happen in the underlying layers due to software rollouts and failures.
 
-In the case of master-replica configurations, MultiGateway can be configured to send read traffic to the replicas.
+In the case of primary-replica configurations, MultiGateway can be configured to send read traffic to the replicas.
 
 The MultiGateway layer could be conceptualized as the compute layer of Multigres. It can be horizontally scaled as needed.
 
@@ -166,11 +163,11 @@ It may happen that the original sharding key you chose for the table was subopti
 
 If you are currently running on a MySQL database, or Vitess, Multigres will allow you to migrate from that source. In this situation, additional work may have to be done by you in the area of how you switch traffic. This is because Multigres will only support the Postgres protocol, and will not be able to orchestrate the traffic meant for the source MySQL.
 
-### Exotic migrations
+### Exotic Migrations
 
 Materializer is versatile enough that it can be used to address migration use cases that have not been thought of yet. For example, you could script it to merge tables from different databases into one. This can be a necessity if you decide to merge many multi-tenant databases into a single sharded one, or vice-versa.
 
-## Materialization
+## Materialized Views
 
 Multigres materialized views will be built using Materializer. Such views are physical tables that are updated in real-time by processing events from the WAL. Consequently, the complexity of the SQL expression for these views is limited to operations that can be incrementally processed from the change events. For example, `count(*)` will be supported, while `max(col)` will not be. Another trade-off of materialization is that it is eventually consistent.
 
@@ -179,7 +176,7 @@ In a sharded environment, materialized views can greatly enhance the performance
 - For a table that has foreign keys into two different tables, you can have the source table be sharded by the first foreign key, and you can materialize the target table using the second sharding key. This approach will allow you to efficiently join this table with either of the two other tables, because both those joins will be in-shard joins.
 - Reference tables: Many databases have smaller tables that have slow changing data. However, they may need to be joined with other massive tables that need to be sharded. In this situation, you can materialize the small table into all the shards of the bigger table. Such a join will then become an in-shard join.
 
-## Schema deployment
+## Schema Deployment
 
 Some schema changes are inherently time-consuming, along with the downside of locking the table from other changes. In such situations, Multigres will use Materializer to materialize the post-schema version of the table within the same database. Once the materialization is complete, it will swap the old table with the new one, thereby achieving a non-blocking, zero-downtime deployment.
 
@@ -203,12 +200,6 @@ Apart from exporting real-time metrics, Multigres will also have an extensive to
 - On-demand real-time query or transaction logs. This is useful to get a snapshot of everything that's currently in progress, useful if there's an active incident.
 - Error logs.
 - Trace points.
-
-## Point-in-time Recovery
-
-Multigres will be able to restore any shard, or an entire cluster, into a specially named read-only database allowing you to view a snapshot of the data as of a certain time. This is achieved by restoring an old enough backup and applying logs up to the necessary timestamp.
-
-If multiple shards are restored, there is no guarantee of transaction consistency across shards.
 
 ## Messaging
 
