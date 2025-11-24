@@ -94,3 +94,13 @@ The series is designed to be read sequentially, with each part building on previ
 [Start with: Defining the Problem](/blog/generalized-consensus-part1)
 
 We believe this framework opens new possibilities for consensus systems that can adapt to modern cloud architectures while maintaining the safety guarantees we depend on.
+
+### Credits
+
+_Many people from the community have reviewed this series and provided valuable feedback. It will be hard to name all of them. My heartfelt thanks go to the following members of the multigres maintainer team, who went above and beyond to ensure the series is clear and approachable:_
+
+- [Deepthi Sigireddi](https://github.com/deepthi)
+- [Rafael Chacon](https://github.com/rafael)
+- [Manan Gupta](https://github.com/GuptaManan100)
+- [David Weitzman](https://github.com/dweitzman)
+- [Cuong Do](https://github.com/cuongdo)
