@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"image/color"
@@ -180,12 +181,13 @@ func parseColor(colorStr string) (color.Color, error) {
 
 	// Handle rgb() colors
 	if strings.HasPrefix(colorStr, "rgb") {
-		re := regexp.MustCompile(`rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)`)
-		matches := re.FindStringSubmatch(colorStr)
-		if len(matches) == 4 {
-			r, _ := strconv.Atoi(matches[1])
-			g, _ := strconv.Atoi(matches[2])
-			b, _ := strconv.Atoi(matches[3])
+		parts := strings.FieldsFunc(colorStr, func(r rune) bool {
+			return r == '(' || r == ')' || r == ',' || r == ' '
+		})
+		if len(parts) >= 4 && parts[0] == "rgb" {
+			r, _ := strconv.Atoi(parts[1])
+			g, _ := strconv.Atoi(parts[2])
+			b, _ := strconv.Atoi(parts[3])
 			return color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: 255}, nil
 		}
 	}
@@ -207,8 +209,46 @@ func colorToHex(c color.Color) string {
 	return fmt.Sprintf("#%02x%02x%02x%02x", r8, g8, b8, a8)
 }
 
-// transformSVG applies the color transformation to fill and stroke attributes
-func transformSVG(content string) string {
+// hasSVGFilterProperties checks if the SVG root element has filter attribute with hue-rotate
+func hasSVGFilterProperties(content string) bool {
+	// Parse just the root SVG element to check for filter/hue-rotate
+	d := xml.NewDecoder(strings.NewReader(content))
+	for {
+		t, err := d.Token()
+		if err != nil {
+			return false
+		}
+		if se, ok := t.(xml.StartElement); ok {
+			if se.Name.Local == "svg" {
+				for _, attr := range se.Attr {
+					if attr.Name.Local == "filter" && strings.Contains(attr.Value, "hue-rotate") {
+						return true
+					}
+				}
+				return false
+			}
+		}
+	}
+}
+
+// transformSVG transforms fill/stroke colors and removes filter attribute
+func transformSVG(content string) (string, error) {
+	// Check if transformation is needed
+	if !hasSVGFilterProperties(content) {
+		return content, nil
+	}
+
+	// Transform colors using regex (surgical approach)
+	result := transformColorAttributes(content)
+
+	// Remove filter attribute
+	result = removeFilterAttribute(result)
+
+	return result, nil
+}
+
+// transformColorAttributes transforms fill and stroke color values
+func transformColorAttributes(content string) string {
 	// Pattern to match fill="..." or stroke="..."
 	attrPattern := regexp.MustCompile(`(fill|stroke)\s*=\s*"([^"]*)"`)
 
@@ -237,6 +277,13 @@ func transformSVG(content string) string {
 	return result
 }
 
+// removeFilterAttribute removes the filter attribute from the SVG tag
+func removeFilterAttribute(content string) string {
+	// Remove filter attribute from the opening <svg ...> tag
+	result := regexp.MustCompile(`\s+filter\s*=\s*"[^"]*"`).ReplaceAllString(content, "")
+	return result
+}
+
 func main() {
 	inputFile := flag.String("input", "", "Input SVG file")
 	outputFile := flag.String("output", "", "Output SVG file (default: stdout)")
@@ -253,7 +300,10 @@ func main() {
 	}
 
 	// Transform the SVG
-	transformed := transformSVG(string(content))
+	transformed, err := transformSVG(string(content))
+	if err != nil {
+		log.Fatalf("Failed to transform SVG: %v", err)
+	}
 
 	// Write output
 	if *outputFile == "" {
