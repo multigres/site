@@ -154,6 +154,24 @@ The rest of the Multigres features like cluster management, HA, etc. will be des
 
 We will cover the Multigres sharding model in more detail in a separate document.
 
+## Combining Shards and Cells
+
+If cells were one axis of a Multigres cluster, then shards would be another axis. The two multiply with each other to produce a matrix of components. This is illustrated in Figure 5 below:
+
+![Cluster management](/img/site/arch-combined.svg)
+
+In a fully deployed cluster, the components will function in the following ways:
+
+* **MultiGateway**: There can be multiple instances of MultiGateways in each cell. A MultiGateway uses MultiPoolers within the current cell to serve traffic. If necessary, a MultiGateway would go cross-cell to access a primary if it's not in the current cell. The user or application can connect to any MultiGateway to run their queries.
+
+* **MultiPooler**: There will be one instance of MultiPooler per Postgres instance. Such an instance contains the data for one shard. Among all MultiPoolers, one of them will be the primary and the others will be standbies or replicas.
+
+* **MultiOrch**: A MultiOrch watches over a single shard across all cells. For a given shard, it is recommended that a MultiOrch be provisioned for each cell. This allows for resilience against network partitions. If one MultiOrch does not have the connectivity to perform a failover, another one in a different can take over. The MultiOrchs are capable of operating without interfering with each other.
+
+* **Local Toposerver**: One local toposerver per cell is required. For smaller deployments, the global toposerver could also be reused for this purpose. However, it is recommended that separate local toposervers be provisioned for each cell in case of larger deployments. This server is used for components within a cell to discover each other. For example, a MultiPooler will publish itself through the toposerver, which will allow MultiGateway to discover its existence.
+
+* **Global Toposerver**: One global toposerver is needed to store the list of cells, the list of databases, and their backup locations. The global toposerver is typically deployed across multiple cells to survive network partitions.
+
 ## Upcoming Topics
 
 We will cover the following topics in more detail in the future:
