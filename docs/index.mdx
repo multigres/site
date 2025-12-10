@@ -51,7 +51,7 @@ This failover and fail-back can be repeatedly performed without requiring any ch
 
 ### 2PC
 
-Due to the flexible sharding scheme of Multigres, you should be able minimize or completely eliminate the need for distributed transactions by a careful selection of an optimal sharding scheme. However, if the need arises, MultiGateway and MultiPooler will work together and use the two-phase commit protocol supported by Postgres to complete transactions that span across multiple instances.
+Due to the flexible sharding scheme of Multigres, you should be able to minimize or completely eliminate the need for distributed transactions by a careful selection of an optimal sharding scheme. However, if the need arises, MultiGateway and MultiPooler will work together and use the two-phase commit protocol supported by Postgres to complete transactions that span across multiple instances.
 
 TODO: Doc on 2PC atomicity and isolation
 
