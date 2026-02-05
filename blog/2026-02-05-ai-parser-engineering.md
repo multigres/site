@@ -1,6 +1,6 @@
 ---
 slug: ai-parser-engineering
-title: 'The Engineering Discipline That Made AI Actually Useful'
+title: 'A 2.5x faster Postgres parser with Claude Code'
 authors: [manan]
 date: 2026-02-05
 tags: [postgres, multigres, ai, parser, engineering]
@@ -8,7 +8,7 @@ image: /img/blog/ai-parser-engineering.png
 description: "Same engineer. Same complexity. A year last time, eight weeks this time. This isn't a story about AI writing code. It's a story about the system, expertise, and discipline that made AI actually useful."
 ---
 
-# The Engineering Discipline That Made AI Actually Useful
+# A 2.5x faster Postgres parser with Claude Code
 
 Building a production-grade parser is an exercise in discipline. You need to translate thousands of grammar rules exactly. You need to catch subtle bugs that only surface on edge cases you've never seen. You need to verify every decision against a reference implementation. There are no shortcuts.
 
