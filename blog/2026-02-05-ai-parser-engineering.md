@@ -110,7 +110,7 @@ The surprising thing was how much it didn't matter.
 
 It didn't matter because I knew what right looked like.
 
-I've been working on parsers for years. I know how yacc grammars behave. I know what grammar conflicts mean and how to debug them. When Claude's output was wrong, I could see it, usually quickly. At that point, if it's a small fix, I would just go ahead and fix it myself. If it was bigger, I'd start a new session and get Claude to fix it, telling it that *I* made that mistake :stuck-out-tongue: (This works better than you'd think.)
+I've been working on parsers for years. I know how yacc grammars behave. I know what grammar conflicts mean and how to debug them. When Claude's output was wrong, I could see it, usually quickly. At that point, if it's a small fix, I would just go ahead and fix it myself. If it was bigger, I'd start a new session and get Claude to fix it, telling it that *I* made that mistake 😝 (This works better than you'd think.)
 
 If I didn't already know how to build a parser, Claude wouldn't have helped. I would have accepted wrong output, made bad structural decisions, and ended up with a mess that didn't work.
 
