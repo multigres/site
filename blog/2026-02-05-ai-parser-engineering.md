@@ -5,17 +5,18 @@ authors: [manan]
 date: 2026-02-05
 tags: [postgres, multigres, ai, parser, engineering]
 image: /img/blog/ai-parser-engineering.png
+description: "Same engineer. Same complexity. A year last time, eight weeks this time. This isn't a story about AI writing code. It's a story about the system, expertise, and discipline that made AI actually useful."
 ---
 
 # The Engineering Discipline That Made AI Actually Useful
 
 Building a production-grade parser is an exercise in discipline. You need to translate thousands of grammar rules exactly. You need to catch subtle bugs that only surface on edge cases you've never seen. You need to verify every decision against a reference implementation. There are no shortcuts.
 
-<!--truncate-->
-
 I know this because I've done it before. I led the effort to build the MySQL parser for Vitess. That took over a year with help from talented contributors. So when we needed a Postgres parser for [Multigres](https://www.multigres.com), I expected a similar timeline.
 
 It took eight weeks. 287,786 lines of code. 304 files. 130 commits. 71.2% test coverage. 2.5x faster than the cgo (Go's C interop) alternative.
+
+<!--truncate-->
 
 The difference wasn't AI writing code for me. It was three things: a **system** for coordinating work across sessions, the **expertise** to recognize when the output was wrong, and the **discipline** to verify everything. Claude amplified what I brought to the table, but without all three, it wouldn't have worked.
 
