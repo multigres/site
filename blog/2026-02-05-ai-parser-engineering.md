@@ -4,6 +4,7 @@ title: 'The Engineering Discipline That Made AI Actually Useful'
 authors: [manan]
 date: 2026-02-05
 tags: [postgres, multigres, ai, parser, engineering]
+image: /img/blog/ai-parser-engineering.png
 ---
 
 # The Engineering Discipline That Made AI Actually Useful
