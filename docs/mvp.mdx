@@ -48,7 +48,7 @@ The purpose of cluster management is to minimize human intervention by automatin
 
 Planned cluster management operations should have no impact to user traffic.
 
-## Performance, Durabilty and HA
+## Performance, Durability and HA
 
 These three features go hand in hand. Storing the data in a local NVME drive yields the best performance for an OLTP system like Postgres. However, this can lead to data loss in case of a node failure. This can be solved by implementing a consensus protocol. The side benefit of a consensus protocol is that it also helps us address the problem of High Availability, because there will always be an up-to-date replica if the primary node fails.
 
