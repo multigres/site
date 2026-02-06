@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+html {
+  font-size: 14px;
+  font-family: "Geist", system-ui, sans-serif;
+}
+
+/* Limit main content width */
+article {
+  max-width: 48rem;
+}
+
+/* Headers not bold */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}

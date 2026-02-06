@@ -1,0 +1,3 @@
+[submodule "apps/docs/fumadocs-ref"]
+	path = apps/docs/fumadocs-ref
+	url = https://github.com/fuma-nama/fumadocs.git
