@@ -7,8 +7,6 @@ date: 2025-10-30T00:00:00.000Z
 author: Sugu Sougoumarane
 ---
 
-# Generalized Consensus: Revocation and Candidacy
-
 This section covers ways to satisfy the prerequisites for a leader change: Revoke previous leaderships and recruit nodes for the new leader candidate.
 
 {/* truncate */}
@@ -48,10 +46,12 @@ To revoke an existing leadership, a coordinator can:
 
 Performing one of these actions will satisfy rule 2a.
 
+import AnimatedSVG from '@/components/AnimatedSVG';
+import { part06Fig1 } from '@/lib/animations/part06Fig1';
 
 <AnimatedSVG
   src={"/img/consensus/part06-fig1.svg"}
-  onAnimate={part06Fig1}
+  onAnimate="part06Fig1"
   autoPlay={true}
   showRestartButton={true}
   alt="Figure 1: Revocation methods"
@@ -130,11 +130,12 @@ C6 must now satisfy 2a(i) by recruiting the nodes needed for candidacy. Let us a
 
 If the network partition was what caused C6 to act, then N1 might not have known that N3 was recruited and may still think that it is the leader. But it would not be able to fulfill any requests.
 
+import { part06Fig2Scenario1 } from '@/lib/animations/part06Fig2Scenario1';
 
 <div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part06-fig2.svg"}
-    onAnimate={part06Fig2Scenario1}
+    onAnimate="part06Fig2Scenario1"
     autoPlay={false}
     showControls={true}
     alt="Figure 2: Scenario 1 - No race"
@@ -150,11 +151,12 @@ If a different coordinator decides on a newer term 7 (C7), it must attempt to re
 
 If this happens before C6 reaches these nodes, then C6 will fail to recruit them due to them being on a higher term.
 
+import { part06Fig2Scenario2 } from '@/lib/animations/part06Fig2Scenario2';
 
 <div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part06-fig2.svg"}
-    onAnimate={part06Fig2Scenario2}
+    onAnimate="part06Fig2Scenario2"
     autoPlay={false}
     showControls={true}
     alt="Figure 2: Scenario 2 - Newer term steals nodes"
@@ -176,11 +178,12 @@ C6 could have completed the rest of the actions needed to establish the new lead
 
 The result of scenario 3 would look the same as the result of scenario 2.
 
+import { part06Fig2Scenario3 } from '@/lib/animations/part06Fig2Scenario3';
 
 <div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part06-fig2.svg"}
-    onAnimate={part06Fig2Scenario3}
+    onAnimate="part06Fig2Scenario3"
     autoPlay={false}
     showControls={true}
     alt="Figure 2: Scenario 3 - Newer term starts after scenario 1"
@@ -211,11 +214,12 @@ To recruit for leadership:
 
 To perform a leadership change to N4, a coordinator must recruit for both revocation and candidacy. This would be any combination from the first set and a combination needed for N4’s leadership. A valid set would be: N3, N4, and N5, which is illustrated in scenario 1. The animation below shows a few examples of valid combinations:
 
+import { part06Fig3 } from '@/lib/animations/part06Fig3';
 
 <div style={{textAlign: 'center', width: '100%', maxWidth: '100%', overflow: 'hidden', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part06-fig3.svg"}
-    onAnimate={part06Fig3}
+    onAnimate="part06Fig3"
     autoPlay={false}
     showControls={true}
     alt="Figure 3: All possible leaders"

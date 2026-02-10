@@ -8,8 +8,6 @@ date: 2025-11-01T00:00:00.000Z
 author: Sugu Sougoumarane
 ---
 
-# Generalized Consensus: Changing the Rules
-
 This section discusses ways to change the durability rules for a consensus system. As you will see below, any approach that respects the governing rules is sufficient to safely effect these changes.
 
 {/* truncate */}
@@ -52,10 +50,12 @@ Every node that receives and applies this ruleset change event updates its rules
 
 *It is actually sufficient if the coordinator satisfies rs1. However, recovery from subsequent failures will need to satisfy both rulesets. For uniformity, it is preferable to apply both rulesets to all situations.*
 
+import AnimatedSVG from '@/components/AnimatedSVG';
+import { part08Fig3a } from '@/lib/animations/part08Fig3a';
 
 <AnimatedSVG
   src={"/img/consensus/part08-fig3.svg"}
-  onAnimate={part08Fig3a}
+  onAnimate="part08Fig3a"
   autoPlay={false}
   showControls={true}
   alt="Figure 3a: Ruleset change scenario 1"
@@ -80,10 +80,11 @@ After the new ruleset rs2 became durable, N1 gets promoted and completes additio
 
 C7 assumes rs1 is currently active. It recruits N2, which it thinks is sufficient to revoke N1’s leadership. However, it notices the ruleset change in the unapplied logs. Therefore, it must continue its revocation and also recruit N2. Recruitment of N2 leads to the discovery of a more progressed timeline. It must therefore propagate N2's timeline instead of N3’s timeline. In this case, it can use rs2 because the ruleset change has already been applied. At this point, it will realize that the minimum conditions are already met, and it could delegate leadership of the 7th term back to N1. N1 will eventually propagate the changes to N3. This scenario is shown in the animation below:
 
+import { part08Fig3b } from '@/lib/animations/part08Fig3b';
 
 <AnimatedSVG
   src={"/img/consensus/part08-fig3.svg"}
-  onAnimate={part08Fig3b}
+  onAnimate="part08Fig3b"
   autoPlay={false}
   showControls={true}
   alt="Figure 3b: Ruleset change scenario 2"
@@ -98,10 +99,11 @@ In this scenario, let us assume that no further progress was made after rs2 beca
 
 The story starts off the same as scenario 1: C7 recruits N3, discovers the ruleset change, which makes it recruit N2. This time, it discovers the same timeline as N3. This allows it to append a completion event for the 7th term. However, the log now contains a mix of events from both rulesets. Therefore, its propagation must satisfy both rulesets: the requests must reach N1, N2 and N3. This scenario is shown in the animation below:
 
+import { part08Fig3c } from '@/lib/animations/part08Fig3c';
 
 <AnimatedSVG
   src={"/img/consensus/part08-fig3.svg"}
-  onAnimate={part08Fig3c}
+  onAnimate="part08Fig3c"
   autoPlay={false}
   showControls={true}
   alt="Figure 3c: Ruleset change scenario 3"

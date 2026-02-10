@@ -7,8 +7,6 @@ date: 2025-10-28T00:00:00.000Z
 author: Sugu Sougoumarane
 ---
 
-# Generalized Consensus: Fulfilling Requests
-
 In this section we will cover how to fulfill requests in a generalized consensus system.
 
 {/* truncate */}
@@ -64,10 +62,12 @@ In Raft, each node must have a log of the requests being processed. Requests get
 
 The figure below shows a step-by-step animation of how requests get fulfilled by a generalized consensus system.
 
+import AnimatedSVG from '@/components/AnimatedSVG';
+import { requestProcessing } from '@/lib/animations/requestProcessing';
 
 <AnimatedSVG
   src={"/img/consensus/requestProcessing.svg"}
-  onAnimate={requestProcessing}
+  onAnimate="requestProcessing"
   autoPlay={false}
   showControls={true}
   alt="Multigres consensus and replication diagram"

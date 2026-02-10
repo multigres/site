@@ -7,8 +7,6 @@ date: 2025-11-03T00:00:00.000Z
 author: Sugu Sougoumarane
 ---
 
-# Generalized Consensus: Addenda
-
 This section covers topics that were deferred in the previous parts. However, these are necessary to deploy consensus systems in production.
 
 {/* truncate */}
@@ -61,11 +59,13 @@ Raft uses a clever method that lets nodes compete by using the same term number.
 
 Those who do not win must wait for a timeout period and then try again using a higher term number. If the cluster is healed by that time, they have no action to take. This approach provides a mitigation for the livelock problem, where nodes can continuously race with each other, preventing anyone from succeeding.
 
+import AnimatedSVG from '@/components/AnimatedSVG';
+import { part06Fig3 } from '@/lib/animations/part06Fig3';
 
 <div style={{textAlign: 'center', width: '100%', maxWidth: '100%', overflow: 'hidden', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part06-fig3.svg"}
-    onAnimate={part06Fig3}
+    onAnimate="part06Fig3"
     autoPlay={false}
     showControls={true}
     alt="Figure 1: Term number competition"

@@ -3,9 +3,44 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SVGAnimator } from "@/lib/svg-animator";
 
+// Import all animation functions
+import { requestProcessing } from "@/lib/animations/requestProcessing";
+import { part06Fig1 } from "@/lib/animations/part06Fig1";
+import { part06Fig2Scenario1 } from "@/lib/animations/part06Fig2Scenario1";
+import { part06Fig2Scenario2 } from "@/lib/animations/part06Fig2Scenario2";
+import { part06Fig2Scenario3 } from "@/lib/animations/part06Fig2Scenario3";
+import { part06Fig3 } from "@/lib/animations/part06Fig3";
+import { part07Fig3Raft } from "@/lib/animations/part07Fig3Raft";
+import { part07Fig3Scenario2 } from "@/lib/animations/part07Fig3Scenario2";
+import { part07Fig3Scenario3 } from "@/lib/animations/part07Fig3Scenario3";
+import { part07Fig3Scenario4 } from "@/lib/animations/part07Fig3Scenario4";
+import { part07Fig3Scenario5 } from "@/lib/animations/part07Fig3Scenario5";
+import { part08Fig3a } from "@/lib/animations/part08Fig3a";
+import { part08Fig3b } from "@/lib/animations/part08Fig3b";
+import { part08Fig3c } from "@/lib/animations/part08Fig3c";
+
+// Animation registry - maps names to functions
+const animationRegistry: Record<string, (animator: SVGAnimator) => void> = {
+  requestProcessing,
+  part06Fig1,
+  part06Fig2Scenario1,
+  part06Fig2Scenario2,
+  part06Fig2Scenario3,
+  part06Fig3,
+  part07Fig3Raft,
+  part07Fig3Scenario2,
+  part07Fig3Scenario3,
+  part07Fig3Scenario4,
+  part07Fig3Scenario5,
+  part08Fig3a,
+  part08Fig3b,
+  part08Fig3c,
+};
+
 interface AnimatedSVGProps {
   src: string;
-  onAnimate?: (animator: SVGAnimator) => void;
+  /** Animation name (string) or function - functions only work in client components */
+  onAnimate?: string | ((animator: SVGAnimator) => void);
   autoPlay?: boolean;
   showControls?: boolean;
   showRestartButton?: boolean;
@@ -33,9 +68,20 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [canGoNext, setCanGoNext] = useState(true);
 
+  // Resolve animation function from name or use directly
+  const resolveAnimation = (): ((animator: SVGAnimator) => void) | undefined => {
+    if (!onAnimate) return undefined;
+    if (typeof onAnimate === 'string') {
+      return animationRegistry[onAnimate];
+    }
+    return onAnimate;
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const animationFn = resolveAnimation();
 
     const loadSVG = async () => {
       try {
@@ -59,8 +105,8 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
         animatorRef.current = new SVGAnimator(svgElement);
         setIsLoaded(true);
 
-        if (onAnimate && animatorRef.current) {
-          onAnimate(animatorRef.current);
+        if (animationFn && animatorRef.current) {
+          animationFn(animatorRef.current);
 
           if (autoPlay) {
             animatorRef.current.play();
@@ -105,6 +151,8 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
       animatorRef.current = null;
     }
 
+    const animationFn = resolveAnimation();
+
     const loadSVG = async () => {
       try {
         const response = await fetch(src);
@@ -127,8 +175,8 @@ const AnimatedSVG: React.FC<AnimatedSVGProps> = ({
         animatorRef.current = new SVGAnimator(svgElement);
         setIsLoaded(true);
 
-        if (onAnimate && animatorRef.current) {
-          onAnimate(animatorRef.current);
+        if (animationFn && animatorRef.current) {
+          animationFn(animatorRef.current);
 
           if (autoPlay) {
             animatorRef.current.play();

@@ -16,11 +16,13 @@ export const baseOptions: BaseLayoutProps = {
       text: 'Documentation',
       url: '/docs',
       active: 'nested-url',
+      secondary: false,
     },
     {
       text: 'Blog',
       url: '/blog',
       active: 'nested-url',
+      secondary: false,
     },
   ],
 };

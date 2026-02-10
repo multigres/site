@@ -7,8 +7,6 @@ date: 2025-10-31T00:00:00.000Z
 author: Sugu Sougoumarane
 ---
 
-# Generalized Consensus: Discovery and Propagation
-
 This section covers the second part of a leadership change: The discovery of the best timeline and its propagation to prepare for the next leadership.
 
 {/* truncate */}
@@ -126,10 +124,12 @@ Raft does not have the term as a separate variable. Instead, each request includ
 
 But they differ on how the timeline is propagated. Let us take the following animated example:
 
+import AnimatedSVG from '@/components/AnimatedSVG';
+import { part07Fig3Raft } from '@/lib/animations/part07Fig3Raft';
 
 <AnimatedSVG
   src={"/img/consensus/part07-fig3.svg"}
-  onAnimate={part07Fig3Raft}
+  onAnimate="part07Fig3Raft"
   autoPlay={false}
   showControls={true}
   alt="Figure 3: Raft timeline propagation"
@@ -199,7 +199,7 @@ We will analyze these scenarios assuming that we are using the Raft method of pr
 
 <AnimatedSVG
   src={"/img/consensus/part07-fig3.svg"}
-  onAnimate={part07Fig3Raft}
+  onAnimate="part07Fig3Raft"
   autoPlay={false}
   showControls={false}
   alt="Figure 4: Initial state"
@@ -224,10 +224,11 @@ Let us restart with the example shown in the Raft section:
 
 *A coordinator may attempt to propagate a timeline and fail before making it durable.*
 
+import { part07Fig3Scenario2 } from '@/lib/animations/part07Fig3Scenario2';
 
 <AnimatedSVG
   src={"/img/consensus/part07-fig3.svg"}
-  onAnimate={part07Fig3Scenario2}
+  onAnimate="part07Fig3Scenario2"
   autoPlay={false}
   showControls={true}
   alt="Figure 5: Scenario 2"
@@ -246,10 +247,11 @@ C6 crashes after propagating N3 to N5.
 
 *A coordinator may attempt a timeline that is different from the previous one, try to propagate it, and fail.*
 
+import { part07Fig3Scenario3 } from '@/lib/animations/part07Fig3Scenario3';
 
 <AnimatedSVG
   src={"/img/consensus/part07-fig3.svg"}
-  onAnimate={part07Fig3Scenario3}
+  onAnimate="part07Fig3Scenario3"
   autoPlay={false}
   showControls={true}
   alt="Figure 6: Scenario 3"
@@ -270,10 +272,11 @@ C7 crashes at this point.
 
 *A coordinator may succeed at propagating a timeline, but fail before promoting the leader.*
 
+import { part07Fig3Scenario4 } from '@/lib/animations/part07Fig3Scenario4';
 
 <AnimatedSVG
   src={"/img/consensus/part07-fig3.svg"}
-  onAnimate={part07Fig3Scenario4}
+  onAnimate="part07Fig3Scenario4"
   autoPlay={false}
   showControls={true}
   alt="Figure 7: Scenario 4"
@@ -298,11 +301,12 @@ But let us assume that C8 crashes at this point.
 
 *A final coordinator may see all these attempts and must make a decision that does not compromise safety.*
 
+import { part07Fig3Scenario5 } from '@/lib/animations/part07Fig3Scenario5';
 
 <div style={{textAlign: 'center', width: '100%', position: 'relative'}}>
   <AnimatedSVG
     src={"/img/consensus/part07-fig3.svg"}
-    onAnimate={part07Fig3Scenario5}
+    onAnimate="part07Fig3Scenario5"
     autoPlay={false}
     showControls={true}
     alt="Figure 8: Scenario 5"

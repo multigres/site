@@ -16,6 +16,8 @@ const BLOG_TARGET = path.join(__dirname, '../content/blog');
 const AUTHORS_FILE = path.join(BLOG_SOURCE, 'authors.yml');
 const STATIC_SOURCE = path.join(ROOT, 'static/img');
 const STATIC_TARGET = path.join(__dirname, '../public/img');
+const ANIMATIONS_SOURCE = path.join(ROOT, 'src/components');
+const ANIMATIONS_TARGET = path.join(__dirname, '../lib/animations');
 
 // Load authors
 function loadAuthors() {
@@ -47,6 +49,11 @@ function parseFrontmatter(content) {
 function extractTitle(body) {
   const match = body.match(/^#\s+(.+)$/m);
   return match ? match[1].trim() : null;
+}
+
+// Strip the first H1 heading from the body (since title is in frontmatter)
+function stripH1Title(body) {
+  return body.replace(/^#\s+.+\n*/m, '');
 }
 
 // Extract description from first paragraph after frontmatter
@@ -98,18 +105,31 @@ function convertHtmlComments(content) {
   });
 }
 
-// Strip Docusaurus-specific imports
-function stripDocusaurusImports(content) {
-  // Remove import lines for @docusaurus/* and @site/*
+// Convert Docusaurus-specific imports
+function convertDocusaurusImports(content) {
   return content
     .split('\n')
-    .filter(line => {
+    .map(line => {
       const trimmed = line.trim();
-      if (trimmed.startsWith('import ') && (trimmed.includes('@docusaurus/') || trimmed.includes('@site/'))) {
-        return false;
+      // Remove @docusaurus/* imports entirely
+      if (trimmed.startsWith('import ') && trimmed.includes('@docusaurus/')) {
+        return null;
       }
-      return true;
+      // Convert @site/src/components/AnimatedSVG to @/components/AnimatedSVG
+      if (trimmed.startsWith('import ') && trimmed.includes('@site/src/components/AnimatedSVG')) {
+        return line.replace('@site/src/components/AnimatedSVG', '@/components/AnimatedSVG');
+      }
+      // Convert other @site/src/components/* to @/lib/animations/*
+      if (trimmed.startsWith('import ') && trimmed.includes('@site/src/components/')) {
+        return line.replace('@site/src/components/', '@/lib/animations/');
+      }
+      // Remove other @site/* imports
+      if (trimmed.startsWith('import ') && trimmed.includes('@site/')) {
+        return null;
+      }
+      return line;
     })
+    .filter(line => line !== null)
     .join('\n');
 }
 
@@ -117,6 +137,13 @@ function stripDocusaurusImports(content) {
 function convertUseBaseUrl(content) {
   // Match useBaseUrl('/path') or useBaseUrl("/path") and replace with just the path
   return content.replace(/useBaseUrl\(['"]([^'"]+)['"]\)/g, '"$1"');
+}
+
+// Convert onAnimate={functionName} to onAnimate="functionName"
+// This is needed because Next.js App Router can't pass functions from server to client
+function convertOnAnimateProps(content) {
+  // Match onAnimate={variableName} and convert to onAnimate="variableName"
+  return content.replace(/onAnimate=\{(\w+)\}/g, 'onAnimate="$1"');
 }
 
 // Fix internal links
@@ -154,9 +181,11 @@ function syncDocs() {
 
     // Convert content
     let newBody = convertHtmlComments(body);
-    newBody = stripDocusaurusImports(newBody);
+    newBody = convertDocusaurusImports(newBody);
     newBody = convertUseBaseUrl(newBody);
+    newBody = convertOnAnimateProps(newBody);
     newBody = fixInternalLinks(newBody);
+    newBody = stripH1Title(newBody);
 
     // Build new content
     const newContent = `---\n${yaml.dump(newFrontmatter)}---\n${newBody}`;
@@ -219,9 +248,11 @@ function syncBlog() {
 
     // Convert content
     let newBody = convertHtmlComments(body);
-    newBody = stripDocusaurusImports(newBody);
+    newBody = convertDocusaurusImports(newBody);
     newBody = convertUseBaseUrl(newBody);
+    newBody = convertOnAnimateProps(newBody);
     newBody = fixInternalLinks(newBody);
+    newBody = stripH1Title(newBody);
 
     // Build new content
     const newContent = `---\n${yaml.dump(newFrontmatter)}---\n${newBody}`;
@@ -264,6 +295,38 @@ function syncStatic() {
   console.log(`  Copied: ${STATIC_SOURCE} -> ${STATIC_TARGET}`);
 }
 
+// Sync animation files from /src/components to /apps/docs/lib/animations
+function syncAnimations() {
+  console.log('Syncing animations...');
+
+  if (!fs.existsSync(ANIMATIONS_SOURCE)) {
+    console.log('  No animations source directory found, skipping');
+    return;
+  }
+
+  // Ensure target exists
+  fs.mkdirSync(ANIMATIONS_TARGET, { recursive: true });
+
+  // Only sync .ts files that are animation configs (not React components)
+  const files = fs.readdirSync(ANIMATIONS_SOURCE).filter(f =>
+    f.endsWith('.ts') && !f.endsWith('.tsx')
+  );
+
+  for (const file of files) {
+    const sourcePath = path.join(ANIMATIONS_SOURCE, file);
+    let content = fs.readFileSync(sourcePath, 'utf-8');
+
+    // Fix import paths: @site/src/lib/svg-animator -> ../svg-animator
+    content = content.replace(/@site\/src\/lib\/svg-animator/g, '../svg-animator');
+    // Also fix relative paths that might be wrong
+    content = content.replace(/["']\.\.\/lib\/svg-animator["']/g, '"../svg-animator"');
+
+    const targetPath = path.join(ANIMATIONS_TARGET, file);
+    fs.writeFileSync(targetPath, content);
+    console.log(`  Synced: ${file}`);
+  }
+}
+
 // Main
 function main() {
   console.log('Starting content sync...\n');
@@ -272,6 +335,8 @@ function main() {
   syncBlog();
   console.log('');
   syncStatic();
+  console.log('');
+  syncAnimations();
   console.log('\nSync complete!');
 }
 
