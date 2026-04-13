@@ -80,7 +80,7 @@ There are two possibilities here:
 
 After the new ruleset rs2 became durable, N1 gets promoted and completes additional requests. But it just uses N2 for its acks, which is sufficient to satisfy rs2.
 
-C7 assumes rs1 is currently active. It recruits N2, which it thinks is sufficient to revoke N1’s leadership. However, it notices the ruleset change in the unapplied logs. Therefore, it must continue its revocation and also recruit N2. Recruitment of N2 leads to the discovery of a more progressed timeline. It must therefore propagate N2's timeline instead of N3’s timeline. In this case, it can use rs2 because the ruleset change has already been applied. At this point, it will realize that the minimum conditions are already met, and it could delegate leadership of the 7th term back to N1. N1 will eventually propagate the changes to N3. This scenario is shown in the animation below:
+C7 assumes rs1 is currently active. It recruits N3, which it thinks is sufficient to revoke N1’s leadership. However, it notices the ruleset change in the unapplied logs. Therefore, it must continue its revocation and also recruit N2. Recruitment of N2 leads to the discovery of a more progressed timeline. It must therefore propagate N2's timeline instead of N3’s timeline. In this case, it can use rs2 because the ruleset change has already been applied. At this point, it will realize that the minimum conditions are already met, and it could delegate leadership of the 7th term back to N1. N1 will eventually propagate the changes to N3. This scenario is shown in the animation below:
 
 import { part08Fig3b } from '@site/src/components/part08Fig3b';
 
