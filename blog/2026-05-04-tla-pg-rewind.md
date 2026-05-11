@@ -1,6 +1,17 @@
+---
+slug: 2026/05/04/tla-pg-rewind
+title: 'How TLA+ Caught a Silent Data Divergence Bug in Postgres’s pg_rewind'
+authors: [mats]
+date: 2026-05-26
+tags: [postgres, multigres, tla+, pg_rewind]
+image: /img/blog/tla-pg-rewind.png
+---
+
 # How TLA+ Caught a Silent Data Divergence Bug in Postgres’s pg_rewind
 
 Multigres is Supabase's high-availability and horizontal scaling project for Postgres. The Multigres team at Supabase used [TLA+][TLAPlus] to model Postgres streaming replication and found a silent data-loss bug in [`pg_rewind`][pg_rewind]. Here's what we found and how we fixed it.
+
+<!--truncate-->
 
 ## Postgres HA with Streaming Replication
 
