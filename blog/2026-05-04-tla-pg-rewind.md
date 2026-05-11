@@ -2,7 +2,7 @@
 slug: 2026/05/04/tla-pg-rewind
 title: 'How TLA+ Caught a Silent Data Divergence Bug in Postgres’s pg_rewind'
 authors: [mats]
-date: 2026-05-26
+date: 2026-05-08
 tags: [postgres, multigres, tla+, pg_rewind]
 image: /img/blog/tla-pg-rewind.png
 ---
