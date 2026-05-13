@@ -24,7 +24,7 @@ the old primary rejoins as a standby with a consistent view of history.
 
 ### Timelines
 
-Central to all of this is the concept of **timelines**. Every time a standby is promoted, Postgres increments the timeline ID (TLI). The new primary writes a *timeline history file*, named `00000002.history`, `00000003.history`, and so on. It records the server’s lineage: which TLI it came from, the WAL location where the switch happened, and a human-readable string giving the *reason* for the promotion.
+Central to all of this is the concept of **timelines**. Every time a standby is promoted, Postgres increments the timeline ID (TLI). The new primary writes a _timeline history file_, named `00000002.history`, `00000003.history`, and so on. It records the server’s lineage: which TLI it came from, the WAL location where the switch happened, and a human-readable string giving the _reason_ for the promotion.
 
 ```
 # 00000002.history
@@ -55,16 +55,16 @@ Consider a group of three servers, **S1** (primary), **S2**, and **S3** (standby
 2. S2 is selected as the new primary and promoted. It transition to timeline TLI 2 and update the history file.
 3. S2 starts writing and writes some record W1 to the WAL. Since synchronous replication with one acknowledging server is used, S2 is now waiting for acknowledgement from a standby before confirming the writes to the client.
 4. S2 crashes before W1 has been streamed to any standby. S2 is now on TLI 2, carrying data that exists nowhere else.
-5. S3 is selected as primary and promoted. It has no knowledge of the promotion of S2, so it  promotes to TLI 2 independently, from the same point in TLI 1 that S2 promoted from.
+5. S3 is selected as primary and promoted. It has no knowledge of the promotion of S2, so it promotes to TLI 2 independently, from the same point in TLI 1 that S2 promoted from.
 6. S1 recovers, rewinds using the primary as source (which will not result in anything being rewound) and connect as a standby to the now fully functional primary S3. It will move over to the TLI 2 that S3 is using.
 7. S3 writes some records W2 to its WAL. Since synchronous replication with one acknowledging server is used, S3 is waiting for acknowledgement from a standby before confirming these writes to the client. Since we have a standby, it can be acknowledged.
 8. The group now has two distinct versions of TLI 2: call them TLI 2.1 (on S2) and TLI 2.2 (on S3).
 9. S2 recovers again and needs to rejoin as a standby. You run `pg_rewind` with S3 (the current primary) as source to remove the divergent changes.
 10. Here, **`pg_rewind` sees that both S2 and S3 are on TLI 2** and concludes there is nothing to rewind. It exits successfully. S2 rejoins, still carrying W1, data that was never replicated or acknowledged.
 
-The cluster reports no errors. S2 looks like a healthy standby. The divergent data sits silently in its storage. If you query the node, it will report that W1 exists, and if you later promote S2 to be a primary again, the data will appear on the primary. From the user’s perspective, the data  appeared from nowhere.
+The cluster reports no errors. S2 looks like a healthy standby. The divergent data sits silently in its storage. If you query the node, it will report that W1 exists, and if you later promote S2 to be a primary again, the data will appear on the primary. From the user’s perspective, the data appeared from nowhere.
 
-It is worth noting that this scenario is probably not entirely unknown to the Postgres community, but as of the time of writing, it remains unfixed in the Postgres source.
+This scenario is likely familiar to some in the Postgres community, but as of this writing, it remains unfixed.
 
 What makes this especially insidious is the structure of the timeline history files. Both S1 and S2 produced a `00000002.history` file, and both files look identical to `pg_rewind`: the same parent TLI, the same switch LSN (the point where both diverged from the parent TLI). There is nothing in the existing file format to distinguish an independent promotion from a legitimate continuation of the same timeline.
 
@@ -113,7 +113,7 @@ The `storage` field is the key one for our invariant: it is the set of write ide
 
 Writes are modeled as monotonically increasing integers assigned by the primary to each client write, starting at 1. Each WAL entry carries one write identifier, and they appear in the WAL in the order the writes were made. The model uses write as a simple abstract representation of data: rather than modeling the actual content of a row or page, it tracks which writes have occurred and whether they are present on each server. This is sufficient to detect the bug, because what matters is not what the data says, but whether a server holds writes that the current primary has never seen.
 
-**Actions** are TLA+ predicates that describe how the state may change in a single atomic step. In TLA+, a primed variable `X'` denotes the value of `X` *after* the action. So `role' = [role EXCEPT ![p] = "down"]` means “the new value of `role` is the old value with server `p` set to `"down"`”. Variables listed in `UNCHANGED` keep their current values. For example, `PrimaryCrash` models the primary failing: it sets its role to `"down"`, disconnects all standbys, and clears in-flight replication channels:
+**Actions** are TLA+ predicates that describe how the state may change in a single atomic step. In TLA+, a primed variable `X'` denotes the value of `X` _after_ the action. So `role' = [role EXCEPT ![p] = "down"]` means “the new value of `role` is the old value with server `p` set to `"down"`”. Variables listed in `UNCHANGED` keep their current values. For example, `PrimaryCrash` models the primary failing: it sets its role to `"down"`, disconnects all standbys, and clears in-flight replication channels:
 
 ```tla
 PrimaryCrash ==
@@ -140,13 +140,13 @@ StorageConsistency ==
           server[server].storage \subseteq server[primary].storage
 ```
 
-In plain English: for every connected server whose role is “standby” , its storage must be a subset of the storage of the server whose role is “primary”*.* Any write identifier present on *server* but absent from the *primary* is a phantom. It is data that exists nowhere in the cluster’s agreed history.
+In plain English: for every connected server whose role is “standby” , its storage must be a subset of the storage of the server whose role is “primary”_._ Any write identifier present on _server_ but absent from the _primary_ is a phantom. It is data that exists nowhere in the cluster’s agreed history.
 
 ### The counterexample
 
 When TLC runs against the model, it finds the counterexample quickly (it explores about 7000 distinct states to find the counterexample). The trace it produces maps directly onto the 8-step sequence described above: two crashes, two independent promotions to TLI 2, and a `pg_rewind` run that skips the rewind entirely because it sees matching timeline identifiers. The invariant is violated: the rejoining server still holds W1, a record the current primary has never seen.
 
-The value of the TLC counterexample is not just that it confirms the bug exists. It also gives you a *precise, reproducible* witness. That witness can be translated directly into a regression test, which is what the proposed fix does (more on that in the next section).
+The value of the TLC counterexample is not just that it confirms the bug exists. It also gives you a _precise, reproducible_ witness. That witness can be translated directly into a regression test, which is what the proposed fix does (more on that in the next section).
 
 ---
 
@@ -199,7 +199,7 @@ The full proposal is available on the pgsql-hackers mailing list at [the origina
 
 ### A UUID per promotion
 
-Every time a standby promotes, Postgres now generates a UUIDv7 ****value and writes it into the timeline history file alongside the existing TLI number and switch LSN. UUIDv7 was chosen for two reasons. First, UUIDv7 values are time-ordered: the leading bits encode a millisecond-precision timestamp, which means UUIDs generated at different times sort naturally by when the promotion occurred. This helps in debugging and auditing. Second, the remaining bits are random, making collisions between two independently generated UUIDs astronomically unlikely even if two promotions happen at exactly the same millisecond. Together these properties give each promotion a unique, time-stamped identity that is cheap to generate, safe to compare, and does not require a centralized coordinator. This fits naturally into a failover scenario where servers may not be able to reach each other. The history file format becomes:
+Every time a standby promotes, Postgres now generates a UUIDv7 \*\*\*\*value and writes it into the timeline history file alongside the existing TLI number and switch LSN. UUIDv7 was chosen for two reasons. First, UUIDv7 values are time-ordered: the leading bits encode a millisecond-precision timestamp, which means UUIDs generated at different times sort naturally by when the promotion occurred. This helps in debugging and auditing. Second, the remaining bits are random, making collisions between two independently generated UUIDs astronomically unlikely even if two promotions happen at exactly the same millisecond. Together these properties give each promotion a unique, time-stamped identity that is cheap to generate, safe to compare, and does not require a centralized coordinator. This fits naturally into a failover scenario where servers may not be able to reach each other. The history file format becomes:
 
 ```
 # 00000002.history (new format)
@@ -411,11 +411,11 @@ pg_rewind: Done!
 
 ### Reflections on Using TLA+ for Database Work
 
-Finding this bug required reasoning about a precise interleaving of events across multiple nodes. Two crashes within a narrow window, interleaved with two independent promotions, is essentially impossible to trigger reliably in an integration test. You would have to know in advance that this exact sequence was worth looking for, and then engineer a test harness capable of pausing execution at just the right moments. In practice, this class of bug tends to go undetected until it surfaces in production under  the wrong conditions.
+Finding this bug required reasoning about a precise interleaving of events across multiple nodes. Two crashes within a narrow window, interleaved with two independent promotions, is essentially impossible to trigger reliably in an integration test. You would have to know in advance that this exact sequence was worth looking for, and then engineer a test harness capable of pausing execution at just the right moments. In practice, this class of bug tends to go undetected until it surfaces in production under the wrong conditions.
 
 TLA+ approaches the problem differently. Rather than running the system and hoping the bad interleaving shows up, you write a model of the system’s possible behaviors and let TLC enumerate them exhaustively. The model for this work is modest in size, a few hundred lines of TLA+ across two modules, but the state space it explores is large enough to cover all the relevant crash and promotion sequences. TLC found the counterexample quickly.
 
-A few things made TLA+  well suited here:
+A few things made TLA+ well suited here:
 
 **The model stays close to the real system.** The actions in the spec `PrimaryCrash`, `BeginPromote`, `StandbyConnect` map directly onto real Postgres behaviors. The `StandbyConnect` action even models the specific `pg_rewind` shortcut that contains the bug: when source and target are on the same timeline, it skips the rewind. This means the counterexample TLC produces is not an abstract state sequence. It is a concrete description of what a real Postgres cluster would do.
 
@@ -431,7 +431,7 @@ The broader lesson is that formal methods pay off most where testing is weakest:
 
 The bug described here is a good example of how correctness issues in distributed systems can hide in plain sight. The scenario involves two crashes and two independent promotions to the same timeline ID. It is unusual enough that no existing test covered it, yet realistic enough to occur in a real production cluster under cascading failure. The consequence is a standby silently carrying phantom writes with no error from `pg_rewind`. This is the kind of data integrity issue that HA systems are supposed to prevent.
 
-The fix is small and elegant: embed a UUIDv7 in each timeline history entry at promotion time, and use it to distinguish independent promotions that happen to share a timeline number. The change is fully backward-compatible, and the counterexample TLC produced translated directly into regression tests that cover both the simple and three-timeline variants.
+The fix is small and elegant: embed a **UUIDv7** in each timeline history entry at promotion time, and use it to distinguish independent promotions that happen to share a timeline number. The change is fully backward-compatible, and the counterexample TLC produced translated directly into regression tests that cover both the simple and three-timeline variants.
 
 The TLA+ models are available at [github.com/mkindahl/tla-postgres](https://github.com/mkindahl/tla-postgres), and the proposed patch and discussion can be found on the pgsql-hackers mailing list at the [original proposal](https://www.postgresql.org/message-id/flat/CAN305gC0VE8zB%3DguccMj-7cJTW4oOAmTYCktaUKSzyOup%3DHHEw%40mail.gmail.com). Feedback on both the model and the patch is very welcome.This work is part of Supabase's broader investment in making Postgres the most reliable foundation for high-availability workloads. We contribute these findings back to the Postgres community because Postgres's reliability is our reliability.
 
