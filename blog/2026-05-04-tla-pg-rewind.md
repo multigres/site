@@ -55,16 +55,16 @@ Consider a group of three servers, **S1** (primary), **S2**, and **S3** (standby
 2. S2 is selected as the new primary and promoted. It transition to timeline TLI 2 and update the history file.
 3. S2 starts writing and writes some record W1 to the WAL. Since synchronous replication with one acknowledging server is used, S2 is now waiting for acknowledgement from a standby before confirming the writes to the client.
 4. S2 crashes before W1 has been streamed to any standby. S2 is now on TLI 2, carrying data that exists nowhere else.
-5. S3 is selected as primary and promoted. It has no knowledge of the promotion of S2, so it  promotes to TLI 2 independently, from the same point in TLI 1 that S2 promoted from.
+5. S3 is selected as primary and promoted. It has no knowledge of the promotion of S2, so it promotes to TLI 2 independently, from the same point in TLI 1 that S2 promoted from.
 6. S1 recovers, rewinds using the primary as source (which will not result in anything being rewound) and connect as a standby to the now fully functional primary S3. It will move over to the TLI 2 that S3 is using.
 7. S3 writes some records W2 to its WAL. Since synchronous replication with one acknowledging server is used, S3 is waiting for acknowledgement from a standby before confirming these writes to the client. Since we have a standby, it can be acknowledged.
 8. The group now has two distinct versions of TLI 2: call them TLI 2.1 (on S2) and TLI 2.2 (on S3).
 9. S2 recovers again and needs to rejoin as a standby. You run `pg_rewind` with S3 (the current primary) as source to remove the divergent changes.
 10. Here, **`pg_rewind` sees that both S2 and S3 are on TLI 2** and concludes there is nothing to rewind. It exits successfully. S2 rejoins, still carrying W1, data that was never replicated or acknowledged.
 
-The cluster reports no errors. S2 looks like a healthy standby. The divergent data sits silently in its storage. If you query the node, it will report that W1 exists, and if you later promote S2 to be a primary again, the data will appear on the primary. From the user’s perspective, the data  appeared from nowhere.
+The cluster reports no errors. S2 looks like a healthy standby. The divergent data sits silently in its storage. If you query the node, it will report that W1 exists, and if you later promote S2 to be a primary again, the data will appear on the primary. From the user’s perspective, the data appeared from nowhere.
 
-It is worth noting that this scenario is probably not entirely unknown to the Postgres community, but as of the time of writing, it remains unfixed in the Postgres source.
+This scenario is likely familiar to some in the Postgres community, but as of this writing, it remains unfixed.
 
 What makes this especially insidious is the structure of the timeline history files. Both S1 and S2 produced a `00000002.history` file, and both files look identical to `pg_rewind`: the same parent TLI, the same switch LSN (the point where both diverged from the parent TLI). There is nothing in the existing file format to distinguish an independent promotion from a legitimate continuation of the same timeline.
 
@@ -411,11 +411,11 @@ pg_rewind: Done!
 
 ### Reflections on Using TLA+ for Database Work
 
-Finding this bug required reasoning about a precise interleaving of events across multiple nodes. Two crashes within a narrow window, interleaved with two independent promotions, is essentially impossible to trigger reliably in an integration test. You would have to know in advance that this exact sequence was worth looking for, and then engineer a test harness capable of pausing execution at just the right moments. In practice, this class of bug tends to go undetected until it surfaces in production under  the wrong conditions.
+Finding this bug required reasoning about a precise interleaving of events across multiple nodes. Two crashes within a narrow window, interleaved with two independent promotions, is essentially impossible to trigger reliably in an integration test. You would have to know in advance that this exact sequence was worth looking for, and then engineer a test harness capable of pausing execution at just the right moments. In practice, this class of bug tends to go undetected until it surfaces in production under the wrong conditions.
 
 TLA+ approaches the problem differently. Rather than running the system and hoping the bad interleaving shows up, you write a model of the system’s possible behaviors and let TLC enumerate them exhaustively. The model for this work is modest in size, a few hundred lines of TLA+ across two modules, but the state space it explores is large enough to cover all the relevant crash and promotion sequences. TLC found the counterexample quickly.
 
-A few things made TLA+  well suited here:
+A few things made TLA+ well suited here:
 
 **The model stays close to the real system.** The actions in the spec `PrimaryCrash`, `BeginPromote`, `StandbyConnect` map directly onto real Postgres behaviors. The `StandbyConnect` action even models the specific `pg_rewind` shortcut that contains the bug: when source and target are on the same timeline, it skips the rewind. This means the counterexample TLC produces is not an abstract state sequence. It is a concrete description of what a real Postgres cluster would do.
 
@@ -431,7 +431,7 @@ The broader lesson is that formal methods pay off most where testing is weakest:
 
 The bug described here is a good example of how correctness issues in distributed systems can hide in plain sight. The scenario involves two crashes and two independent promotions to the same timeline ID. It is unusual enough that no existing test covered it, yet realistic enough to occur in a real production cluster under cascading failure. The consequence is a standby silently carrying phantom writes with no error from `pg_rewind`. This is the kind of data integrity issue that HA systems are supposed to prevent.
 
-The fix is small and elegant: embed a UUIDv7 in each timeline history entry at promotion time, and use it to distinguish independent promotions that happen to share a timeline number. The change is fully backward-compatible, and the counterexample TLC produced translated directly into regression tests that cover both the simple and three-timeline variants.
+The fix is small and elegant: embed a **UUIDv7** in each timeline history entry at promotion time, and use it to distinguish independent promotions that happen to share a timeline number. The change is fully backward-compatible, and the counterexample TLC produced translated directly into regression tests that cover both the simple and three-timeline variants.
 
 The TLA+ models are available at [github.com/mkindahl/tla-postgres](https://github.com/mkindahl/tla-postgres), and the proposed patch and discussion can be found on the pgsql-hackers mailing list at the [original proposal](https://www.postgresql.org/message-id/flat/CAN305gC0VE8zB%3DguccMj-7cJTW4oOAmTYCktaUKSzyOup%3DHHEw%40mail.gmail.com). Feedback on both the model and the patch is very welcome.This work is part of Supabase's broader investment in making Postgres the most reliable foundation for high-availability workloads. We contribute these findings back to the Postgres community because Postgres's reliability is our reliability.
 
