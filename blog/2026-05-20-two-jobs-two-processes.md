@@ -2,7 +2,7 @@
 slug: two-jobs-two-processes
 authors: [manan]
 date: 2026-05-20T09:00
-tags: [planetpg, postgres, connection-pooling]
+tags: [planetpg, postgres, connection-pooling, distributed-systems, architecture]
 ---
 
 # Two jobs, two processes: why Multigres has its own connection pooler

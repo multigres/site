@@ -2,7 +2,7 @@
 slug: pooling-without-choosing-a-mode
 authors: [manan]
 date: 2026-05-20T11:00
-tags: [planetpg, postgres, connection-pooling]
+tags: [planetpg, postgres, connection-pooling, pgbouncer, transactions]
 ---
 
 # Pooling without choosing a mode

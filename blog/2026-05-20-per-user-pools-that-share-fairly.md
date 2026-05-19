@@ -2,7 +2,7 @@
 slug: per-user-pools-that-share-fairly
 authors: [manan]
 date: 2026-05-20T10:00
-tags: [planetpg, postgres, connection-pooling]
+tags: [planetpg, postgres, connection-pooling, security, fairness]
 ---
 
 # Per-user pools that share fairly

@@ -2,7 +2,7 @@
 slug: one-parse-per-query-no-matter-how-many-gateways
 authors: [manan]
 date: 2026-05-20T12:00
-tags: [planetpg, postgres, connection-pooling]
+tags: [planetpg, postgres, connection-pooling, prepared-statements, distributed-systems]
 ---
 
 # One parse per query, no matter how many gateways
