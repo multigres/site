@@ -93,6 +93,12 @@
   padding-top: 1rem;
 }
 
+/* Tables that should fill the full content width instead of shrinking to content */
+.full-width-table table {
+  display: table;
+  width: 100%;
+}
+
 /* Custom nested list numbering: 1, 1.a, 1.a.(i) */
 .markdown ol {
   counter-reset: item;
