@@ -18,7 +18,7 @@ We want to highlight that those operations are consensus decisions, and a system
 The full demo:
 
 <iframe
-  width="700"
+  width="800"
   height="450"
   src="https://www.youtube-nocookie.com/embed/S3-buC80OKA"
   title="YouTube video"
