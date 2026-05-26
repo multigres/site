@@ -1,7 +1,7 @@
 ---
 slug: drop-in-postgres-proven-with-a-real-app
 authors: [manan]
-date: 2026-05-28
+date: 2026-05-27
 tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 ---
 
