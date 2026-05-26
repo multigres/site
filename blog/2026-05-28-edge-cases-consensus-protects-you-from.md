@@ -19,7 +19,7 @@ The full demo:
 
 <iframe
   style={{width: '100%', aspectRatio: '16 / 9'}}
-  src="https://www.youtube-nocookie.com/embed/S3-buC80OKA"
+  src="https://www.youtube-nocookie.com/embed/DLHPZBE0MoY"
   title="YouTube video"
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

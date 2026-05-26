@@ -11,7 +11,16 @@ In order to run services at scale and in a reliable way, high availability is a 
 
 <!--truncate-->
 
-The full demo is here: [TODO].
+The full demo:
+
+<iframe
+  style={{width: '100%', aspectRatio: '16 / 9'}}
+  src="https://www.youtube-nocookie.com/embed/5k_H0FbOVUo"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
 
 ## Two definitions
 
