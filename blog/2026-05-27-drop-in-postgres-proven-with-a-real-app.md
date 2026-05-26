@@ -1,7 +1,7 @@
 ---
 slug: drop-in-postgres-proven-with-a-real-app
 authors: [manan]
-date: 2026-05-27
+date: 2026-05-27T10:00
 tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 ---
 
@@ -15,7 +15,16 @@ Multigres makes a different bet. The surface stays Postgres. Existing clients co
 
 This post is about two parts of that bet. The first is the drop-in claim, which is easy to test with a real Postgres app. The second is what happens when you push that drop-in past anything Postgres-on-its-own can handle, which is where Multigres earns its keep.
 
-The full demo is here: [TODO].
+The full demo:
+
+<iframe
+  style={{width: '100%', aspectRatio: '16 / 9'}}
+  src="https://www.youtube-nocookie.com/embed/vSjnbtfQEoA"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
 
 ## The drop-in test
 
