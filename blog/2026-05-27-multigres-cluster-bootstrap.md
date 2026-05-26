@@ -13,7 +13,16 @@ A new high-availability Postgres cluster has to do several things: pick a primar
 
 This post walks through what happens between provisioning a Multigres cluster and the moment your application can write to it. The short version: gateways and poolers register in topology, each pooler runs `initdb`, the poolers race to write a seed backup to S3, every pooler restores from that backup, and the orchestrator appoints one as the primary. The longer version is below.
 
-A recording of the same flow: [TODO]
+A recording of the same flow:
+
+<iframe
+  style={{width: '100%', aspectRatio: '16 / 9'}}
+  src="https://www.youtube-nocookie.com/embed/9Sf83F9QppY"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
 
 ## The services
 
