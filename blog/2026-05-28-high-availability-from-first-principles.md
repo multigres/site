@@ -1,7 +1,7 @@
 ---
 slug: high-availability-from-first-principles
 authors: [rafael]
-date: 2026-05-29
+date: 2026-05-28
 tags: [postgres, multigres, high-availability, consensus, failover]
 ---
 
