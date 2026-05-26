@@ -1,0 +1,70 @@
+---
+slug: edge-cases-consensus-protects-you-from
+authors: [rafael]
+date: 2026-05-28T09:00
+tags: [planetpg, postgres, multigres, consensus, high-availability, membership]
+---
+
+# The edge cases consensus protects you from
+
+The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. The pictures are easy to draw. The failure mode is obvious.
+
+<!--truncate-->
+
+This post is about the boring kind. The kind where you scale your cluster from three replicas to four, or from four to three, or change the durability requirement from "two acks" to "three acks." Operations that look like configuration changes.
+
+We want to highlight that those operations are consensus decisions, and a system that handles failovers correctly but treats them like configuration changes will lose data in scenarios that are rare, but possible at scale. Multigres handles those corner cases for you.
+
+The full demo:
+
+<iframe
+  width="700"
+  height="450"
+  src="https://www.youtube-nocookie.com/embed/S3-buC80OKA"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+
+## Scaling a cluster from three to four
+
+Start with the simplest version. A Multigres cluster has one primary and two replicas. An operator wants a third replica, for read capacity, for a multi-zone deployment, or to prepare for a planned shrink elsewhere.
+
+The Kubernetes operator scales the number of replicas from three to four. A new pod comes up. A new MultiPooler registers in the topology. A new Postgres process starts as a fresh replica. The orchestrator notices the new node and brings it into the cluster.
+
+The naive way to bring it in is to point the new replica at the current primary, let it restore from a backup, let it stream WAL forward, and once it has caught up, count it as a member.
+
+The naive approach is wrong because it treats membership as a local orchestration detail. A standby cannot simply join the cohort and start acknowledging writes. Let's unpack in detail an interesting failure mode where this becomes a problem.
+
+## The race
+
+The hard part in distributed systems is that changes take time to propagate, and agents may take action based on stale information. Multiple MultiOrch instances are watching the cluster from different cells. They do not share local state, and for short periods of time they can have different views of the world. The challenge is that those local decisions still have to honor the cluster's consensus rules. That is intentional. It is part of what makes the orchestrator partition-tolerant.
+
+The risk appears when cluster membership is implemented naively using only the local view of a coordinator. During a membership change, one orchestrator may already believe a new replica has joined, while another may still be operating with the old view of the cluster.
+
+That gap is dangerous. If a write is acknowledged using one view of membership, but failover later happens using another view, the system can make a decision that can lead to data loss. In the demo, we show this failure mode: a new replica is admitted by one orchestrator, a write is acknowledged with that replica's participation, the primary crashes, and another orchestrator fails over the cluster without recognizing that replica as part of the membership.
+
+The result is a data loss event that does not look like one. The orchestrator that repaired the cluster followed its rules. The problem is that it was operating with a different membership view than the one used to acknowledge the write.
+
+This is why membership changes cannot be treated as local orchestration decisions. Adding or removing a replica changes the set of nodes that durability and failover rules are evaluated against. That means membership has to be coordinated as a consensus decision, similar to a failover. A new member should not affect write acknowledgement or failover until the cluster has made a shared, durable decision that it belongs to the cluster.
+
+## Membership changes are ruleset changes
+
+The right way to think about adding or removing replicas is as a change to the ruleset that the cluster agrees on.
+
+A ruleset is the concrete, current statement of how a write becomes durable. It depends on the policy ("two replicas in different zones" or "any three nodes") and on the cohort, which is the set of nodes currently considered members.
+
+If the cohort changes, the ruleset changes. Every node that participates in durability decisions has to know which ruleset is active. If two nodes disagree about the ruleset, they will disagree about which writes are committed. That disagreement leads to data loss as described in the previous section.
+
+**So adding or removing nodes cannot be a local decision by the orchestrator that noticed it. It has to be a consensus decision the cluster makes about itself, propagated to every node that could possibly run a future failover.**
+
+## What this gets you
+
+A Multigres cluster scales without losing data. A node joins the cluster as a consensus decision. A node leaves the cluster as a consensus decision. Every operation that affects which writes the cluster can complete is itself a write that the cluster has to complete under the durability rules.
+
+These are strong safety guarantees that Multigres provides. Not only the obvious failures, like a primary dying and needing a safe failover, but also the subtle edge cases that show up during routine cluster operations. Adding a replica may look like configuration, but once that replica can affect durability or failover, membership becomes part of the consensus state. Multigres treats it that way.
+
+## Further reading
+
+- [Generalized Consensus: Changing the Rules](https://multigres.com/blog/generalized-consensus-part8)
