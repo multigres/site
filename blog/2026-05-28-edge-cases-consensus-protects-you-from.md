@@ -18,8 +18,7 @@ We want to highlight that those operations are consensus decisions, and a system
 The full demo:
 
 <iframe
-  width="800"
-  height="450"
+  style={{width: '100%', aspectRatio: '16 / 9'}}
   src="https://www.youtube-nocookie.com/embed/S3-buC80OKA"
   title="YouTube video"
   frameBorder="0"
