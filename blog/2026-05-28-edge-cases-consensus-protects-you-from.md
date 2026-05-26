@@ -1,7 +1,7 @@
 ---
 slug: edge-cases-consensus-protects-you-from
 authors: [rafael]
-date: 2026-05-28T09:00
+date: 2026-05-28T11:00
 tags: [planetpg, postgres, multigres, consensus, high-availability, membership]
 ---
 
