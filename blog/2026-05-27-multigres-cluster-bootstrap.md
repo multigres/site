@@ -1,0 +1,97 @@
+---
+slug: multigres-cluster-bootstrap
+authors: [cuongdo]
+date: 2026-05-27
+tags: [planetpg, postgres, multigres, bootstrap, high-availability, distributed-systems]
+---
+
+# How a Multigres Cluster Bootstraps
+
+A new high-availability Postgres cluster has to do several things: pick a primary, seed standbys from a backup, configure replication, and start serving traffic. Multigres runs these as one automated flow.
+
+<!--truncate-->
+
+This post walks through what happens between provisioning a Multigres cluster and the moment your application can write to it. The short version: gateways and poolers register in topology, each pooler runs `initdb`, the poolers race to write a seed backup to S3, every pooler restores from that backup, and the orchestrator appoints one as the primary. The longer version is below.
+
+A recording of the same flow:
+
+<iframe
+  style={{width: '100%', aspectRatio: '16 / 9'}}
+  src="https://www.youtube-nocookie.com/embed/9Sf83F9QppY"
+  title="YouTube video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+
+## The services
+
+A Multigres deployment runs four services alongside Postgres, plus a topology server.
+
+- **MultiGateway.** Speaks the Postgres wire protocol, so your application thinks it is talking to a Postgres server. The gateway forwards queries to the right MultiPooler over gRPC.
+- **MultiPooler.** Sits next to a single Postgres instance and owns its connection pool. One pooler per Postgres process.
+- **pgctld.** Runs alongside the pooler and manages the local Postgres process: `initdb`, start, stop, restart.
+- **MultiOrch.** The orchestrator. Watches replication, appoints leaders, runs failovers, and coordinates bootstrap, backup, restore, and scale.
+- **Topology server.** A distributed key-value store, typically etcd. Records which databases exist, which cells they live in, and where every component is registered.
+
+Cells are user-defined groupings that map to availability zones or regions. In a multi-zone deployment, the topology splits into a global server holding cluster-wide state and per-cell servers holding local discovery state. A partitioned cell keeps operating against its own local view.
+
+## Starting from nothing
+
+Bootstrap starts with next to nothing: just a Kubernetes manifest and a target topology. No primary, no replicas.
+
+When the manifest applies, each service registers itself with the topology server as it comes up. Gateways register first because they have no dependency on database state. Each gateway reads the topology to learn which databases exist and which poolers serve them, then watches for changes.
+
+Poolers register next, each bound to a Postgres instance through pgctld. Every data directory is empty. Every pooler advertises itself as REPLICA, the safe default. The cluster still has no primary.
+
+This is the most fragile moment of a cluster's life. If a hand-rolled bootstrap script picked a primary now, two scripts could run in parallel and pick two different primaries. This is a split-brain. Multigres avoids it by coordinating leader appointment through MultiOrch, which runs as a small set of independent instances that agree on the leader through our [consensus protocol](https://multigres.com/blog/generalized-consensus-part1).
+
+## Seed backup first, then leader
+
+Bootstrap runs in two phases.
+
+### Phase 1: each pooler initializes itself and races for the seed backup
+
+Each pooler independently runs `initdb`, starts Postgres through pgctld, and creates the Multigres schema and pgBackRest stanza. The poolers then race for a backup lease. One wins, takes a full backup of its local data directory, and writes it to S3. The others find that a backup already exists and skip the create step. Every pooler then tears down its local data directory and restores from the shared backup. After this phase, every pooler holds the same restored state, in hot-standby mode.
+
+### Phase 2: MultiOrch appoints the initial leader
+
+MultiOrch waits for enough initialized poolers to satisfy the durability policy. It then claims the exclusive right to initialize the shard, picks one of the restored poolers as the leader, and promotes it to primary. The other poolers point at the new primary and start streaming WAL.
+
+Bootstrap and failover share the same election code path. A new cluster is a failover with no prior leader.
+
+## Why the seed backup comes first
+
+A new cluster has nothing in it. A backup of an empty cluster is a few megabytes of metadata. Why bother?
+
+Because every node uses it. Standbys restore from S3, then stream WAL (write-ahead log) forward from the position recorded in the backup. The seed backup is small because the cluster is empty, but it is the same artifact every node reads on its way in.
+
+Backups are also what a new replica reads when you scale from three nodes to four, and backups are what the cluster reads when it has to rebuild from disaster. Bootstrap and recovery share a largely common backup and restore path.
+
+## The cluster is now healthy
+
+Now we have one primary, two replicas streaming, and one backup in S3. A `psql` connection through any gateway lands on the primary's pooler. Gateways start routing read traffic to the replicas if the application opts in.
+
+## Backups after bootstrap
+
+Backups in a running cluster are the same artifact the cluster used to come up, taken at a later point in time. Multigres uses pgBackRest tool to provide efficient, reliable backups.
+
+Multigres supports full, incremental, and differential backups. A full backup copies the entire data directory at a checkpoint. An incremental backup copies only the files that changed since the previous backup, plus a manifest describing the chain. A differential backup copies the changes since the last full backup, trading more disk space for faster restore. Restore walks the chain from the most recent full backup and applies each delta on top.
+
+One small but important rule: scheduled backups run on replicas, not on the primary. The primary has to keep up with writes. Asking it to also stream gigabytes or terabytes to S3 stresses its I/O. A replica already receives the same WAL the primary is producing, so it can back up without affecting application traffic.
+
+The seed backup at bootstrap is the exception. There is no replica to take it from yet.
+
+In production, a Multigres cluster runs scheduled full backups, more frequent incremental or differential backups, and stores them in S3. The CLI lists backups, takes manual ones, and initiates restores.
+
+## What you get
+
+A bootstrapped Multigres cluster is a primary, two replicas, a seed backup in S3, a topology server that knows where everything is, poolers managing connection state, gateways speaking the Postgres protocol, and an orchestrator watching for failures. It's simple to provision additional replicas as needed.
+
+The bootstrap is reproducible. The same flow runs on a developer's laptop against kind, on a test cluster against EKS, and in production across regions. The orchestrator follows the same principles whether the cluster has three nodes or 300.
+
+That is what cluster bootstrapping looks like in Multigres. The result feels effortless because Multigres handles the orchestration. The next post in this series shows what happens when a real application starts pushing the cluster.
+
+## Further reading
+
+- [Multigres Architecture](https://multigres.com/docs/architecture)
