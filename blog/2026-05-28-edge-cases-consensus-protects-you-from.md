@@ -7,13 +7,13 @@ tags: [planetpg, postgres, multigres, consensus, high-availability, membership]
 
 # The edge cases consensus protects you from
 
-The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. The pictures are easy to draw. The failure mode is obvious.
+The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. This is a very standard failure mode in a large scale deployment. 
 
 <!--truncate-->
 
-This post is about the boring kind. The kind where you scale your cluster from three replicas to four, or from four to three, or change the durability requirement from "two acks" to "three acks." Operations that look like configuration changes.
+This post is about more subtle failures. It shows how scaling a cluster is, underneath, a consensus problem. Operations that look like configuration changes on the surface are not simple when viewed through the lens of consensus.
 
-We want to highlight that those operations are consensus decisions, and a system that handles failovers correctly but treats them like configuration changes will lose data in scenarios that are rare, but possible at scale. Multigres handles those corner cases for you.
+We want to highlight that these operations are consensus decisions. A system that handles failovers correctly, but treats scaling as a configuration change, can still lose data in scenarios that are rare but possible at scale. We are thinking about those edge cases in Multigres.
 
 The full demo:
 
@@ -30,7 +30,7 @@ The full demo:
 
 Start with the simplest version. A Multigres cluster has one primary and two replicas. An operator wants a third replica, for read capacity, for a multi-zone deployment, or to prepare for a planned shrink elsewhere.
 
-The Kubernetes operator scales the number of replicas from three to four. A new pod comes up. A new MultiPooler registers in the topology. A new Postgres process starts as a fresh replica. The orchestrator notices the new node and brings it into the cluster.
+The Kubernetes operator scales the number of replicas from three to four. A new pod comes up. A new MultiPooler registers in the topology of the cluster. A new Postgres process starts as a fresh replica. The orchestrator notices the new node and brings it into the cluster.
 
 The naive way to bring it in is to point the new replica at the current primary, let it restore from a backup, let it stream WAL forward, and once it has caught up, count it as a member.
 
@@ -60,7 +60,7 @@ If the cohort changes, the ruleset changes. Every node that participates in dura
 
 ## What this gets you
 
-A Multigres cluster scales without losing data. A node joins the cluster as a consensus decision. A node leaves the cluster as a consensus decision. Every operation that affects which writes the cluster can complete is itself a write that the cluster has to complete under the durability rules.
+A Multigres cluster scales without losing data. Every operation that affects which writes the cluster can complete is itself a write that the cluster has to complete under the durability rules.
 
 These are strong safety guarantees that Multigres provides. Not only the obvious failures, like a primary dying and needing a safe failover, but also the subtle edge cases that show up during routine cluster operations. Adding a replica may look like configuration, but once that replica can affect durability or failover, membership becomes part of the consensus state. Multigres treats it that way.
 

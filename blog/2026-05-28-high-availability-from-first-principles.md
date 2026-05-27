@@ -24,9 +24,9 @@ The full demo:
 
 ## Two definitions
 
-The shallow definition of HA is "promote a replica when the primary dies." A loop watches a health check, picks a candidate, and runs `pg_promote`. There's a tension between preventing data loss and maximizing uptime. There are many practical approaches to implementing high availability when durability guarantees are not strict and you can tolerate small amounts of data loss.
+The simple definition of HA is "promote a replica when the primary dies." A loop watches a health check, picks a candidate, and runs `pg_promote`. There's a tension between preventing data loss and maximizing uptime. There are many practical approaches to implementing high availability when durability guarantees are not strict and you can tolerate small amounts of data loss.
 
-The deeper definition is harder. HA is a contract where every committed write survives failures including multiple failures close to each other, and that the cluster reaches agreement on which writes are committed before allowing any further writes. This deeper definition requires a consensus implementation.
+The stricter definition is harder. HA is a contract where every committed write survives failures including multiple failures close to each other, and that the cluster reaches agreement on which writes are committed before allowing any further writes. This deeper definition requires a consensus implementation.
 
 Multigres is built around the second version. The HA implementation is anchored in a body of work the team calls generalized consensus, and every failover the orchestrator performs has to satisfy a small set of invariants drawn from that work.
 
@@ -36,7 +36,7 @@ The series of blog posts on the Multigres blog walks through generalized consens
 
 The first is a set of invariants. There is a small list of properties that any consensus implementation has to maintain, regardless of the specific algorithm. If the implementation maintains them, it is correct. If it violates any of them, even briefly, it is not. The invariants are not specific to Raft, Paxos, or any other named algorithm. They are the underlying rules that all of them happen to satisfy.
 
-The second is a template. Given the invariants, there is a sequence of steps that, if followed, cannot violate them. The template covers leader election, membership changes, request completion, and discovery. The template is what the implementation runs. The invariants are what the template is checked against.
+The second is a template. Given the invariants, there is a sequence of steps that, if followed, cannot violate them. The template covers leader election, membership changes, request completion, and discovery. 
 
 The two together let the team make changes to the implementation with confidence. A new edge case in failover does not require re-deriving the safety properties of the whole system. It requires checking the change against the existing invariants.
 
@@ -46,9 +46,15 @@ In a Raft system, every node is a candidate. Nodes vote among themselves, elect 
 
 Generalized consensus separates the roles. Leaders accept and complete requests. Followers help make requests durable. Observers replicate completed requests for read scaling. Coordinators run health checks, detect failures, and drive rule changes (including leadership changes).
 
-In Multigres, the Postgres processes are leaders, followers, and observers depending on their state. MultiOrch is the coordinator. In our deployments, we run our Postgres cluster spread across three availability zones. So for redundancy and to account for coordinators being network partitioned from the rest of the cluster, we run MultiOrch in different AZs. There are normally two or three MultiOrch instances per shard, one per cell, watching the cluster from independent vantage points. They can all act independently, and they don't talk to each other directly. They each watch the state of the shard, each detect failures independently, and race to fix them when they do.
+In Multigres, Postgres processes can be leaders, followers, or observers depending on their state. MultiOrch is the coordinator.
 
-The race is bounded by the consensus rules. A coordinator that wants to perform a leadership change has to obtain a fresh term number, revoke the old leader's ability to make further progress, recruit a quorum of followers under the current ruleset, and discover the most progressed log among them before the new primary can accept writes. The candidate has to satisfy the durability rules of the cluster, which are externally specified by policy and combined with the current cohort to produce a concrete ruleset.
+In our deployments, we spread each Postgres cluster across three availability zones. This gives us redundancy across AZs. We also run MultiOrch in multiple AZs so that the system can tolerate a coordinator being network-partitioned from part of the cluster.
+
+Normally, there are two or three MultiOrch instances per shard, one per cell, each watching the cluster from an independent vantage point. They can all act independently and they do not talk to each other directly. Each instance observes the state of the shard, detects failures independently, and races to repair the cluster when it sees a problem.
+
+The remediation follows the consensus rules. A coordinator that wants to perform a leadership change has to obtain the authority to do so, revoke the old leader's ability to make further progress, recruit a quorum of followers under the current ruleset, and discover the most progressed log among them before the new primary can accept writes.
+
+The candidate must satisfy the cluster's durability requirements. Those requirements are externally specified by policy and combined with the current cohort to produce the concrete ruleset for the shard.
 
 If two coordinators race, only one can complete the sequence. The other one notices, abandons its attempt, and watches the cluster re-converge. The cluster does not split.
 
@@ -86,9 +92,9 @@ The right answer is `pg_rewind`, which finds the last common WAL position betwee
 
 Multigres runs `pg_rewind` automatically as part of bringing the old primary back. The disconnected state in the UI is the rewind in progress. Once it completes, the old primary attaches as a replica, streams the WAL it missed, and rejoins the cluster as a follower.
 
-## What a failover gives you
+## Multigres failover guarantees
 
-A failover that completes in seconds is table stakes. The interesting promise is the one underneath: every committed write survives the failover, every uncommitted write is discarded, the cluster reaches agreement on which is which before any new writes happen, and no human has to be paged.
+Our implementation provides timely remediation (within seconds), minimum disruption to clients and strict durability guarantees: every committed write survives the failover, every uncommitted write is discarded, the cluster reaches agreement on which is which before any new writes happen, and no human has to be paged.
 
 Multigres can deliver this because it owns the problem as a cohesive solution. The HA promise depends on Postgres, the orchestrator, our connection pooling, and query gateway playing a role in an interconnected way. Multigres gives us one integrated stack where those pieces are designed to operate as a single system.
 
