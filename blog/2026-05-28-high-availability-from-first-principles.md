@@ -86,7 +86,7 @@ Postgres makes a guarantee that is weaker than the consensus contract. A primary
 
 In a planned failover, that window is closed because the primary stops accepting new writes before the new primary takes over. In an unplanned failover, that window is real. A primary can crash holding writes that no replica ever saw.
 
-When that primary comes back, it has WAL records on disk that the rest of the cluster does not have. Its timeline diverges from the cluster's timeline at the failover point. If you let it stream from the new primary directly, Postgres will refuse, because the timelines do not match. If you reset its WAL position naively, you lose the new primary's writes.
+When that primary comes back, it has WAL records on disk that the rest of the cluster does not have. Its timeline diverges from the cluster's timeline at the failover point. If you let it stream from the new primary directly, Postgres will refuse, because the timelines do not match. We need to safely rewind the old primary so it can join the cluster again. 
 
 The right answer is `pg_rewind`, which finds the last common WAL position between the old primary and the new primary and rewinds the old primary to that point. The old primary's local writes after the divergence are discarded. The new primary's writes are then streamed forward.
 
