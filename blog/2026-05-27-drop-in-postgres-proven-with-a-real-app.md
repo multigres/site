@@ -9,11 +9,11 @@ tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 
 Most replacements for Postgres make a small bet: they ask you to give up something on the way in. A different wire protocol. A subset of SQL. A custom client library. A subset of extensions. The reasoning is that scaling Postgres requires breaking with Postgres, at least at the surface.
 
-<!--truncate-->
-
 Multigres makes a different bet. The surface stays Postgres. Existing clients connect, existing extensions load, existing apps work without code changes. The scaling happens behind the gateway, where the application cannot see it.
 
 This post is about two parts of that bet. The first is the drop-in claim, which is easy to test with a real Postgres app. The second is what happens when you push that drop-in past anything Postgres-on-its-own can handle, which is where Multigres earns its keep.
+
+<!--truncate-->
 
 The full demo:
 
