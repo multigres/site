@@ -1,11 +1,11 @@
 ---
-slug: edge-cases-consensus-protects-you-from
+slug: handling-edge-cases-using-consensus
 authors: [rafael]
 date: 2026-05-28T11:00
 tags: [planetpg, postgres, multigres, consensus, high-availability, membership]
 ---
 
-# The edge cases consensus protects you from
+# Handling edge cases using consensus
 
 The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. This is a very standard failure mode in a large scale deployment. 
 
