@@ -113,7 +113,7 @@ There are other replication modes, but they don’t follow rule 1:
 - Async replication: The leader appends and applies the request, and asynchronously sends the events to the followers. This breaks rules 1a and 1b. This can lead to data loss if the leader node crashes.
 - Synchronous replication: The leader sends the request to the followers as final. The followers apply the change and send an ack to the leader. The leader applies the change when the ack is received. This follows rule 1a, but breaks rule 1b. This is because the followers apply the change before the request has met the durability criteria. This can lead to inconsistent “split-brain” states.
 
-*Postgres can rewind transactions. When a split-brain scenario happens, it is possible to identify the transactions that must be rewound to restore system consistency. Using this approach, it is possible to design a system that meets the necessary durability criteria. Details about this are covered in our earlier [blog post](https://multigres.com/blog/postgres-ha-full-sync#existing-replication-pitfalls).*
+*Postgres can rewind transactions. When a split-brain scenario happens, it is possible to identify the transactions that must be rewound to restore system consistency. Using this approach, it is possible to design a system that meets the necessary durability criteria. Details about this are covered in our earlier [blog post](/blog/postgres-ha-full-sync#existing-replication-pitfalls).*
 
 ### Rule 2
 

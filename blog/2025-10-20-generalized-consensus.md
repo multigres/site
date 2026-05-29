@@ -79,7 +79,7 @@ The series consists of 11 parts:
 
 ## Why This Matters for Multigres
 
-This work directly supports our goals for [Multigres](https://multigres.com). Postgres currently lacks a native consensus protocol. Existing solutions appear to use Raft as a black box, which limits their ability to optimize for Postgres's WAL replication model.
+This work directly supports our goals for [Multigres](/). Postgres currently lacks a native consensus protocol. Existing solutions appear to use Raft as a black box, which limits their ability to optimize for Postgres's WAL replication model.
 
 By building on this generalized framework, Multigres will support:
 - Flexible durability policies (cross-AZ, cross-region, custom combinations)

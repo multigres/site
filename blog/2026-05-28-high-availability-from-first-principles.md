@@ -7,7 +7,7 @@ tags: [postgres, multigres, high-availability, consensus, failover]
 
 # High availability from first principles
 
-In order to run services at scale and in a reliable way, high availability is a critical cornerstone. What it means in practice could vary from user to user. What follows is what high availability means in Multigres, what it is built on, and what a failover looks like in practice. The short version is that Multigres treats HA as a consensus problem, anchors that consensus in a [generalized](https://multigres.com/blog/generalized-consensus) model, and runs failovers that complete in a matter of seconds without violating durability.
+In order to run services at scale and in a reliable way, high availability is a critical cornerstone. What it means in practice could vary from user to user. What follows is what high availability means in Multigres, what it is built on, and what a failover looks like in practice. The short version is that Multigres treats HA as a consensus problem, anchors that consensus in a [generalized](/blog/generalized-consensus) model, and runs failovers that complete in a matter of seconds without violating durability.
 
 <!--truncate-->
 
@@ -100,4 +100,4 @@ Multigres can deliver this because it owns the problem as a cohesive solution. T
 
 ## Further reading
 
-- [Generalized Consensus: Recap](https://multigres.com/blog/generalized-consensus-part11)
+- [Generalized Consensus: Recap](/blog/generalized-consensus-part11)

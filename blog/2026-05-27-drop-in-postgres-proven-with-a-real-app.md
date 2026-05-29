@@ -54,10 +54,10 @@ Multigres splits that job in two. The MultiGateway is the tier that accepts clie
 
 How the gateway and pooler are built, and what the pooler does once it owns the connections, are their own topics. Earlier posts go deep on each piece:
 
-- [Two jobs, two processes](https://multigres.com/blog/two-jobs-two-processes) - why the pooler is part of the cluster rather than a sidecar in front of it.
-- [Per-user pools that share fairly](https://multigres.com/blog/per-user-pools-that-share-fairly) - per-user pooling and max-min fairness when demand is unknown.
-- [Pooling without choosing a mode](https://multigres.com/blog/pooling-without-choosing-a-mode) - how the pooler recycles connections automatically instead of making you pick transaction, session, or statement mode up front.
-- [One parse per query, no matter how many gateways](https://multigres.com/blog/one-parse-per-query-no-matter-how-many-gateways) - how prepared statements stay deduplicated on the backend even as you scale gateways out horizontally.
+- [Two jobs, two processes](/blog/two-jobs-two-processes) - why the pooler is part of the cluster rather than a sidecar in front of it.
+- [Per-user pools that share fairly](/blog/per-user-pools-that-share-fairly) - per-user pooling and max-min fairness when demand is unknown.
+- [Pooling without choosing a mode](/blog/pooling-without-choosing-a-mode) - how the pooler recycles connections automatically instead of making you pick transaction, session, or statement mode up front.
+- [One parse per query, no matter how many gateways](/blog/one-parse-per-query-no-matter-how-many-gateways) - how prepared statements stay deduplicated on the backend even as you scale gateways out horizontally.
 
 ## The 20,000-connection demo
 

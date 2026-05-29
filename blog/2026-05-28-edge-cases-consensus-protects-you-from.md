@@ -66,4 +66,4 @@ These are strong safety guarantees that Multigres provides. Not only the obvious
 
 ## Further reading
 
-- [Generalized Consensus: Changing the Rules](https://multigres.com/blog/generalized-consensus-part8)
+- [Generalized Consensus: Changing the Rules](/blog/generalized-consensus-part8)
