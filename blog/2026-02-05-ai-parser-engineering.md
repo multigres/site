@@ -12,7 +12,7 @@ description: "Same engineer. Same complexity. A year last time, eight weeks this
 
 Building a production-grade parser is an exercise in discipline. You need to translate thousands of grammar rules exactly. You need to catch subtle bugs that only surface on edge cases you've never seen. You need to verify every decision against a reference implementation. There are no shortcuts.
 
-I know this because I've done it before. I led the effort to build the MySQL parser for Vitess. That took over a year with help from talented contributors. So when we needed a Postgres parser for [Multigres](https://www.multigres.com), I expected a similar timeline.
+I know this because I've done it before. I led the effort to build the MySQL parser for Vitess. That took over a year with help from talented contributors. So when we needed a Postgres parser for [Multigres](/), I expected a similar timeline.
 
 It took eight weeks. 287,786 lines of code. 304 files. 130 commits. 71.2% test coverage. 2.5x faster than the cgo (Go's C interop) alternative.
 
@@ -28,7 +28,7 @@ Here's what I learned.
 
 ## Why build a parser at all?
 
-[Multigres](https://www.multigres.com) is Vitess for Postgres, a horizontally scalable layer that sits in front of your database. It distributes data across multiple database servers called shards. Each shard holds a subset of your data. When a query comes in, Multigres figures out which shard (or shards) should handle it and routes accordingly.
+[Multigres](/) is Vitess for Postgres, a horizontally scalable layer that sits in front of your database. It distributes data across multiple database servers called shards. Each shard holds a subset of your data. When a query comes in, Multigres figures out which shard (or shards) should handle it and routes accordingly.
 
 To route queries intelligently, we need to understand them. To understand them, we need a parser.
 

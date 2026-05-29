@@ -44,7 +44,7 @@ When the manifest applies, each service registers itself with the topology serve
 
 Poolers register next, each bound to a Postgres instance through pgctld. Every data directory is empty. Every pooler advertises itself as REPLICA, the safe default. The cluster still has no primary.
 
-This is the most fragile moment of a cluster's life. If a hand-rolled bootstrap script picked a primary now, two scripts could run in parallel and pick two different primaries. This is a split-brain. Multigres avoids it by coordinating leader appointment through MultiOrch, which runs as a small set of independent instances that agree on the leader through our [consensus protocol](https://multigres.com/blog/generalized-consensus-part1).
+This is the most fragile moment of a cluster's life. If a hand-rolled bootstrap script picked a primary now, two scripts could run in parallel and pick two different primaries. This is a split-brain. Multigres avoids it by coordinating leader appointment through MultiOrch, which runs as a small set of independent instances that agree on the leader through our [consensus protocol](/blog/generalized-consensus-part1).
 
 ## Seed backup first, then leader
 
@@ -94,4 +94,4 @@ That is what cluster bootstrapping looks like in Multigres. The result feels eff
 
 ## Further reading
 
-- [Multigres Architecture](https://multigres.com/docs/architecture)
+- [Multigres Architecture](/docs/architecture)
