@@ -5,11 +5,11 @@ date: 2026-05-27T10:00
 tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 ---
 
-# 16,000 Postgres connections at 2,000/sec churn 
+# 16,000 Postgres connections at 2,000/sec churn
 
 Connection management is one of the least-scalable parts of Postgres. Because Postgres uses a process-per-connection architecture, production deployments are often fronted by a connection pooler.
 
-Multigres provides a scalable connection pooler natively. Unlike other popular connection poolers, users don't need to choose between different "modes", like `Statement Mode` or `Sessions Mode`. 
+Multigres provides a scalable connection pooler natively. Unlike other popular connection poolers, users don't need to choose between different "modes", like `Statement Mode` or `Session Mode`.
 
 In this post, we test the scalability of Multigres' connection pooler. We also demonstrate Postgres compatibility using Miniflux, a feature-rich Postgres application.
 
@@ -34,7 +34,7 @@ Multigres doesn't have its own engine. It is more like an "operating system" aro
 
 ## Testing Postgres compatibility with Miniflux
 
-To demonstrate this compatibility, we searched for an application that uses a variety of advanced Postgres features. We found [Miniflux](https://miniflux.app/), a self-hosted feed reader. 
+To demonstrate this compatibility, we searched for an application that uses a variety of advanced Postgres features. We found [Miniflux](https://miniflux.app/), a self-hosted feed reader.
 
 The Miniflux docs explicitly say it requires Postgres, not "a Postgres-compatible database". It uses extensions, JSON columns for feed metadata, full-text search, `LISTEN`/`NOTIFY`, and various other niche Postgres features.
 
@@ -42,7 +42,7 @@ The Miniflux Docker image takes a Postgres connection string. Pointing it at a M
 
 ## Testing scalability to 16,000 connections
 
-To test scalability in the video demonstration above, we run an app called SupaFirehose. It's configured for `20,000` concurrent connections, high read and write QPS, and a churn rate of `2,000` connections per second. The demonstration runs on a single MacBook.
+To test scalability in the video demonstration above, we run an app called SupaFireHose. It's configured for `20,000` concurrent connections, high read and write QPS, and a churn rate of `2,000` connections per second. The demonstration runs on a single MacBook.
 
 The connection count climbs and settles in the `16,000` to `18,000` range. The limit is the laptop, not Multigres. The gateway could accept more, but the kernel runs out of file descriptors.
 
@@ -54,8 +54,8 @@ Most poolers impose a hard limit on client connections. Once that limit is reach
 
 Multigres splits connection pooling into two distinct jobs:
 
-1. `MultiGateway` is the tier that accepts client connections. It scales horizontally: connection capacity grows by adding gateways, not by tuning a single process. That is where the large connection counts come from. 
-2. `MultiPooler` sits behind MultiGateway and runs next to every Postgres instance. It manages the real Postgres connections - a small, stable set that client connections are multiplexed onto. 
+1. `MultiGateway` is the tier that accepts client connections. It scales horizontally: connection capacity grows by adding gateways, not by tuning a single process. That is where the large connection counts come from.
+2. `MultiPooler` sits behind MultiGateway and runs next to every Postgres instance. It manages the real Postgres connections - a small, stable set that client connections are multiplexed onto.
 
 The gateway gives you the connections and the pooler keeps the backend side small. Both are managed by the same Multigres machinery that is responsible for replication and failover.
 
