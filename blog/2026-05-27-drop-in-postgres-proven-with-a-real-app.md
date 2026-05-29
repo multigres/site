@@ -42,11 +42,11 @@ The Miniflux Docker image takes a Postgres connection string. Pointing it at a M
 
 ## Testing scalability to 16,000 connections
 
-To test scalability in the video demonstration above, we run an app called SupaFireHose. It's configured for `20,000` concurrent connections, high read and write QPS, and a churn rate of `2,000` connections per second. The demonstration runs on a single MacBook.
+To test scalability in the video demonstration above, we run a tool called [SupaFireHose](https://github.com/multigres/supafirehose). It's configured for `20,000` concurrent connections, high read and write QPS, and a churn rate of `2,000` connections per second. The demonstration runs on a single MacBook.
 
 The connection count climbs and settles in the `16,000` to `18,000` range. The limit is the laptop, not Multigres. The gateway could accept more, but the kernel runs out of file descriptors.
 
-We felt it was important to include churn because real workloads don't just hold connections - they open, use, drop, and reopen connections.
+We felt it was important to include connection churn to mimic real workloads that open, use, drop, and reopen connections.
 
 Most poolers impose a hard limit on client connections. Once that limit is reached, new connections are rejected. In contrast, the Multigres gateway absorbs the churn of client connections while the pooler keeps the backend connection set stable, and the application never notices.
 
