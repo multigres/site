@@ -9,9 +9,9 @@ tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 
 Connection management is one of the least-scalable parts of Postgres. Because Postgres uses a process-per-connection architecture, production deployments are often fronted by a connection pooler.
 
-Multigres provides a scalable connection pooler natively. Unlike other popular connections poolers, users don't need to choose between different "modes", like `Statement Mode` or `Sessions Mode`. 
+Multigres provides a scalable connection pooler natively. Unlike other popular connection poolers, users don't need to choose between different "modes", like `Statement Mode` or `Sessions Mode`. 
 
-In this post, we test the scalability of Multigres' connection pooler. We also demonstrate Postgres-compability using Miniflux, a feature-rich Postgres applications.
+In this post, we test the scalability of Multigres' connection pooler. We also demonstrate Postgres compatibility using Miniflux, a feature-rich Postgres application.
 
 <!--truncate-->
 
@@ -57,13 +57,13 @@ Multigres splits connection pooling into two distinct jobs:
 1. `MultiGateway` is the tier that accepts client connections. It scales horizontally: connection capacity grows by adding gateways, not by tuning a single process. That is where the large connection counts come from. 
 2. `MultiPooler` sits behind MultiGateway and runs next to every Postgres instance. It manages the real Postgres connections - a small, stable set that client connections are multiplexed onto. 
 
-The gateway gives you the connections and the pooler keeps the backend side small. Both are managed by the same Multigres machinery that is responsible replication and failover.
+The gateway gives you the connections and the pooler keeps the backend side small. Both are managed by the same Multigres machinery that is responsible for replication and failover.
 
 ## Pooling as a property of the cluster
 
 In Multigres, connection pooling is a property of the cluster, not a service bolted on in front of it. Each Postgres instance has its own `MultiPooler`, co-located with it and registered in the same topology as the rest of the cluster.
 
-This pooler is also supervises the Postgres instance. If Postgres goes down, the pooler is the component that notices and brings it back, through `pgctld`. `MultiOrch` handles failover across instances, and the gateway watches the topology - when the primary moves, the gateway routes to whichever pooler now owns it. The application keeps talking to the gateway and is unaware that anything has changed.
+This pooler also supervises the Postgres instance. If Postgres goes down, the pooler is the component that notices and brings it back, through `pgctld`. `MultiOrch` handles failover across instances, and the gateway watches the topology - when the primary moves, the gateway routes to whichever pooler now owns it. The application keeps talking to the gateway and is unaware that anything has changed.
 
 ## Technical Deep Dive
 
