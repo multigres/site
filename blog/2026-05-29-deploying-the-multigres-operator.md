@@ -7,7 +7,11 @@ tags: [multigres, postgres, kubernetes]
 
 # Deploying the Multigres Operator
 
-This post walks through deploying a multi-zone Multigres cluster on EKS using the operator, connecting to it, and scaling replicas up and down.
+Running Postgres at scale is hard. Managing database connections, owning High Availability and failover, disaster recovery, scaling read replicas, and taking backups across availability zones is a full time job. Each piece is well understood in isolation, but keeping them working together reliably across availability zones is difficult.
+
+Multigres is a scalable operating system for Postgres: it holistically manages your Postgres instances and gives you sharding, connection pooling, automatic failover, and backup orchestration.
+
+We deploy Multigres with Kubernetes, which is the industry standard for managing infrastructure at scale. As many can attest, deploying and managing Kubernetes comes with its own set of challenges. That is exactly where the multigres operators come in. 
 
 <!--truncate-->
 
@@ -22,11 +26,17 @@ Demo Video:
   allowFullScreen
 ></iframe>
 
+## What is an operator?
+
+An operator is a Kubernetes controller that runs inside your cluster and manages the lifecycle of a complex application on your behalf. Instead of manually applying configuration changes, scaling resources, or handling failures, you declare the state you want and the operator continuously works to make it so.
+
+The Multigres operator is what turns a single YAML declaration into a fully orchestrated, multi-zone Postgres cluster. 
+
 ## What the operator manages
 
-The operator manages pods directly, which means it can be primary-aware in ways that StatefulSet rolling updates cannot. When the operator needs to restart pods — for a config change, a scaling event, or a failover — it knows which pod holds the primary and acts accordingly.
+The operator manages pods: the individual containers running each component. The operator is primary-aware, meaning it knows which pod holds the active Postgres primary at any given moment.  In practical terms, primary-awareness ensures the operator always acts on standbys first and the primary last when restarting pods for a config change, scaling the cluster, or performing failover. By acting on the primary last, the operator guarantees safe operations without interrupting writes on the primary.
 
-The components the operator provisions from a single `MultigresCluster` manifest are:
+A Multigres cluster is made up of several components that work together across availability zones. The operator provisions the following components from a single `MultigresCluster` manifest:
 
 **GlobalTopoServer** is a managed etcd cluster that records the topology state: which databases exist, which cells they live in, and where every component is registered. Cells are user-defined groupings that map to availability zones. In a multi-zone deployment, the topology splits into a global server for cluster-wide state and per-cell servers for local discovery, so a partitioned cell keeps operating against its own local view.
 
@@ -34,117 +44,25 @@ The components the operator provisions from a single `MultigresCluster` manifest
 
 **MultiGateway** speaks the Postgres wire protocol. Your application connects to a gateway, which forwards queries to the right MultiPooler over gRPC. Adding more gateways scales Multigres’ connection capacity horizontally.
 
-**MultiOrch:** the orchestrator. One set of MultiOrch instances per shard, running across cells. It watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap, backup, restore, and scaling events. When you apply the manifest, MultiOrch runs bootstrap as a consensus-backed election. This is the same code path as every later failover. So there is no separate provisioning script that can race with itself.
+**MultiOrch:** the orchestrator. One set of MultiOrch instances per shard, running across cells. It watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap, backup, restore, and scaling events. When you apply the manifest, MultiOrch runs bootstrap as a consensus-backed election. This is the same code path as every later failover- so, there is no separate provisioning script that can race with itself.
 
 **Postgres** pods themselves, managed by pgctld which owns the local Postgres process and MultiPooler. One pooler per Postgres instance.
 
 ## Deploying on EKS
 
-The EKS getting started guide published today covers prerequisites, zone labels, storage, S3 backup identity, and the full cluster manifest. The short version of what you need is a kubeconfig pointed at an EKS cluster with the operator installed and a manifest that looks roughly like this:
+Amazon EKS provides a managed Kubernetes control plane across AWS availability zones, which we use as the foundation for a multi-zone Multigres cluster. Each cell in Multigres maps to a real AZ. A zone failure can take down one cell, while the other two keep operating without interruption. The [Multigres EKS guide](https://github.com/multigres/multigres/blob/9fcd28b847810612601f5cacd5b3d0689834f912/docs/kubernetes/eks.md) covers everything you need to stand this up: prerequisites, zone labels, storage, S3 backup identity, and the full cluster manifest.
 
-```yaml
-apiVersion: multigres.com/v1alpha1
-kind: MultigresCluster
-metadata:
-  name: <CLUSTER_NAME>               # e.g. demo-multi-az
-  namespace: <NAMESPACE>             # e.g. eks-demo
-  annotations:
-    multigres.com/project-ref: <PROJECT_REF>  # e.g. proj-release-v01-demo
-spec:
-  pvcDeletionPolicy:
-    whenDeleted: Delete
-    whenScaled: Delete
+The short version of what you need is a kubeconfig pointed at an EKS cluster with the operator installed and a manifest [like this](https://github.com/multigres/multigres/blob/9fcd28b847810612601f5cacd5b3d0689834f912/docs/kubernetes/eks.md#7-create-a-multi-az-cluster).
 
-  durabilityPolicy: AT_LEAST_2
+In the Manifest linked to above, you’ll see three cells, each mapped to a real AWS availability zone. `AT_LEAST_2` durability means every committed write is acknowledged by one standby (one primary and one standby). The operator infers everything else from the templates: resource limits, gateway configuration, topo server sizing — and builds the full topology.
 
-  templateDefaults:
-    coreTemplate: eks-smallest
-    cellTemplate: eks-smallest
-    shardTemplate: eks-smallest
-
-  postgresPasswordSecretRef:
-    name: <PASSWORD_SECRET_NAME>     # e.g. multigres-admin-password
-    key: password
-
-  backup:
-    type: filesystem
-    filesystem:
-      path: /backups
-      storage:
-        size: 10Gi
-
-  images:
-    imagePullPolicy: Always
-
-    # Same Multigres runtime image used by all Multigres components.
-    multiadmin: <ECR_REGISTRY>/multigres:<IMAGE_TAG>
-    multigateway: <ECR_REGISTRY>/multigres:<IMAGE_TAG>
-    multiorch: <ECR_REGISTRY>/multigres:<IMAGE_TAG>
-    multipooler: <ECR_REGISTRY>/multigres:<IMAGE_TAG>
-
-    # pgctld/Postgres image.
-    postgres: <ECR_REGISTRY>/pgctld:<IMAGE_TAG>
-
-    # Web UI image.
-    multiadminWeb: ghcr.io/multigres/multiadmin-web:<MULTIADMIN_WEB_TAG>
-
-  cells:
-    - name: <CELL_NAME_A>            # e.g. zone-a
-      zoneId: <ZONE_ID_A>            # e.g. use1-az1
-    - name: <CELL_NAME_B>            # e.g. zone-b
-      zoneId: <ZONE_ID_B>            # e.g. use1-az2
-    - name: <CELL_NAME_C>            # e.g. zone-d
-      zoneId: <ZONE_ID_C>            # e.g. use1-az6
-
-  databases:
-    - name: postgres
-      default: true
-      backup:
-        type: s3
-        s3:
-          bucket: <S3_BUCKET>        # e.g. multigres-backups-dev-242108887234
-          region: <AWS_REGION>       # e.g. us-east-1
-          keyPrefix: <S3_KEY_PREFIX> # e.g. eks-demo-demo-multi-az-v0.1/
-          serviceAccountName: <BACKUP_SERVICE_ACCOUNT>  # e.g. multigres-backup
-      tablegroups:
-        - name: default
-          default: true
-          shards:
-            - name: 0-inf
-              spec:
-                pools:
-                  default:
-                    replicasPerCell: <REPLICAS_PER_CELL>  # e.g. 1
-                    storage: {}
-                    multipooler:
-                      resources: {}
-                    postgres:
-                      resources: {}
-                multiorch:
-                  resources: {}
-```
-
-Three cells, each mapped to a real AWS availability zone. `AT_LEAST_2` durability means every committed write is acknowledged by one standby (one primary and one standby). The operator infers everything else from the templates — resource limits, gateway configuration, topo server sizing — and builds the full topology.
-
-`kubectl apply -f demo-multi-az.yaml` and then `kubectl get pods -w`. Within a minute you have a global topo server, MultiAdmin, MultiGateway, MultiOrch across three zones, and Postgres pool pods across three zones.
-
-### Apply the YAML
-
-```bash
-kubectl apply -f demo-multi-az.yaml
-```
-
-Watch the pods come up:
-
-```bash
-kubectl get pods -w
-```
+Run `kubectl apply -f demo-multi-az.yaml` and then `kubectl get pods -w`. Within a minute you have a global topo server, MultiAdmin, MultiGateway, MultiOrch across three zones, and Postgres pool pods across three zones.
 
 You should eventually see pods for global topo, multiadmin, multigateway, multiorch, and three poolers.
 
-### Verify the cluster
+### **Verify The Cluster**
 
-Check the Multigres resources:
+Once deployed, check the Multigres resources like this:
 
 ```bash
 kubectl get multigresclusters
@@ -157,7 +75,7 @@ Check the pods:
 kubectl get pods
 ```
 
-## Scaling
+## Scaling Replicas
 
 Scaling replicas is a spec change on the `MultigresCluster`. Child resources are owned by the operator and reconciled back to the desired state if edited directly. To add a replica per cell:
 
@@ -168,13 +86,6 @@ kubectl patch multigrescluster demo-multi-az \
 ```
 
 The operator provisions new standby pods across all three zones simultaneously. Scale back down by patching the value to `1`. The operator drains standbys out of the replication set before terminating their pods.
-
-### Scaling down
-
-```bash
-kubectl patch multigrescluster demo-multi-az -n eks-demo --type=json -p \
-  '[{"op":"replace","path":"/spec/databases/0/tablegroups/0/shards/0/spec/pools/default/replicasPerCell","value":1}]'
-```
 
 ## Connecting
 
