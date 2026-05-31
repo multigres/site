@@ -5,7 +5,7 @@ date: 2026-05-27T10:00
 tags: [postgres, multigres, connection-pooling, drop-in, scaling]
 ---
 
-# 16,000 Postgres connections at 2,000/sec churn
+# Running a real Postgres app on Multigres, at scale
 
 Connection management is one of the least-scalable parts of Postgres. Because Postgres uses a process-per-connection architecture, production deployments are often fronted by a connection pooler.
 
