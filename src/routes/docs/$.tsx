@@ -112,7 +112,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
     },
   ) {
     return (
-      <DocsPage toc={toc} className="max-w-[800px] pb-32">
+      <DocsPage toc={toc} className="max-w-[800px] pb-16">
         <header className="mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="min-w-0 space-y-2">
             <DocsTitle className={docPageHeadingClassName}>

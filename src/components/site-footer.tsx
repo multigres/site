@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { GithubIcon } from '@/components/github-icon';
 import { appName, blogRoute, docsRoute, gitConfig } from '@/lib/shared';
+import { cn } from '@/lib/utils';
 
 const footerLinks = [
   { label: 'Docs', href: docsRoute },
@@ -15,9 +16,18 @@ const footerLinks = [
   { label: 'RSS Feed', href: '/blog/rss.xml' },
 ];
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  className?: string;
+};
+
+export function SiteFooter({ className }: SiteFooterProps) {
   return (
-    <footer className="border-t border-border bg-background px-6 py-8 text-sm text-muted-foreground">
+    <footer
+      className={cn(
+        'border-t border-border bg-background px-6 py-8 text-sm text-muted-foreground',
+        className,
+      )}
+    >
       <div className="mx-auto flex w-full max-w-(--fd-layout-width,97rem) flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <p>Copyright © {new Date().getFullYear()} Supabase Inc. Built with {appName}.</p>
         <nav className="flex flex-wrap items-center gap-x-5 gap-y-3">

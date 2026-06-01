@@ -32,13 +32,10 @@ export function SiteDocsContainer(props: ComponentProps<typeof Container>) {
           ) : undefined
         }
       />
-      <div className={siteNavPageClassName('h-dvh')}>
+      <div className={siteNavPageClassName()}>
         <Container
           {...props}
-          className={cn(
-            'h-full min-h-0 [--fd-docs-height:100%] [--fd-header-height:0px]',
-            props.className,
-          )}
+          className={cn('[--fd-header-height:0px]', props.className)}
         />
       </div>
     </>
