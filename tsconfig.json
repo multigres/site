@@ -1,12 +1,23 @@
 {
-  "extends": "@docusaurus/tsconfig",
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "baseUrl": ".",
+    "strict": true,
+    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "types": ["node"],
-    "lib": ["ES2020", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["vite/client"],
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@site/*": ["./*"]
-    }
+      "@/*": ["./src/*"],
+      "collections/*": ["./.source/*"]
+    },
+    "noEmit": true
   }
 }
