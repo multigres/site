@@ -24,7 +24,7 @@ export function SiteFooter({ className }: SiteFooterProps) {
   return (
     <footer
       className={cn(
-        'border-t border-border bg-background px-6 py-8 text-sm text-muted-foreground',
+        'relative z-10 border-t border-border bg-background px-6 py-8 text-sm text-muted-foreground',
         className,
       )}
     >

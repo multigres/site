@@ -120,17 +120,18 @@ function RootComponent() {
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-dvh flex-col">
-        <div className="flex flex-1 flex-col">
-          <RootProvider
-            search={{ options: { api: '/api/search' } }}
-            theme={{ storageKey: 'multigres-ui-theme' }}
-          >
-            <PostHogTracker />
+      <body className="flex min-h-dvh flex-col bg-background text-foreground">
+        <RootProvider
+          search={{ options: { api: '/api/search' } }}
+          theme={{ storageKey: 'multigres-ui-theme' }}
+          className="flex min-h-dvh flex-1 flex-col"
+        >
+          <PostHogTracker />
+          <div className="flex flex-1 flex-col">
             <Outlet />
-          </RootProvider>
-        </div>
-        <SiteFooter className="shrink-0" />
+          </div>
+          <SiteFooter className="shrink-0 bg-background" />
+        </RootProvider>
         <Scripts />
       </body>
     </html>
