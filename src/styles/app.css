@@ -1,0 +1,386 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/manrope";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --site-header-height: 3.5rem;
+  --hue: 159.355068;
+  --saturation: 0.18;
+  --surface: 0.97;
+  --surface-chroma: calc(var(--saturation) * 0.02);
+  --foreground-chroma: calc(var(--saturation) * 0.04);
+  --border-chroma: calc(var(--saturation) * 0.03);
+  --brand-chroma: var(--saturation);
+  --primary-foreground-chroma: calc(var(--saturation) * 0.25);
+  --primary-lightness: 0.54;
+  --primary-foreground-lightness: 0.28;
+  --chart-chroma: calc(var(--saturation) * 0.03);
+
+  --background: oklch(var(--surface) var(--surface-chroma) var(--hue));
+  --foreground: oklch(0.2 var(--foreground-chroma) var(--hue));
+  --card: oklch(calc(var(--surface) - 0.02) var(--surface-chroma) var(--hue));
+  --card-foreground: var(--foreground);
+  --popover: oklch(var(--surface) var(--surface-chroma) var(--hue));
+  --popover-foreground: var(--foreground);
+  --primary: oklch(var(--primary-lightness) var(--brand-chroma) var(--hue));
+  --primary-foreground: oklch(var(--primary-foreground-lightness) var(--primary-foreground-chroma) var(--hue));
+  --secondary: oklch(calc(var(--surface) - 0.04) var(--surface-chroma) var(--hue));
+  --secondary-foreground: oklch(0.25 var(--foreground-chroma) var(--hue));
+  --muted: oklch(calc(var(--surface) - 0.03) var(--surface-chroma) var(--hue));
+  --muted-foreground: oklch(0.5 var(--foreground-chroma) var(--hue));
+  --tertiary: oklch(calc(var(--surface) - 0.015) var(--surface-chroma) var(--hue));
+  --tertiary-foreground: oklch(0.6 var(--foreground-chroma) var(--hue));
+  --accent: oklch(calc(var(--surface) - 0.06) calc(var(--brand-chroma) * 0.08) var(--hue));
+  --accent-foreground: oklch(0.44 var(--foreground-chroma) var(--hue));
+  --border: oklch(0.25 var(--border-chroma) var(--hue) / 0.12);
+  --input: var(--muted);
+  --ring: var(--primary);
+  --destructive: oklch(0.577 0.245 27.325);
+  --chart-1: oklch(calc(var(--surface) - 0.12) var(--chart-chroma) var(--hue));
+  --chart-2: oklch(calc(var(--surface) - 0.2) var(--chart-chroma) var(--hue));
+  --chart-3: oklch(calc(var(--surface) - 0.28) var(--chart-chroma) var(--hue));
+  --chart-4: oklch(calc(var(--surface) - 0.36) var(--chart-chroma) var(--hue));
+  --chart-5: oklch(calc(var(--surface) - 0.44) var(--chart-chroma) var(--hue));
+  --radius: 0.5rem;
+  --sidebar: var(--popover);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: oklch(calc(var(--surface) - 0.08) var(--border-chroma) var(--hue));
+  --sidebar-ring: var(--primary);
+}
+
+@theme inline {
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-foreground: var(--tertiary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-heading: 'Manrope Variable', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-destructive: var(--destructive);
+  /* Fumadocs fd-* utilities → app tokens (overrides fumadocs-ui default HSL theme) */
+  --color-fd-background: var(--background);
+  --color-fd-foreground: var(--foreground);
+  --color-fd-muted: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+  --color-fd-card: var(--card);
+  --color-fd-card-foreground: var(--card-foreground);
+  --color-fd-popover: var(--popover);
+  --color-fd-popover-foreground: var(--popover-foreground);
+  --color-fd-border: var(--border);
+  --color-fd-primary: var(--primary);
+  --color-fd-primary-foreground: var(--primary-foreground);
+  --color-fd-secondary: var(--secondary);
+  --color-fd-secondary-foreground: var(--secondary-foreground);
+  --color-fd-accent: var(--accent);
+  --color-fd-accent-foreground: var(--accent-foreground);
+  --color-fd-ring: var(--ring);
+  /* Override Tailwind default --radius-* (see https://tailwindcss.com/docs/theme) */
+  --radius-xs: calc(var(--radius) * 0.25);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.2);
+  --radius-2xl: calc(var(--radius) * 1.4);
+  --radius-3xl: calc(var(--radius) * 1.6);
+  --radius-4xl: calc(var(--radius) * 1.8);
+}
+
+/* Fumadocs fd-accent → app accent (nav search, search dialog items, etc.) */
+:root,
+.dark {
+  --color-fd-accent: var(--accent);
+  --color-fd-accent-foreground: var(--accent-foreground);
+}
+
+.docs-cta-dot {
+  box-shadow:
+    0 0 28px 12px color-mix(in oklch, var(--primary) 8%, transparent),
+    0 0 72px 32px color-mix(in oklch, var(--primary) 4%, transparent),
+    0 0 120px 48px color-mix(in oklch, var(--primary) 1.5%, transparent);
+}
+
+/* Landing hero overlays — light mode avoids foreground-mixed vignette (reads as a dark ring) */
+.landing-hero-bottom-fade {
+  background: linear-gradient(
+    to top,
+    var(--background) 0%,
+    color-mix(in oklch, var(--background) 97%, transparent) 30%,
+    color-mix(in oklch, var(--background) 82%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.dark .landing-hero-bottom-fade {
+  background: linear-gradient(
+    to top,
+    var(--background) 0%,
+    color-mix(in oklch, var(--background) 94%, transparent) 28%,
+    color-mix(in oklch, var(--background) 72%, transparent) 52%,
+    color-mix(in oklch, var(--background) 35%, transparent) 72%,
+    transparent 100%
+  );
+}
+
+.landing-hero-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 44%,
+    color-mix(in oklch, var(--background) 50%, transparent) 100%
+  );
+}
+
+.dark .landing-hero-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    color-mix(in oklch, var(--background) 84%, black) 100%
+  );
+}
+
+@layer base {
+  body {
+    @apply antialiased bg-background text-foreground font-normal;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@media (width >= 48rem) {
+  #nd-docs-layout {
+    --fd-sidebar-width: 248px !important;
+  }
+}
+
+/* Docs sidebar: fd-* vars on #nd-sidebar must use app tokens (beats fumadocs neutral.css) */
+#nd-sidebar,
+#nd-sidebar-mobile,
+.dark #nd-sidebar,
+.dark #nd-sidebar-mobile {
+  --color-fd-background: var(--background);
+  --color-fd-foreground: var(--foreground);
+  --color-fd-muted: var(--muted);
+  --color-fd-muted-foreground: var(--muted-foreground);
+  --color-fd-card: var(--card);
+  --color-fd-card-foreground: var(--card-foreground);
+  --color-fd-popover: var(--popover);
+  --color-fd-popover-foreground: var(--popover-foreground);
+  --color-fd-border: var(--sidebar-border);
+  --color-fd-primary: var(--primary);
+  --color-fd-primary-foreground: var(--primary-foreground);
+  --color-fd-secondary: var(--secondary);
+  --color-fd-secondary-foreground: var(--secondary-foreground);
+  --color-fd-accent: var(--sidebar-accent);
+  --color-fd-accent-foreground: var(--sidebar-accent-foreground);
+  --color-fd-ring: var(--sidebar-ring);
+}
+
+#nd-sidebar,
+.dark #nd-sidebar {
+  background-color: transparent;
+}
+
+/* Mobile drawer: opaque panel + stronger scrim (desktop sidebar stays transparent) */
+#nd-sidebar-mobile,
+.dark #nd-sidebar-mobile {
+  @apply border-border bg-background/95 backdrop-blur-lg;
+}
+
+.backdrop-blur-xs:has(+ #nd-sidebar-mobile) {
+  @apply bg-background/55 backdrop-blur-md;
+}
+
+/* Fumadocs docs sidebar header slot (nav title, search, tabs) — unused on this site */
+#nd-sidebar > div.flex.flex-col.gap-3.p-4.pb-2:first-child {
+  display: none;
+}
+
+#nd-sidebar :is(a, button),
+#nd-sidebar-mobile :is(a, button) {
+  @apply text-sm py-1 px-2;
+}
+
+#nd-sidebar :is(a, button):not([data-active='true']),
+#nd-sidebar-mobile :is(a, button):not([data-active='true']) {
+  @apply text-tertiary-foreground;
+}
+
+#nd-sidebar :is(a, button)[data-active='true'],
+#nd-sidebar-mobile :is(a, button)[data-active='true'] {
+  @apply bg-primary/10 text-primary;
+}
+
+#nd-sidebar :is(a, button):not([data-active='true']):hover,
+#nd-sidebar-mobile :is(a, button):not([data-active='true']):hover {
+  /* Override fumadocs `hover:bg-fd-accent/50` — hover is text-only */
+  background-color: transparent !important;
+  @apply text-foreground;
+}
+
+[data-sidebar-panel] {
+  display: none;
+}
+
+.prose {
+  --tw-prose-body: var(--color-muted-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-lead: var(--color-muted-foreground);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-counters: var(--color-muted-foreground);
+  --tw-prose-bullets: var(--color-muted-foreground);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-muted-foreground);
+  --tw-prose-captions: var(--color-muted-foreground);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-links: var(--color-foreground);
+  color: var(--color-muted-foreground);
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6, strong, b):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  ) {
+  color: var(--color-foreground);
+}
+
+/* `body` raises specificity above Fumadocs prose rules and prose-a:* utilities. */
+body .prose
+  :where(a[href]):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  color: var(--color-foreground);
+  font-weight: inherit;
+  opacity: 1;
+  transition: none;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in oklab, var(--color-accent-foreground) 50%, transparent);
+  text-underline-offset: 0.25em;
+}
+
+body .prose
+  :where(a[href]:hover):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  ) {
+  color: var(--color-foreground);
+  opacity: 1;
+}
+
+#nd-page .prose :where(h1):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  font-size: var(--text-2xl);
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+#nd-toc a[href^='#'],
+[data-toc-popover-content] a[href^='#'] {
+  color: var(--color-tertiary-foreground);
+}
+
+#nd-toc a[href^='#'][data-active='true'],
+[data-toc-popover-content] a[href^='#'][data-active='true'] {
+  color: var(--color-primary);
+}
+
+html {
+  color-scheme: light dark;
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+.dark {
+  --hue: 159.355068;
+  --saturation: 0.18;
+  --surface: 0.16;
+  --surface-chroma: calc(var(--saturation) * 0.06);
+  --foreground-chroma: calc(var(--saturation) * 0.02);
+  --border-chroma: calc(var(--saturation) * 0.025);
+  --brand-chroma: var(--saturation);
+  --primary-foreground-chroma: calc(var(--saturation) * 0.25);
+  --primary-lightness: 0.762394;
+  --primary-foreground-lightness: calc(var(--surface) + 0.123137);
+  --chart-chroma: calc(var(--saturation) * 0.02);
+
+  --background: oklch(var(--surface) var(--surface-chroma) var(--hue));
+  --foreground: oklch(0.95 var(--foreground-chroma) var(--hue));
+  --card: oklch(calc(var(--surface) + 0.04) var(--surface-chroma) var(--hue));
+  --card-foreground: var(--foreground);
+  --popover: oklch(calc(var(--surface) + 0.02) var(--surface-chroma) var(--hue));
+  --popover-foreground: var(--foreground);
+  --primary: oklch(var(--primary-lightness) var(--brand-chroma) var(--hue));
+  --primary-foreground: oklch(var(--primary-foreground-lightness) var(--primary-foreground-chroma) var(--hue));
+  --secondary: oklch(calc(var(--surface) + 0.07) var(--surface-chroma) var(--hue));
+  --secondary-foreground: oklch(0.9 var(--foreground-chroma) var(--hue));
+  --muted: oklch(calc(var(--surface) + 0.1) var(--surface-chroma) var(--hue));
+  --muted-foreground: oklch(0.7 var(--foreground-chroma) var(--hue));
+  --tertiary: oklch(calc(var(--surface) + 0.05) var(--surface-chroma) var(--hue));
+  --tertiary-foreground: oklch(0.56 var(--foreground-chroma) var(--hue));
+  --accent: oklch(calc(var(--surface) + 0.12) calc(var(--brand-chroma) * 0.08) var(--hue));
+  --accent-foreground: oklch(0.58 var(--foreground-chroma) var(--hue));
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.95 var(--border-chroma) var(--hue) / 0.12);
+  --input: var(--muted);
+  --ring: var(--primary);
+  --chart-1: oklch(calc(var(--surface) + 0.79) var(--chart-chroma) var(--hue));
+  --chart-2: oklch(calc(var(--surface) + 0.476) var(--chart-chroma) var(--hue));
+  --chart-3: oklch(calc(var(--surface) + 0.359) var(--chart-chroma) var(--hue));
+  --chart-4: oklch(calc(var(--surface) + 0.291) var(--chart-chroma) var(--hue));
+  --chart-5: oklch(calc(var(--surface) + 0.189) var(--chart-chroma) var(--hue));
+  --sidebar: var(--popover);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: oklch(calc(var(--surface) + 0.12) var(--border-chroma) var(--hue));
+  --sidebar-ring: var(--primary);
+}

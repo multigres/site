@@ -6,7 +6,21 @@
       "source": "/blog/2025/07/22/ha-postgres-full-sync",
       "destination": "/blog/postgres-ha-full-sync",
       "permanent": true
+    },
+    {
+      "source": "/blog/2026/05/04/tla-pg-rewind",
+      "destination": "/blog/tla-pg-rewind",
+      "permanent": true
+    },
+    {
+      "source": "/consensus",
+      "destination": "/docs/consensus/part-00",
+      "permanent": true
+    },
+    {
+      "source": "/consensus/:path*",
+      "destination": "/docs/consensus/:path*",
+      "permanent": true
     }
-  ],
-  "rewrites": [{ "source": "/blog(/.*)?", "destination": "/index.html" }]
+  ]
 }
