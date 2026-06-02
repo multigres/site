@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Governing Rules"
-description: "This section discusses the fundamental governing rules of any consensus system."
+description: "The durability and consistency rules that underpin any consensus implementation—and how following them lets you reason about correctness."
 date: "2025-10-27"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 3
 ---
 This section discusses the fundamental governing rules of any consensus system.
 

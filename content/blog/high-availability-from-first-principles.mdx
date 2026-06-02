@@ -1,11 +1,11 @@
 ---
 title: "Postgres High Availability from first principles"
-description: "High Availability is a critical feature for running services reliably at scale. What \"HA\" means in practice varies from user to user. This post describes how we approach high availability in Multigres and what a failover looks like in practice."
+description: "How Multigres applies generalized consensus to Postgres HA: fast failovers, durable handovers, and what that looks like in a live demo."
 date: "2026-05-28"
 author: "rafael"
 tags: [postgres, multigres, high-availability, consensus, failover]
 ---
-High Availability is a critical feature for running services reliably at scale. What "HA" means in practice varies from user to user. This post describes how we approach high availability in Multigres and what a failover looks like in practice. 
+High Availability is a critical feature for running services reliably at scale. What "HA" means in practice varies from user to user. This post describes how we approach high availability in Multigres and what a failover looks like in practice.
 
 The short version is that Multigres treats HA as a consensus problem, using [generalized consensus](/blog/generalized-consensus). It completes failovers in a matter of seconds, without violating durability.
 

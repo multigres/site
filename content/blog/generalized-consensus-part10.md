@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Addenda"
-description: "This section covers topics that were deferred in the previous parts. However, these are necessary to deploy consensus systems in production."
+description: "Production necessities: health checks, failure detection, observers, and operational patterns for running consensus at scale."
 date: "2025-11-03"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 10
 ---
 This section covers topics that were deferred in the previous parts. However, these are necessary to deploy consensus systems in production.
 

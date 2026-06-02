@@ -1,14 +1,14 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import browserCollections from 'collections/browser';
-import { BlogAuthors } from '@/components/blog-author';
+import { BlogMetaRow } from '@/components/blog-meta-row';
+import { BlogSeriesAlert } from '@/components/blog-series-alert';
 import { BlogLayout } from '@/components/blog-layout';
 import { BlogShardPlaceholder } from '@/components/blog-shard-placeholder';
 import { useMDXComponents } from '@/components/mdx';
 import { parseAuthorKeys, resolveAuthors } from '@/lib/authors';
 import { blogSource } from '@/lib/blog-source.server';
-import { formatBlogDate } from '@/lib/blog-source';
-import { blogDateClassName, docPageHeadingClassName } from '@/lib/typography';
+import { docPageHeadingClassName } from '@/lib/typography';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 
@@ -115,21 +115,19 @@ const clientLoader = browserCollections.blog.createClientLoader({
           </Link>
           <h1 className={docPageHeadingClassName}>{frontmatter.title}</h1>
           {postAuthors.length > 0 || frontmatter.date ? (
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <BlogAuthors authors={postAuthors} />
-              {frontmatter.date ? (
-                <time
-                  dateTime={new Date(frontmatter.date).toISOString().slice(0, 10)}
-                  className={blogDateClassName}
-                >
-                  {formatBlogDate(frontmatter.date)}
-                </time>
-              ) : null}
-            </div>
+            <BlogMetaRow
+              authors={postAuthors}
+              date={frontmatter.date}
+              className="mt-4"
+            />
           ) : null}
           {frontmatter.description ? (
             <p className="mt-4 text-lg text-muted-foreground">{frontmatter.description}</p>
           ) : null}
+          <BlogSeriesAlert
+            series={frontmatter.series}
+            seriesPart={frontmatter.seriesPart}
+          />
         </header>
         <div className="prose prose-invert max-w-none prose-headings:font-heading">
           <MDX components={useMDXComponents()} />

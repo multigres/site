@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Fulfilling Requests"
-description: "In this section we will cover how to fulfill requests in a generalized consensus system."
+description: "How leaders, followers, and observers fulfill requests while meeting quorum durability, with a walkthrough of the request-processing workflow."
 date: "2025-10-28"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 4
 ---
 In this section we will cover how to fulfill requests in a generalized consensus system.
 

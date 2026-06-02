@@ -123,7 +123,11 @@ function RootComponent() {
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
         <RootProvider
           search={{ options: { api: '/api/search' } }}
-          theme={{ storageKey: 'multigres-ui-theme' }}
+          theme={{
+            storageKey: 'multigres-ui-theme',
+            defaultTheme: 'dark',
+            enableSystem: false,
+          }}
           className="flex min-h-dvh flex-1 flex-col"
         >
           <PostHogTracker />

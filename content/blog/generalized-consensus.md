@@ -1,9 +1,11 @@
 ---
 title: "Introducing Generalized Consensus: An Alternate Approach to Distributed Durability"
-description: "Today, we're releasing a series that presents a fresh perspective on consensus algorithms. Rather than treating consensus as a monolithic black box, we propose a conceptual framework that makes these systems more approachable, adaptable, and flexible."
+description: "Announcing a blog series that reframes consensus as adaptable rules and goals—beyond treating Raft or Paxos as monolithic black boxes."
 date: "2025-10-20"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 0
 ---
 Today, we're releasing a series that presents a fresh perspective on consensus algorithms. Rather than treating consensus as a monolithic black box, we propose a conceptual framework that makes these systems more approachable, adaptable, and flexible.
 

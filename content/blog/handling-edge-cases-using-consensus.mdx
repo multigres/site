@@ -1,11 +1,11 @@
 ---
 title: "Handling edge cases using consensus"
-description: "The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. This is a very standard failure mode in a large scale deployment."
+description: "When scaling a Multigres cluster is a consensus problem—and why correct failover alone is not enough to prevent rare data loss."
 date: "2026-05-28"
 author: "rafael"
 tags: [planetpg, postgres, multigres, consensus, high-availability, membership]
 ---
-The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. This is a very standard failure mode in a large scale deployment. 
+The previous demo in this series covered a failover when a primary node goes down. A primary dies, the cluster picks a new one, the old one comes back. This is a very standard failure mode in a large scale deployment.
 
 This post is about more subtle failures. It shows how scaling a cluster is, underneath, a consensus problem. Operations that look like configuration changes on the surface are not simple when viewed through the lens of consensus.
 

@@ -1,3 +1,4 @@
+import { blogSeries } from '@/lib/blog-series';
 import { source } from '@/lib/source';
 import { blogSource } from '@/lib/blog-source.server';
 import { createFileRoute } from '@tanstack/react-router';
@@ -13,6 +14,11 @@ export const Route = createFileRoute('/sitemap.xml')({
         const urls = [
           { loc: `${baseUrl}/`, changefreq: 'daily', priority: '1.0' },
           { loc: `${baseUrl}/blog`, changefreq: 'daily', priority: '0.8' },
+          ...Object.keys(blogSeries).map((seriesSlug) => ({
+            loc: `${baseUrl}/blog/series/${seriesSlug}`,
+            changefreq: 'weekly' as const,
+            priority: '0.75',
+          })),
           ...docsPages.map((page) => ({
             loc: `${baseUrl}${page.url}`,
             changefreq: 'weekly',

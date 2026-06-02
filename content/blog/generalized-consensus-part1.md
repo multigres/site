@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Defining the Problem"
-description: "In this blog series, I have the following goals:"
+description: "Why consensus feels like a black box, and how reframing the problem into goals and rules can make Paxos, Raft, and successors easier to adapt."
 date: "2025-10-23"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 1
 ---
 In this blog series, I have the following goals:
 

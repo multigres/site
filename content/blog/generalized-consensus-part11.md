@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Recap"
-description: "We covered a lot of ground in this series. We started with the following objectives:"
+description: "A recap of the generalized consensus framework—from the informal definition through durability, leadership changes, reads, and production addenda."
 date: "2025-11-04"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 11
 ---
 We covered a lot of ground in this series. We started with the following objectives:
 

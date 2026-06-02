@@ -1,12 +1,12 @@
 ---
 title: "Per-user pools that share fairly"
-description: "_Part 2 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._"
+description: "Why Multigres pools connections per user, how pools share Postgres's connection budget fairly, and constant-time routing at scale."
 date: "2026-05-20"
 author: "manan"
 tags: [planetpg, postgres, connection-pooling, security, fairness]
+series: connection-pooling
+seriesPart: 2
 ---
-_Part 2 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._
-
 Multigres maintains a separate connection pool per user. This post is about why we made that choice (it's mostly a security story), how we share the connection budget fairly across users, and the routing trick that keeps pool lookup constant time even when there are many pools.
 
 ## Why per-user pools

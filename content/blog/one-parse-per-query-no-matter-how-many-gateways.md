@@ -1,12 +1,12 @@
 ---
 title: "One parse per query, no matter how many gateways"
-description: "_Part 4 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._"
+description: "Deduplicating prepared statements across many multigateways so Postgres parses each query once, not once per gateway."
 date: "2026-05-20"
 author: "manan"
 tags: [planetpg, postgres, connection-pooling, prepared-statements, distributed-systems]
+series: connection-pooling
+seriesPart: 4
 ---
-_Part 4 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._
-
 In a single-database setup, prepared statements are a clean win. Postgres parses the statement once, builds a plan, caches both, and subsequent EXECUTEs reuse the plan. Cheap. In a setup with many gateways in front of one Postgres instance, that win quietly evaporates unless you do something about it. This post is about what we do about it.
 
 ## The N-gateways problem
