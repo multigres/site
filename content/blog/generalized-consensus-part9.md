@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Consistent Reads"
-description: "This section discusses various approaches to achieving consistent reads in a consensus protocol."
+description: "Leader leases, heartbeat reads, quorum reads, and other trade-offs for consistent reads in replicated consensus systems."
 date: "2025-11-02"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 9
 ---
 This section discusses various approaches to achieving consistent reads in a consensus protocol.
 

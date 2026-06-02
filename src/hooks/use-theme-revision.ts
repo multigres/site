@@ -4,5 +4,5 @@ import { useTheme } from "fumadocs-ui/provider/base";
 export function useThemeRevision(): string {
   const { resolvedTheme } = useTheme();
 
-  return resolvedTheme ?? "system";
+  return resolvedTheme ?? "dark";
 }

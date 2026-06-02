@@ -1,12 +1,10 @@
 ---
 title: "Pooling without choosing a mode"
-description: "_Part 3 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._"
+description: "How Multigres picks statement, transaction, or session pooling per query instead of forcing one PgBouncer-style mode at configure time."
 date: "2026-05-20"
 author: "manan"
 tags: [planetpg, postgres, connection-pooling, pgbouncer, transactions]
 ---
-_Part 3 of a series. Start with [Two jobs, two processes](/blog/two-jobs-two-processes) for the architecture and motivation._
-
 Connection pool modes aren't an arbitrary choice. They exist because Postgres connections carry session state - temp tables, prepared statements, settings, transactions in progress - and it's not always safe to give one client's connection to a different client. The traditional answer is to pick a mode at configuration time and live with it. We didn't want users to have to make that pick. This post is about how Multigres figures it out per-query, automatically.
 
 ## The mode tradeoff

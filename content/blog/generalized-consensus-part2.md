@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Setting the Requirements"
-description: "This section sets the requirements for a generalized consensus system."
+description: "From single-value Paxos to log replication: durability rules, coordinators, and the requirements every generalized consensus system must satisfy."
 date: "2025-10-24"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 2
 ---
 This section sets the requirements for a generalized consensus system.
 

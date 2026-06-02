@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Changing the Rules"
-description: "This section discusses ways to change the durability rules for a consensus system. As you will see below, any approach that respects the governing rules is sufficient to safely effect these changes."
+description: "Safely changing durability policies, adding or removing cohort nodes, and keeping agents aligned when cluster rules evolve."
 date: "2025-11-01"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 8
 ---
 This section discusses ways to change the durability rules for a consensus system. As you will see below, any approach that respects the governing rules is sufficient to safely effect these changes.
 

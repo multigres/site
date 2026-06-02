@@ -37,6 +37,8 @@ export const blog = defineCollections({
     authors: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
+    series: z.string().optional(),
+    seriesPart: z.number().int().nonnegative().optional(),
   }),
 });
 

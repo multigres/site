@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Ordering Decisions"
-description: "In this section we will discuss the challenges of ordering decisions when multiple agents are involved."
+description: "Term numbers, failure detection, and the groundwork for safe leadership changes when multiple agents must order decisions sequentially."
 date: "2025-10-29"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 5
 ---
 In this section we will discuss the challenges of ordering decisions when multiple agents are involved.
 

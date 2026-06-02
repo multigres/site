@@ -21,6 +21,7 @@ import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog/rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
+import { Route as BlogSeriesSeriesSlugRouteImport } from './routes/blog/series/$seriesSlug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -82,6 +83,11 @@ const ApiSearchRoute = ApiSearchRouteImport.update({
   path: '/api/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSeriesSeriesSlugRoute = BlogSeriesSeriesSlugRouteImport.update({
+  id: '/blog/series/$seriesSlug',
+  path: '/blog/series/$seriesSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
   '/blog/': typeof BlogIndexRoute
+  '/blog/series/$seriesSlug': typeof BlogSeriesSeriesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
   '/blog': typeof BlogIndexRoute
+  '/blog/series/$seriesSlug': typeof BlogSeriesSeriesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.md': typeof DocsChar123Char125DotmdRoute
   '/blog/': typeof BlogIndexRoute
+  '/blog/series/$seriesSlug': typeof BlogSeriesSeriesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/docs/$'
     | '/docs/{$}.md'
     | '/blog/'
+    | '/blog/series/$seriesSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/docs/$'
     | '/docs/{$}.md'
     | '/blog'
+    | '/blog/series/$seriesSlug'
   id:
     | '__root__'
     | '/'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/docs/$'
     | '/docs/{$}.md'
     | '/blog/'
+    | '/blog/series/$seriesSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +196,7 @@ export interface RootRouteChildren {
   DocsSplatRoute: typeof DocsSplatRoute
   DocsChar123Char125DotmdRoute: typeof DocsChar123Char125DotmdRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  BlogSeriesSeriesSlugRoute: typeof BlogSeriesSeriesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/series/$seriesSlug': {
+      id: '/blog/series/$seriesSlug'
+      path: '/blog/series/$seriesSlug'
+      fullPath: '/blog/series/$seriesSlug'
+      preLoaderRoute: typeof BlogSeriesSeriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,6 +308,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsSplatRoute: DocsSplatRoute,
   DocsChar123Char125DotmdRoute: DocsChar123Char125DotmdRoute,
   BlogIndexRoute: BlogIndexRoute,
+  BlogSeriesSeriesSlugRoute: BlogSeriesSeriesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

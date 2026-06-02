@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Discovery and Propagation"
-description: "This section covers the second part of a leadership change: The discovery of the best timeline and its propagation to prepare for the next leadership."
+description: "Discovering the best timeline, honoring durable-but-unapplied decisions, and propagating state so the next leader can resume safely."
 date: "2025-10-31"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 7
 ---
 This section covers the second part of a leadership change: The discovery of the best timeline and its propagation to prepare for the next leadership.
 

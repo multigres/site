@@ -1,9 +1,11 @@
 ---
 title: "Generalized Consensus: Revocation and Candidacy"
-description: "This section covers ways to satisfy the prerequisites for a leader change: Revoke previous leaderships and recruit nodes for the new leader candidate."
+description: "Revoking prior leadership and recruiting cohort members—the prerequisites a new leader must satisfy before taking over."
 date: "2025-10-30"
 author: "sougou"
 tags: [planetpg, consensus, distributed-systems, durability]
+series: generalized-consensus
+seriesPart: 6
 ---
 This section covers ways to satisfy the prerequisites for a leader change: Revoke previous leaderships and recruit nodes for the new leader candidate.
 

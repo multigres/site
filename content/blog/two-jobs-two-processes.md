@@ -1,9 +1,11 @@
 ---
 title: "Two jobs, two processes: why Multigres has its own connection pooler"
-description: "Most connection poolers do two jobs in one process: accept client connections, and manage backend connections. In Multigres, we split them. Multigateway accepts clients; multipooler manages backends. This post is about why."
+description: "Why Multigres splits client acceptance (multigateway) from backend pooling (multipooler) instead of using a single-process pooler like PgBouncer."
 date: "2026-05-20"
 author: "manan"
 tags: [planetpg, postgres, connection-pooling, distributed-systems, architecture]
+series: connection-pooling
+seriesPart: 1
 ---
 Most connection poolers do two jobs in one process: accept client connections, and manage backend connections. In Multigres, we split them. Multigateway accepts clients; multipooler manages backends. This post is about why.
 
