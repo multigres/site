@@ -83,15 +83,15 @@ export function BlogPostList({ posts }: BlogPostListProps) {
             <Link
               to="/blog/$slug"
               params={{ slug: post.slug }}
-              className="group flex flex-col items-center gap-2 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+              className="group flex flex-col items-start gap-2 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
             >
-              <span className="font-medium text-foreground group-hover:text-primary">
+              <span className="w-full font-medium text-foreground group-hover:text-primary sm:w-auto">
                 {post.title}
               </span>
               <BlogMetaRow
                 authors={resolveBlogMetaAuthors(post)}
                 date={post.date}
-                className={cn('sm:shrink-0')}
+                className={cn('w-full sm:w-auto sm:shrink-0')}
               />
             </Link>
           </li>

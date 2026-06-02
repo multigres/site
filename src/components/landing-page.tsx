@@ -102,7 +102,7 @@ export default function Home() {
               'lg:col-start-1 lg:row-start-1 lg:self-end',
             )}
           >
-            <span className="block text-foreground">Postgres</span>
+            <span className="block text-foreground">Postgres,</span>
             <span className="block text-muted-foreground/80">
               scaled horizontally.
             </span>
