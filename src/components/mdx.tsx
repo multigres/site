@@ -1,6 +1,7 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import { BlogAuthor } from '@/components/blog-author';
+import { PgRegressCount } from '@/components/pg-regress-count';
 import { YouTubeEmbed } from '@/components/youtube-embed';
 import type { Author } from '@/lib/authors';
 
@@ -20,6 +21,7 @@ export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
     Author,
+    PgRegressCount,
     YouTubeEmbed,
     ...components,
   } satisfies MDXComponents;
