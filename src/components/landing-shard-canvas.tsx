@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { MultigresLogo } from "@/components/multigres-logo";
 import { colorWithAlpha } from "@/lib/canvas-color";
 import { resolveShardGridColors } from "@/lib/shard-canvas-colors";
@@ -14,24 +9,16 @@ import {
   getGridDimensions,
   getInitialGridScale,
   getShardBlinkTiming,
-  getShardMetrics,
-  hitTestShard,
   isCellHiddenByLogo,
   isLogoCellStart,
   LANDING_ANIMATION_CONFIG,
   type GridDimensions,
   type LandingAnimationPhase,
 } from "@/lib/landing-animation";
-import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-const numberFormatter = new Intl.NumberFormat("en-US");
 const ZOOM_EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
 const COMPLETE_FRAME_INTERVAL_MS = 1000 / 20;
-
-type HoveredShard = {
-  row: number;
-  col: number;
-};
 
 type LandingShardCanvasProps = {
   phase: LandingAnimationPhase;
@@ -54,7 +41,6 @@ export function LandingShardCanvas({
   const blinkStartAtRef = useRef<number | null>(null);
   const completeStartAtRef = useRef<number | null>(null);
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
-  const [hoveredShard, setHoveredShard] = useState<HoveredShard | null>(null);
   const themeRevision = useThemeRevision();
 
   useEffect(() => {
@@ -104,13 +90,6 @@ export function LandingShardCanvas({
   const currentTranslateY = isZoomedIn
     ? 0
     : LANDING_ANIMATION_CONFIG.FINAL_TRANSLATE_Y;
-  const showHover = phase === "complete";
-  const hoveredMetrics = hoveredShard
-    ? getShardMetrics(hoveredShard.row, hoveredShard.col)
-    : null;
-  const hoverAnchor = hoveredShard
-    ? getShardAnchor(hoveredShard, gridDimensions)
-    : null;
   const logoBox = getLogoBox(gridDimensions);
 
   useEffect(() => {
@@ -176,32 +155,6 @@ export function LandingShardCanvas({
     return clearScheduledRender;
   }, [gridDimensions, phase, reduceMotion, themeRevision]);
 
-  useEffect(() => {
-    if (!showHover) {
-      setHoveredShard(null);
-    }
-  }, [showHover]);
-
-  const handlePointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
-    if (!showHover || !gridRef.current) return;
-
-    const rect = gridRef.current.getBoundingClientRect();
-    const gridX = ((event.clientX - rect.left) / rect.width) * gridWidth;
-    const gridY = ((event.clientY - rect.top) / rect.height) * gridHeight;
-    const shard = hitTestShard(gridX, gridY, gridDimensions);
-
-    setHoveredShard((current) => {
-      if (
-        current?.row === shard?.row &&
-        current?.col === shard?.col
-      ) {
-        return current;
-      }
-
-      return shard;
-    });
-  };
-
   return (
     <div
       ref={containerRef}
@@ -233,8 +186,6 @@ export function LandingShardCanvas({
             width: gridWidth,
             height: gridHeight,
           }}
-          onPointerMove={handlePointerMove}
-          onPointerLeave={() => setHoveredShard(null)}
         />
         <div
           aria-hidden="true"
@@ -248,54 +199,6 @@ export function LandingShardCanvas({
         >
           <MultigresLogo className="size-full text-primary" />
         </div>
-
-        <HoverCard
-          open={showHover && hoveredMetrics !== null}
-          openDelay={120}
-          closeDelay={80}
-        >
-          <HoverCardTrigger asChild>
-            <div
-              aria-hidden="true"
-              className="absolute pointer-events-none"
-              style={{
-                left: hoverAnchor?.left ?? 0,
-                top: hoverAnchor?.top ?? 0,
-                width: hoverAnchor?.size ?? 0,
-                height: hoverAnchor?.size ?? 0,
-              }}
-            />
-          </HoverCardTrigger>
-          {hoveredMetrics ? (
-            <HoverCardContent
-              side="top"
-              sideOffset={10}
-              className="w-64 bg-popover"
-            >
-              <div className="space-y-3 font-mono text-xs leading-4">
-                <h4 className="text-foreground mb-3">{hoveredMetrics.id}</h4>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">replication lag</span>
-                    <span>{hoveredMetrics.lagMs}ms</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">qps</span>
-                    <span>{numberFormatter.format(hoveredMetrics.qps)}/s</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">latency</span>
-                    <span>{hoveredMetrics.latencyMs}ms</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">error rate</span>
-                    <span>{hoveredMetrics.errorRate.toFixed(2)}%</span>
-                  </div>
-                </div>
-              </div>
-            </HoverCardContent>
-          ) : null}
-        </HoverCard>
       </div>
     </div>
   );
@@ -622,13 +525,5 @@ function getLogoBox(dimensions: GridDimensions) {
     logoLeft: centerCol * dimensions.cellSize + (spanSize - logoSize) / 2,
     logoTop: centerRow * dimensions.cellSize + (spanSize - logoSize) / 2,
     logoSize,
-  };
-}
-
-function getShardAnchor(shard: HoveredShard, dimensions: GridDimensions) {
-  return {
-    left: shard.col * dimensions.cellSize,
-    top: shard.row * dimensions.cellSize,
-    size: dimensions.cellSize,
   };
 }
