@@ -25,6 +25,12 @@ export const authors = {
     url: 'https://github.com/mkindahl',
     imageUrl: 'https://github.com/mkindahl.png',
   },
+  haritabh: {
+    name: 'Haritabh Gupta',
+    title: 'Engineer, Multigres',
+    url: 'https://github.com/haritabh17',
+    imageUrl: 'https://github.com/haritabh17.png',
+  },
   rafael: {
     name: 'Rafael Chacon',
     title: 'Founding Engineer, Multigres',

@@ -1,0 +1,107 @@
+---
+title: "Building a Truly Compatible Postgres Proxy: The Multigres Story"
+description: "True Postgres compatibility means a client can't tell it's talking to a proxy — not at the wire, not in a message, not in a diagnostic field. What we learned chasing that bar while building Multigres, and how we measure it with Postgres's own regression suite instead of asserting it."
+date: "2026-06-04"
+author: "haritabh"
+tags:
+  [planetpg, postgres, multigres, proxy, compatibility, pg_regress, pgbouncer]
+---
+
+When we set out to build [Multigres](https://github.com/multigres/multigres), one of the trickiest parts wasn't the systems work people usually talk about. It was something narrower and quieter: **true Postgres compatibility**. The kind where a client connected to the proxy can't tell — at the wire, at the message, at the diagnostic field — that it's talking to anything other than Postgres.
+
+That sounds obvious. "Speaks Postgres protocol" is on every proxy's box. In practice, the Postgres protocol is large, asynchronous, and full of small details that most middleware quietly drops. The gap between _parses StartupMessage and Query_ and _behaves indistinguishably from Postgres_ is where applications break in production. Tools rely on error fields you've never named. ORMs depend on transaction state transitions you didn't think to track. Drivers reuse prepared statements your proxy silently re-parses on every execution. The application doesn't get worse loudly — it gets worse subtly, and you find out at 2 AM.
+
+This post is about what we learned chasing that compatibility bar while building Multigres, and how we measure it instead of asserting it.
+
+## What "transparent" actually means
+
+Our working definition: **an application connected to Multigres cannot observe a difference from a direct Postgres connection** along any axis reasonable for a connection pooler.
+
+Every wire message Postgres can send and only the ones it would send. Every diagnostic field on errors and notices. Every state transition. Every async message at the moment Postgres would send it. Every startup parameter the client requested. Every TLS handshake quirk.
+
+This is testable. We'll measure it against Postgres's own regression suite later in the post.
+
+## The shape of Multigres
+
+Multigres is a connection pooler and horizontal-scaling layer for Postgres — the Vitess model brought to Postgres. Two services do the heavy lifting. **Multigateway** sits at the front, speaking the Postgres wire protocol to the client — auth, message parsing, session state, query routing. **Multipooler** sits in front of each Postgres backend, manages a pool of connections to it, owns transactions, and translates gRPC requests back into wire-level interactions with Postgres. Between gateway and pooler sits gRPC.
+
+The why-split-into-two-services question is its own story, and our [connection-pooling series](/blog/two-jobs-two-processes) covers it in depth. What matters here is the consequence: every Postgres-specific detail has to survive a gRPC hop in the middle. The Postgres protocol and the gRPC protocol have different ideas about what an "error" or a "result" or an "async event" is, and bridging those ideas without loss is most of the engineering below.
+
+## The compatibility surface
+
+When we audited what "transparent" actually required, we ended up with more challenges than we expected — each one a small protocol detail that, individually, sounded niche, and collectively decided whether applications could trust the proxy. The following is in no particular order, just some of the more interesting ones.
+
+**COPY FROM STDIN is its own sub-protocol.** After `CopyInResponse`, the client streams unbounded `CopyData` frames until `CopyDone` or `CopyFail`. The proxy isn't in request/response mode anymore — it's mediating a state machine with its own framing. A naive implementation that buffers the whole stream dies on the first 10 GB import; one that re-fragments the stream loses ordering. We model COPY end-to-end as a streaming state machine with explicit phase transitions, so bytes flow through both hops without staging in memory. The reverse direction, `COPY TO STDOUT`, has its own framing — `CopyOutResponse` followed by a stream of `CopyData` until `CopyDone` — and we model it the same way, so bulk exports stream through the proxy with the same byte-for-byte fidelity as imports.
+
+**NOTICE messages can arrive at any time.** Postgres can emit `NoticeResponse` between row data messages, before `CommandComplete`, multiple in a row. They share the on-wire diagnostic format with errors but aren't errors — they're warnings, info messages, deprecation hints that ORMs and monitoring code rely on. The proxy has to forward them in order, immediately, without buffering. We model notices as another payload class in our gRPC streaming response, alongside result rows and `LISTEN` notifications, so the gateway can emit them onto the client connection the moment they arrive from the backend. One honest caveat lives on the neighboring asynchronous `LISTEN` / `NOTIFY` path: we deliver notifications when a query completes rather than the instant they arrive on an otherwise idle connection, and a saturated delivery channel can drop one. Notices themselves we forward in order, as we see them.
+
+**Error diagnostics have more than a dozen typed fields, not one.** A Postgres `ErrorResponse` is a wire message built from typed fields — severity, SQLSTATE, message, detail, hint, position, schema, table, column, constraint, and more. SQLSTATE alone has over 250 defined codes. Lose any of these and applications degrade in ways their authors didn't plan for: ORMs fall back to string parsing, observability tools start grouping unrelated errors together. gRPC, by contrast, gives you one code and one message. Rather than stringify the Postgres error into that message and lose every field but two, we pack every application-visible diagnostic field into a protobuf and attach it to the gRPC status details — lossless in both directions. From the client's perspective, an error raised by Postgres arrives with the same fields and formatting it would have sent.
+
+**`CancelRequest` arrives on a different connection.** Postgres assigns each backend a process ID and a secret key at startup and ships both to the client. When the client wants to cancel a running query, it opens a _new_ TCP connection, sends a `CancelRequest` carrying the PID and secret, and the server matches them to find the right backend. The proxy has to honor this same flow, but with a twist: the cancel connection may land on a different gateway than the one running the query. We solve it by encoding gateway identity into the PID we hand the client at startup — a small prefix selects which gateway, the rest identifies the local connection. A cancel arriving anywhere can be routed to the right gateway, which then signals the right backend. From the client's perspective it's the same PID-and-secret protocol Postgres ships with.
+
+There were others. TLS negotiation has a pre-startup handshake with its own CVE-class footgun around buffered plaintext before the handshake completes. Client startup parameters (`client_encoding`, `application_name`, `search_path`, `DateStyle`) have to influence every query for the rest of the session, even though pooled backend connections weren't opened with them. The extended-query protocol's `Describe` message has two forms — for a statement, for a portal — that Postgres answers differently and that libpq breaks on if you confuse them. Each of these turned into its own project, and the list keeps growing as we find new corners of the protocol that matter.
+
+## Proving it with `pg_regress`
+
+The honest question, after all of the above, is: how do we know any of it actually works?
+
+Postgres ships its own regression suite. `pg_regress` runs SQL files and diffs their output against expected output, byte-for-byte. There's a companion suite, `pg_isolation_regress`, that does the same for concurrency scenarios with multiple coordinated sessions. These are the strictest correctness tests Postgres has — the ones that gate every Postgres release.
+
+Running them through Multigres is the most honest compatibility test we can write. If Postgres's own tests pass when pointed at the proxy, the proxy is being transparent in a way no unit test can prove.
+
+The first time we ran the harness, we saw over a hundred failing tests and our reflex was to chase each as a Multigres bug. A meaningful chunk turned out to be something else entirely. Our Postgres was provisioned with production-tuned GUCs (small `work_mem`, low `random_page_cost`), while the regression suite's expected output had been captured against vanilla Postgres defaults. Same answer, different EXPLAIN. Reverting to default GUCs for the duration of the test made a large batch of failures disappear at once — a useful reminder that correct tuning for the database matters, and that what's right for production isn't always what's right for a compatibility test.
+
+The remaining failures are the real signal. Some are intentional formatting divergences — Multigres reports parser error positions through the gateway with a different anchoring than direct Postgres, and we'd rather not pretend otherwise. We capture those as patches alongside the expected outputs, and require the actual output to match _expected + patch_.
+
+`pg_regress` proves single-session correctness. Its sibling, `pg_isolation_regress`, proves concurrency correctness — specs in which multiple sessions coordinate around locks, wait for each other, and assert who blocks whom. The isolation harness uses Postgres's `pg_blocking_pids()` function to inspect waits. Here the proxy's two-layer identity bites: the PID the client sees is one the gateway issues and owns, while the query actually runs on a pooler-to-Postgres backend connection whose real PID the client never sees. Through a proxy that multiplexes client connections onto pooled backends, those PIDs are the wrong PIDs: the test asks `pg_blocking_pids()` about the gateway-issued PID for the session it thinks it owns, but the actual lock-holder lives on a hidden backend connection it has no direct handle to. The assertions silently miscompare. We work around it with a virtual-PID stamp written into `pg_stat_activity.application_name` at session start, plus a small PL/pgSQL helper installed alongside the suite that translates the client-visible session identifier back into the real backend PID at query time. With those in place, the isolation tests run end-to-end against the proxy with no client-side changes. The proxy is effectively invisible to the test's assertions, which is the whole point.
+
+## Results
+
+Numbers on their own don't say much; they need a baseline. So we compare ourselves against the de-facto standard for Postgres proxying — PgBouncer in its two most common pool modes. Not because PgBouncer is bad; it's excellent at what it sets out to do. But it's what most readers already trust, and a head-to-head on Postgres's own test suites is the fairest picture we can offer.
+
+| Suite        | Multigres                                                | PgBouncer (transaction) | PgBouncer (session) |
+| ------------ | -------------------------------------------------------- | ----------------------- | ------------------- |
+| `pg_regress` | <PgRegressCount suite="regression" fallback="164/222" /> | 155/222                 | 221/222             |
+
+_Multigres's `pg_regress` pass rate updates live from our nightly compatibility run; the PgBouncer figures are point-in-time measurements from the time of publishing._
+
+We read these numbers as a marker of how close to native Postgres we are today, not a final grade. The remaining gap is compatibility work still in flight — cases we haven't covered yet, not architectural limits — and the numbers climb as we close them.
+
+So what is in that gap? At the time of writing, the failing cases cluster into a few buckets. Some are `pg_catalog` and system-view divergences, where the proxy's view of session and backend state doesn't yet match Postgres byte-for-byte. Some are asynchronous-message edge cases — orderings and timings around notices and notifications that we don't yet reproduce exactly. And some are the intentional formatting divergences described above, such as parser error-position anchoring, which we carry as patches rather than pretend away. None of these are architectural limits; they're the long tail we're still closing.
+
+The comparison that matters is PgBouncer's transaction mode. PgBouncer's session mode is almost perfectly compatible, but that's precisely because it pins each client to one Postgres connection for the life of the session and gives up pooling almost entirely: it holds a connection open rather than sharing it, so you get little of the connection reuse pooling exists to provide, and it inherits Postgres's behavior nearly unchanged. That's the trade-off in plain sight — PgBouncer reaches near-full Postgres compatibility only in the mode that gives up pooling. Transaction mode is where pooling actually happens: connections return to the pool between transactions and are shared across clients. That's the right peer for Multigres, and it's where compatibility drops, because transaction pooling buys its efficiency by breaking Postgres features. The [PgBouncer docs](https://www.pgbouncer.org/features.html) are explicit that transaction pooling "can be used only if the application cooperates by not using non-working features." Those features matter — and several cut the other way:
+
+| Feature                                        | Multigres | PgBouncer (transaction) | PgBouncer (session) |
+| ---------------------------------------------- | --------- | ----------------------- | ------------------- |
+| `SET` / `RESET` (incl. `SET ROLE`)             | Yes       | No                      | Yes                 |
+| `PREPARE` / `DEALLOCATE`                       | Yes       | No                      | Yes                 |
+| Temp tables (`ON COMMIT PRESERVE/DELETE ROWS`) | Yes       | No                      | Yes                 |
+| `LISTEN` / `NOTIFY`                            | Yes       | No                      | Yes                 |
+| `WITH HOLD` cursors                            | Yes       | No                      | Yes                 |
+| `CREATE SUBSCRIPTION` (logical replication)    | No        | Yes                     | Yes                 |
+| `postgres_fdw` / foreign tables                | No        | No                      | Yes                 |
+| `CREATE` / `DROP DATABASE`                     | No        | Yes                     | Yes                 |
+
+PgBouncer can claw some of this back with the right configuration. Protocol-level prepared statements come back with `max_prepared_statements`, and a handful of parameters Postgres echoes to the client — `DateStyle`, `TimeZone`, `client_encoding` — can be carried across transactions with `track_extra_parameters`. If your application stays inside that envelope, transaction pooling is a perfectly good choice.
+
+But these are partial recoveries, not a general fix. `max_prepared_statements` doesn't cover SQL-level `PREPARE` / `EXECUTE` / `DEALLOCATE`, which are forwarded straight through and still break. `track_extra_parameters` only works for the few GUCs Postgres reports back, not an arbitrary `SET`. And some features have no knob at all: temp tables, `LISTEN` / `NOTIFY`, session-level advisory locks, and `WITH HOLD` cursors are all tied to a single backend that transaction pooling won't pin to one client. They are off the table by design.
+
+Multigres preserves the first group because each client connection carries its own session state — GUCs, prepared statements, role, open portals — and the pool routes re-checkouts to a backend that matches. The remaining rows run the other way: server-level operations that Multigres deliberately blocks rather than forward, while PgBouncer passes them straight through to Postgres. Transparency cuts both ways, and we'd rather name the operations we don't pass through than pretend the gap isn't there.
+
+The full per-test breakdown — including which tests pass with patches, which fail, and why — lives alongside the harness in the repo, and the numbers climb as we land new compatibility work.
+
+## Takeaways
+
+A few lessons from this work that are worth keeping in mind for anyone building or evaluating a pooler or proxy in front of Postgres:
+
+1. **Compatibility is a spectrum, not a checkbox.** "Speaks Postgres protocol" can mean almost anything. The long tail — the diagnostic fields, the async messages, the sub-protocols — is what separates a proxy applications can adopt from one that breaks them quietly in production.
+2. **Test with the database's own tests.** `pg_regress` was already written. Running it through your proxy will teach you more about your compatibility gaps than any amount of bespoke unit tests.
+3. **Diagnostic fidelity is non-negotiable.** Every error field exists because some tool relies on it. Preserve all of them and prove it with a round-trip test.
+4. **gRPC isn't free for protocol bridges.** It gives you streaming, structured errors, codegen — and it takes back schema-on-the-wire flexibility and Postgres's error model. Plan for what you'll have to rebuild on top.
+5. **Measure compatibility, don't assert it.** We measure end-to-end against Postgres's own tests so we know exactly what works, what doesn't, and how the proxy deviates from native Postgres — instead of trusting that it doesn't.
+
+## What's next
+
+A lot of the compatibility work above is in production paths today; some of it is still hardening. We're working on the remaining patches, expanding isolation-test coverage, and chasing the long tail of Postgres-specific behaviors we haven't yet matched.
+
+If you're working on Postgres middleware and have hit any of these compatibility puzzles, we'd love to compare notes. If you'd like to try Multigres against your own workload, the code is open source at [github.com/multigres/multigres](https://github.com/multigres/multigres) — issues and discussions are how we hear about the cases we haven't thought of yet.
