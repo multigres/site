@@ -96,15 +96,7 @@ const clientLoader = browserCollections.blog.createClientLoader({
     return (
       <article className="pb-32">
         <div className="relative left-1/2 h-[200px] w-screen -translate-x-1/2 overflow-hidden bg-muted">
-          {frontmatter.image ? (
-            <img
-              src={frontmatter.image}
-              alt=""
-              className="size-full object-cover"
-            />
-          ) : (
-            <BlogShardPlaceholder seed={frontmatter.title} />
-          )}
+          <BlogShardPlaceholder seed={frontmatter.title} />
         </div>
         <header className="mb-8 border-b border-border pb-8 pt-10 md:pt-14">
           <Link
