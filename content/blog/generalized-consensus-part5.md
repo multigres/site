@@ -107,7 +107,7 @@ Raft offers a better approach: have the coordinators visit a set of overlapping 
 
 # The term number
 
-The assignment of an order between two independent nodes deciding to act is what Paxos calls a proposal number, and Raft calls a term number. This number must be universally unique, and is expected to increase monotonically. For clarity, we will use the RAFT terminology and refer to it as the term number. The rules around term numbers apply to all agents. This includes coordinators as well as leaders.
+The assignment of an order between two independent nodes deciding to act is what Paxos calls a proposal number, and Raft calls a term number. This number must be universally unique, and is expected to increase monotonically. For clarity, we will use the Raft terminology and refer to it as the term number. The rules around term numbers apply to all agents. This includes coordinators as well as leaders.
 
 To handle agents acting out of sequence, we’ll specify that a newer agent always supersedes an older one. This is a prerequisite for Rule 2a(i). To achieve this, we will make agents `recruit` nodes into their term:
 
