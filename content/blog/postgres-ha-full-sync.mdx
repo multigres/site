@@ -18,7 +18,7 @@ Multigres will bring the flexibility of a pluggable durability policy. There wil
 - cross-availability zone (cross-AZ): a replica in at least one other AZ must have my data
 - cross-region: same as cross-AZ, but for regions
 - at least two AZs: replicas in two distinct AZs must have my data
-- majority quorum: traditional consensus rules like RAFT
+- majority quorum: traditional consensus rules like Raft
 - etc.
 
 The advantages of policy based durability go beyond ease of use. Essentially, the policy does not need to depend on the number of nodes in the quorum. This flexibility allows you to deploy more nodes or additional zones without affecting the performance of the cluster.

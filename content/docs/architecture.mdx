@@ -91,7 +91,7 @@ MultiOrch will implement a distributed consensus algorithm that will provide the
 
 MultiOrch will operate on an unmodified Postgres engine by using full sync replication. For a better experience, we recommend using the two-phase sync plug in (more details on this later).
 
-MultiOrch will be configurable to use a RAFT style majority quorum. It will also be configurable to support more advanced durability policies that don't depend on the quorum size. This will be achieved by using a new generalized consensus approach (covered later).
+MultiOrch will be configurable to use a Raft style majority quorum. It will also be configurable to support more advanced durability policies that don't depend on the quorum size. This will be achieved by using a new generalized consensus approach (covered later).
 
 MultiGateway will make use of the replicas to scale reads for situations where the application can tolerate eventual consistency. It will also be configurable to support consistent reads from replicas at the cost of waiting for writes to finish transmitting the data to the replicas.
 
