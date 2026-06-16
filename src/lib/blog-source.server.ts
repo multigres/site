@@ -64,3 +64,11 @@ export function getBlogPostListSummaries(posts: BlogPage[]) {
     seriesPart: post.data.seriesPart,
   }));
 }
+
+export async function getBlogLLMText(page: BlogPage) {
+  const processed = await page.data.getText('processed');
+
+  return `# ${page.data.title} (${page.url})
+
+${processed}`;
+}
