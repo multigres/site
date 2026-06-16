@@ -14,7 +14,7 @@ function isLiveFetchAgent(request: Request): boolean {
 }
 
 function prefersMarkdownByAccept(request: Request): boolean {
-  const preferred = getNegotiator(request).mediaTypes(['text/markdown', 'text/html'])[0];
+  const preferred = getNegotiator(request).mediaTypes(['text/html', 'text/markdown'])[0];
   return preferred === 'text/markdown';
 }
 
@@ -26,6 +26,7 @@ function markdownResponse(body: string): Response {
   return new Response(body, {
     headers: {
       'Content-Type': 'text/markdown; charset=utf-8',
+      'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400',
       Vary: 'Accept',
     },
   });

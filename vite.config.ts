@@ -16,12 +16,34 @@ export default defineConfig({
     tanstackStart({
       prerender: {
         enabled: true,
+        filter: ({ path }) =>
+          !path.startsWith('/docs') && !path.startsWith('/blog') && path !== '/',
       },
     }),
     react(),
     // please see https://tanstack.com/start/latest/docs/framework/react/guide/hosting#nitro for guides on hosting
     nitro({
       preset: 'vercel',
+      routeRules: {
+        '/': {
+          headers: {
+            'cache-control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+            vary: 'Accept',
+          },
+        },
+        '/docs/**': {
+          headers: {
+            'cache-control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+            vary: 'Accept',
+          },
+        },
+        '/blog/**': {
+          headers: {
+            'cache-control': 'public, s-maxage=86400, stale-while-revalidate=86400',
+            vary: 'Accept',
+          },
+        },
+      },
     }),
   ],
   resolve: {
