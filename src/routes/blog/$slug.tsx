@@ -11,6 +11,9 @@ import { blogSource } from '@/lib/blog-source.server';
 import { docPageHeadingClassName } from '@/lib/typography';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
+import { serializeJsonLd } from '@/lib/json-ld';
+
+const logoUrl = 'https://multigres.com/img/og-image.png';
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPage,
@@ -25,48 +28,43 @@ export const Route = createFileRoute('/blog/$slug')({
     const image = loaderData?.image || '/img/og-image.png';
     const canonicalUrl = `https://multigres.com/blog/${params.slug}`;
 
+    const jsonLd: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: loaderData?.title ?? 'Blog | Multigres',
+      description,
+      url: canonicalUrl,
+      publisher: {
+        '@type': 'Organization',
+        name: 'Multigres',
+        logo: { '@type': 'ImageObject', url: logoUrl },
+      },
+    };
+
+    jsonLd['image'] = image.startsWith('http') ? image : `https://multigres.com${image}`;
+    if (loaderData?.datePublished) jsonLd['datePublished'] = loaderData.datePublished;
+    if (loaderData?.authorName) {
+      jsonLd['author'] = { '@type': 'Person', name: loaderData.authorName };
+    }
+
     return {
       meta: [
-        {
-          title,
-        },
-        {
-          name: 'description',
-          content: description,
-        },
-        {
-          property: 'og:title',
-          content: title,
-        },
-        {
-          property: 'og:description',
-          content: description,
-        },
-        {
-          property: 'og:image',
-          content: image,
-        },
-        {
-          property: 'og:type',
-          content: 'article',
-        },
-        {
-          name: 'twitter:title',
-          content: title,
-        },
-        {
-          name: 'twitter:description',
-          content: description,
-        },
-        {
-          name: 'twitter:image',
-          content: image,
-        },
+        { title },
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:image', content: image },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:url', content: canonicalUrl },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: image },
       ],
-      links: [
+      links: [{ rel: 'canonical', href: canonicalUrl }],
+      scripts: [
         {
-          rel: 'canonical',
-          href: canonicalUrl,
+          type: 'application/ld+json',
+          children: serializeJsonLd(jsonLd),
         },
       ],
     };
@@ -79,11 +77,20 @@ const serverLoader = createServerFn({ method: 'GET' })
     const page = blogSource.getPage([slug]);
     if (!page) throw notFound();
 
+    const authorKeys = parseAuthorKeys(
+      (page.data.authors as string | string[] | undefined) ??
+        (page.data.author as string | undefined),
+    );
+    const authors = resolveAuthors(authorKeys);
+    const firstAuthor = authors[0];
+
     return {
       path: page.path,
       title: page.data.title,
       description: page.data.description,
       image: page.data.image,
+      datePublished: page.data.date ? page.data.date.toISOString() : undefined,
+      authorName: firstAuthor?.name,
     };
   });
 
