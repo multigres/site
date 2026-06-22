@@ -20,6 +20,7 @@ import { gitConfig } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { useMDXComponents } from '@/components/mdx';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export const Route = createFileRoute('/docs/$')({
   component: Page,
@@ -36,46 +37,30 @@ export const Route = createFileRoute('/docs/$')({
 
     return {
       meta: [
-        {
-          title,
-        },
-        {
-          name: 'description',
-          content: description,
-        },
-        {
-          property: 'og:title',
-          content: title,
-        },
-        {
-          property: 'og:description',
-          content: description,
-        },
-        {
-          property: 'og:type',
-          content: 'article',
-        },
-        {
-          property: 'og:image',
-          content: '/img/og-image.png',
-        },
-        {
-          name: 'twitter:title',
-          content: title,
-        },
-        {
-          name: 'twitter:description',
-          content: description,
-        },
-        {
-          name: 'twitter:image',
-          content: '/img/og-image.png',
-        },
+        { title },
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:url', content: canonicalUrl },
+        { property: 'og:image', content: '/img/og-image.png' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: '/img/og-image.png' },
       ],
-      links: [
+      links: [{ rel: 'canonical', href: canonicalUrl }],
+      scripts: [
         {
-          rel: 'canonical',
-          href: canonicalUrl,
+          type: 'application/ld+json',
+          children: serializeJsonLd({
+            '@context': 'https://schema.org',
+            '@type': 'TechArticle',
+            headline: loaderData?.title ?? 'Multigres Docs',
+            description,
+            url: canonicalUrl,
+            inLanguage: 'en',
+            publisher: { '@type': 'Organization', name: 'Multigres' },
+          }),
         },
       ],
     };
@@ -102,14 +87,7 @@ const serverLoader = createServerFn({
 const clientLoader = browserCollections.docs.createClientLoader({
   component(
     { toc, frontmatter, default: MDX },
-    // you can define props for the component
-    {
-      markdownUrl,
-      path,
-    }: {
-      markdownUrl: string;
-      path: string;
-    },
+    { markdownUrl, path }: { markdownUrl: string; path: string },
   ) {
     return (
       <DocsPage toc={toc} className="max-w-[800px] pb-16">
