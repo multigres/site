@@ -126,7 +126,7 @@ When the leader has to change, we have new decisions to make. We will talk about
 
 # How is this different from traditional consensus?
 
-The two-phase mechanism of sending out the requests, waiting for the necessary acks, and then sending out messages to apply the requests is nothing new. This is how RAFT also works. The part that differs is that the rules for what constitutes durable can be arbitrary.
+The two-phase mechanism of sending out the requests, waiting for the necessary acks, and then sending out messages to apply the requests is nothing new. This is how Raft also works. The part that differs is that the rules for what constitutes durable can be arbitrary.
 
 If we provided a plugin mechanism for the rules, these acks would be handled by the plugin, which would validate them against the durability rules. This would allow the main algorithm to remain agnostic of the durability policy.
 
