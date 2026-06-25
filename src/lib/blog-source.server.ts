@@ -3,7 +3,7 @@ import { blog } from 'collections/server';
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 import { isBlogSeriesSlug } from './blog-series';
-import { blogRoute } from './shared';
+import { blogRoute, siteUrl } from './shared';
 
 export const blogSource = loader({
   source: toFumadocsSource(blog, []),
@@ -68,7 +68,7 @@ export function getBlogPostListSummaries(posts: BlogPage[]) {
 export async function getBlogLLMText(page: BlogPage) {
   const processed = await page.data.getText('processed');
 
-  return `# ${page.data.title} (${page.url})
+  return `# ${page.data.title} (${siteUrl}${page.url})
 
 ${processed}`;
 }

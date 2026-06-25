@@ -32,35 +32,37 @@ function markdownResponse(body: string): Response {
   });
 }
 
+const MARKDOWN_EXT = '.md';
+
 const llmMiddleware = createMiddleware().server(async ({ next, request }) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const explicitMarkdown = pathname.endsWith(MARKDOWN_EXT);
 
-  if (pathname.endsWith('.md') || !wantsMarkdown(request)) {
+  // Explicit `.md` URLs always serve markdown; bare URLs only when the client prefers it.
+  if (!explicitMarkdown && !wantsMarkdown(request)) {
     return next();
   }
 
-  if (pathname === '/') {
+  const path = explicitMarkdown ? pathname.slice(0, -MARKDOWN_EXT.length) : pathname;
+
+  if (path === '/' || path === '') {
     return markdownResponse(homepageMarkdown);
   }
 
-  if (pathname.startsWith(docsRoute)) {
+  if (path.startsWith(docsRoute)) {
     const slugs = markdownPathToSlugs(
-      pathname.slice(docsRoute.length).split('/').filter((v) => v.length > 0),
+      path.slice(docsRoute.length).split('/').filter((v) => v.length > 0),
     );
     const page = source.getPage(slugs);
-    if (!page) return next();
-    return markdownResponse(await getLLMText(page));
-  }
-
-  if (pathname.startsWith(blogRoute)) {
-    const slugs = pathname
+    if (page) return markdownResponse(await getLLMText(page));
+  } else if (path.startsWith(blogRoute)) {
+    const slugs = path
       .slice(blogRoute.length)
       .split('/')
       .filter((v) => v.length > 0);
     const page = blogSource.getPage(slugs);
-    if (!page) return next();
-    return markdownResponse(await getBlogLLMText(page));
+    if (page) return markdownResponse(await getBlogLLMText(page));
   }
 
   return next();
