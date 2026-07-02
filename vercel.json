@@ -13,6 +13,11 @@
       "permanent": true
     },
     {
+      "source": "/blog/2026-05-24-listen-notify",
+      "destination": "/blog/listen-notify",
+      "permanent": true
+    },
+    {
       "source": "/consensus",
       "destination": "/docs/consensus/part-00",
       "permanent": true
