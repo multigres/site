@@ -1,4 +1,5 @@
 import { loader } from 'fumadocs-core/source';
+import { slugsFromData } from 'fumadocs-core/source/plugins/slugs';
 import { blog } from 'collections/server';
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
@@ -8,6 +9,7 @@ import { blogRoute, siteUrl } from './shared';
 export const blogSource = loader({
   source: toFumadocsSource(blog, []),
   baseUrl: blogRoute,
+  slugs: slugsFromData(),
   plugins: [lucideIconsPlugin()],
 });
 

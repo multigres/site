@@ -1,9 +1,9 @@
 ---
 title: "How Multigres Supports LISTEN/NOTIFY Across Pooled Connections"
+slug: "listen-notify"
 description: "LISTEN/NOTIFY is a per-session feature, and Multigres pools connections away from clients. Here's how we keep Postgres's pub/sub working when no client owns a backend session."
-date: "2026-06-23"
+date: "2026-07-02"
 author: "haritabh"
-image: "/img/blog/listen-notify/establish-pooler-owned-listener.png"
 tags: [postgres, multigres, listen-notify, connection-pooling]
 ---
 
