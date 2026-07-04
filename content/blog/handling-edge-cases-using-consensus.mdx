@@ -19,7 +19,7 @@ The full demo:
 
 Start with the simplest version. A Multigres cluster has one primary and two replicas. An operator wants a third replica, for read capacity, for a multi-zone deployment, or to prepare for a planned shrink elsewhere.
 
-The Kubernetes operator scales the number of replicas from three to four. A new pod comes up. A new MultiPooler registers in the topology of the cluster. A new Postgres process starts as a fresh replica. The orchestrator notices the new node and brings it into the cluster.
+The Kubernetes operator scales the number of replicas from three to four. A new pod comes up. A new Multipooler registers in the topology of the cluster. A new Postgres process starts as a fresh replica. The orchestrator notices the new node and brings it into the cluster.
 
 The naive way to bring it in is to point the new replica at the current primary, let it restore from a backup, let it stream WAL forward, and once it has caught up, count it as a member.
 
@@ -27,7 +27,7 @@ The naive approach is wrong because it treats membership as a local orchestratio
 
 ## The race
 
-The hard part in distributed systems is that changes take time to propagate, and agents may take action based on stale information. Multiple MultiOrch instances are watching the cluster from different cells. They do not share local state, and for short periods of time they can have different views of the world. The challenge is that those local decisions still have to honor the cluster's consensus rules. That is intentional. It is part of what makes the orchestrator partition-tolerant.
+The hard part in distributed systems is that changes take time to propagate, and agents may take action based on stale information. Multiple Multiorch instances are watching the cluster from different cells. They do not share local state, and for short periods of time they can have different views of the world. The challenge is that those local decisions still have to honor the cluster's consensus rules. That is intentional. It is part of what makes the orchestrator partition-tolerant.
 
 The risk appears when cluster membership is implemented naively using only the local view of a coordinator. During a membership change, one orchestrator may already believe a new replica has joined, while another may still be operating with the old view of the cluster.
 

@@ -9,6 +9,7 @@
     "start": "vite preview",
     "preview": "vite preview",
     "types:check": "fumadocs-mdx && tsc --noEmit",
+    "lint:naming": "./tools/naming_linter.sh",
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {

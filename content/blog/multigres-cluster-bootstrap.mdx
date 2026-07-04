@@ -17,10 +17,10 @@ A recording of the same flow:
 
 A Multigres deployment runs four services alongside Postgres, plus a topology server.
 
-- **MultiGateway.** Speaks the Postgres wire protocol, so your application thinks it is talking to a Postgres server. The gateway forwards queries to the right MultiPooler over gRPC.
-- **MultiPooler.** Sits next to a single Postgres instance and owns its connection pool. One pooler per Postgres process.
+- **Multigateway.** Speaks the Postgres wire protocol, so your application thinks it is talking to a Postgres server. The gateway forwards queries to the right Multipooler over gRPC.
+- **Multipooler.** Sits next to a single Postgres instance and owns its connection pool. One pooler per Postgres process.
 - **pgctld.** Runs alongside the pooler and manages the local Postgres process: `initdb`, start, stop, restart.
-- **MultiOrch.** The orchestrator. Watches replication, appoints leaders, runs failovers, and coordinates bootstrap, backup, restore, and scale.
+- **Multiorch.** The orchestrator. Watches replication, appoints leaders, runs failovers, and coordinates bootstrap, backup, restore, and scale.
 - **Topology server.** A distributed key-value store, typically etcd. Records which databases exist, which cells they live in, and where every component is registered.
 
 Cells are user-defined groupings that map to availability zones or regions. In a multi-zone deployment, the topology splits into a global server holding cluster-wide state and per-cell servers holding local discovery state. A partitioned cell keeps operating against its own local view.
@@ -33,7 +33,7 @@ When the manifest applies, each service registers itself with the topology serve
 
 Poolers register next, each bound to a Postgres instance through pgctld. Every data directory is empty. Every pooler advertises itself as REPLICA, the safe default. The cluster still has no primary.
 
-This is the most fragile moment of a cluster's life. If a hand-rolled bootstrap script picked a primary now, two scripts could run in parallel and pick two different primaries. This is a split-brain. Multigres avoids it by coordinating leader appointment through MultiOrch, which runs as a small set of independent instances that agree on the leader through our [consensus protocol](/blog/generalized-consensus-part1).
+This is the most fragile moment of a cluster's life. If a hand-rolled bootstrap script picked a primary now, two scripts could run in parallel and pick two different primaries. This is a split-brain. Multigres avoids it by coordinating leader appointment through Multiorch, which runs as a small set of independent instances that agree on the leader through our [consensus protocol](/blog/generalized-consensus-part1).
 
 ## Seed backup first, then leader
 
@@ -43,9 +43,9 @@ Bootstrap runs in two phases.
 
 Each pooler independently runs `initdb`, starts Postgres through pgctld, and creates the Multigres schema and pgBackRest stanza. The poolers then race for a backup lease. One wins, takes a full backup of its local data directory, and writes it to S3. The others find that a backup already exists and skip the create step. Every pooler then tears down its local data directory and restores from the shared backup. After this phase, every pooler holds the same restored state, in hot-standby mode.
 
-### Phase 2: MultiOrch appoints the initial leader
+### Phase 2: Multiorch appoints the initial leader
 
-MultiOrch waits for enough initialized poolers to satisfy the durability policy. It then claims the exclusive right to initialize the shard, picks one of the restored poolers as the leader, and promotes it to primary. The other poolers point at the new primary and start streaming WAL.
+Multiorch waits for enough initialized poolers to satisfy the durability policy. It then claims the exclusive right to initialize the shard, picks one of the restored poolers as the leader, and promotes it to primary. The other poolers point at the new primary and start streaming WAL.
 
 Bootstrap and failover share the same election code path. A new cluster is a failover with no prior leader.
 

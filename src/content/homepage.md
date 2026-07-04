@@ -6,11 +6,11 @@ Multigres adds horizontal scaling, connection pooling, and cluster orchestration
 
 ## Components
 
-- **MultiGateway** — PostgreSQL wire-protocol proxy. Accepts client connections, parses SQL, applies routing rules, and routes queries to poolers.
-- **MultiPooler** — connection pooler managing pools per PostgreSQL instance, session state, prepared statements, and transactions.
+- **Multigateway** — PostgreSQL wire-protocol proxy. Accepts client connections, parses SQL, applies routing rules, and routes queries to poolers.
+- **Multipooler** — connection pooler managing pools per PostgreSQL instance, session state, prepared statements, and transactions.
 - **Pgctld** — PostgreSQL process manager: start/stop/restart instances, base backups, WAL archiving.
-- **MultiOrch** — cluster orchestration with Raft-based consensus, primary election, and failover coordination.
-- **MultiAdmin** — administrative API for cluster management operations.
+- **Multiorch** — cluster orchestration with Raft-based consensus, primary election, and failover coordination.
+- **Multiadmin** — administrative API for cluster management operations.
 - **Operator** — Kubernetes operator for deploying and managing Multigres clusters.
 
 ## Learn more
