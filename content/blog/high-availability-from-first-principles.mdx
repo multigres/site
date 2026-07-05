@@ -31,9 +31,9 @@ Multigres provides strict guarantees. The HA implementation is anchored in a bod
 
 Together, these enable the team change the implementation with confidence. New failover scenarios do not require re-proving the safety of the entire system. Instead, each change is evaluated against a well-defined set of invariants that preserve the core guarantees.
 
-## MultiOrch: the coordinator
+## Multiorch: the coordinator
 
-The HA coodinator in Multigres is called "MultiOrch". It uses a more efficient approach to HA than most other database implementations. Take a Raft implementation, where every node is a candidate: nodes vote among themselves, elect a leader, and replicate the log. The members do all the work.
+The HA coodinator in Multigres is called "Multiorch". It uses a more efficient approach to HA than most other database implementations. Take a Raft implementation, where every node is a candidate: nodes vote among themselves, elect a leader, and replicate the log. The members do all the work.
 
 Generalized consensus separates the roles:
 
@@ -42,11 +42,11 @@ Generalized consensus separates the roles:
 3. `Observers` replicate completed requests for read scaling. 
 4. `Coordinators` run health checks, detect failures, and drive rule changes (including leadership changes).
 
-In Multigres, MultiOrch is the coordinator and Postgres processes can be leaders, followers, or observers depending on their state.
+In Multigres, Multiorch is the coordinator and Postgres processes can be leaders, followers, or observers depending on their state.
 
-In our deployments, we spread each Postgres cluster across three availability zones to provide cross-AZ redundancy. We also run MultiOrch in multiple AZs so that the system can tolerate a coordinator becoming network-partitioned from part of the cluster.
+In our deployments, we spread each Postgres cluster across three availability zones to provide cross-AZ redundancy. We also run Multiorch in multiple AZs so that the system can tolerate a coordinator becoming network-partitioned from part of the cluster.
 
-Typically there are two or three MultiOrch instances per shard, one per cell, each watching the cluster from an independent vantage point. They can all act independently and they do not talk to each other directly. Each instance observes the state of the shard, detects failures independently, and races to repair the cluster when it sees a problem.
+Typically there are two or three Multiorch instances per shard, one per cell, each watching the cluster from an independent vantage point. They can all act independently and they do not talk to each other directly. Each instance observes the state of the shard, detects failures independently, and races to repair the cluster when it sees a problem.
 
 The remediation follows the consensus rules. A coordinator that wants to perform a leadership change has to:
 
@@ -63,13 +63,13 @@ If two coordinators race, only one can complete the sequence. The other one noti
 
 The demo video above demonstrates the full sequence of a primary failover in a local Kubernetes cluster. This is what happens in that sequence of events from the consensus perspective:
 
-**Detection:** The cluster is healthy: one primary, two replicas, three MultiOrch instances watching. A demo button kills the Postgres process on the primary. Within a configurable timeout, every MultiOrch notices that the primary's pooler has stopped reporting healthy status.
+**Detection:** The cluster is healthy: one primary, two replicas, three Multiorch instances watching. A demo button kills the Postgres process on the primary. Within a configurable timeout, every Multiorch notices that the primary's pooler has stopped reporting healthy status.
 
-**Race:** Each MultiOrch starts a failover attempt. Each one picks a new term number, one higher than any term it has observed on the cohort, and asks the replicas to pledge to it. Replicas accept only one coordinator per term, so only one MultiOrch can gather a quorum of pledges for this round. The losers back off and retry later if needed.
+**Race:** Each Multiorch starts a failover attempt. Each one picks a new term number, one higher than any term it has observed on the cohort, and asks the replicas to pledge to it. Replicas accept only one coordinator per term, so only one Multiorch can gather a quorum of pledges for this round. The losers back off and retry later if needed.
 
 **Revocation:** The quorum's pledge to a new term is the revocation, and we recruit enough replicas for it to do two things. First, the old primary can no longer satisfy the cluster's durability policy with whatever replicas remain, so it can't durably commit any new writes under the old term. Second, we recruit enough replicas that they can't be part of any other quorum either, preventing a network-partitioned slice of the cluster from forming an independent quorum and electing a competing leader. This gives the coordinator sole authority to establish the next rule (in this demo the new leadership).
 
-**Discovery:** The winning MultiOrch inspects the WAL position reported by each pledged replica and identifies the most-advanced replica that satisfies the durability requirements.
+**Discovery:** The winning Multiorch inspects the WAL position reported by each pledged replica and identifies the most-advanced replica that satisfies the durability requirements.
 
 **Candidacy:** The new leader is chosen from the nodes already tied at that most-advanced position. There may be more than one; any of them is safe. Reachability and the cluster's durability policy are checked against the proposed cohort before the choice is finalized.
 

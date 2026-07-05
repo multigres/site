@@ -29,13 +29,13 @@ A Multigres cluster is made up of several components that work together across a
 
 **GlobalTopoServer** is a managed etcd cluster that records the topology state: which databases exist, which cells they live in, and where every component is registered. Cells are user-defined groupings that map to availability zones. In a multi-zone deployment, the topology splits into a global server for cluster-wide state and per-cell servers for local discovery, so a partitioned cell keeps operating against its own local view.
 
-**MultiAdmin** is the management plane for the cluster, including a web UI.
+**Multiadmin** is the management plane for the cluster, including a web UI.
 
-**MultiGateway** speaks the Postgres wire protocol. Your application connects to a gateway, which forwards queries to the right MultiPooler over gRPC. Adding more gateways scales Multigres’ connection capacity horizontally.
+**Multigateway** speaks the Postgres wire protocol. Your application connects to a gateway, which forwards queries to the right Multipooler over gRPC. Adding more gateways scales Multigres’ connection capacity horizontally.
 
-**MultiOrch:** the orchestrator. One set of MultiOrch instances per shard, running across cells. It watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap, backup, restore, and scaling events. When you apply the manifest, MultiOrch runs bootstrap as a consensus-backed election. This is the same code path as every later failover- so, there is no separate provisioning script that can race with itself.
+**Multiorch:** the orchestrator. One set of Multiorch instances per shard, running across cells. It watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap, backup, restore, and scaling events. When you apply the manifest, Multiorch runs bootstrap as a consensus-backed election. This is the same code path as every later failover- so, there is no separate provisioning script that can race with itself.
 
-**Postgres** pods themselves, managed by pgctld which owns the local Postgres process and MultiPooler. One pooler per Postgres instance.
+**Postgres** pods themselves, managed by pgctld which owns the local Postgres process and Multipooler. One pooler per Postgres instance.
 
 ## Deploying on EKS
 
@@ -45,7 +45,7 @@ The short version of what you need is a kubeconfig pointed at an EKS cluster wit
 
 In the Manifest linked to above, you’ll see three cells, each mapped to a real AWS availability zone. `AT_LEAST_2` durability means every committed write is acknowledged by one standby (one primary and one standby). The operator infers everything else from the templates: resource limits, gateway configuration, topo server sizing — and builds the full topology.
 
-Run `kubectl apply -f demo-multi-az.yaml` and then `kubectl get pods -w`. Within a minute you have a global topo server, MultiAdmin, MultiGateway, MultiOrch across three zones, and Postgres pool pods across three zones.
+Run `kubectl apply -f demo-multi-az.yaml` and then `kubectl get pods -w`. Within a minute you have a global topo server, Multiadmin, Multigateway, Multiorch across three zones, and Postgres pool pods across three zones.
 
 You should eventually see pods for global topo, multiadmin, multigateway, multiorch, and three poolers.
 
@@ -78,7 +78,7 @@ The operator provisions new standby pods across all three zones simultaneously. 
 
 ## Connecting
 
-Applications inside the cluster connect through the MultiGateway service:
+Applications inside the cluster connect through the Multigateway service:
 
 `postgresql://postgres:<password>@demo-multi-az-multigateway:5432/postgres`
 
