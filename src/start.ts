@@ -5,21 +5,9 @@ import { getLLMText, markdownPathToSlugs, source } from '@/lib/source';
 import { getBlogLLMText, blogSource } from '@/lib/blog-source.server';
 import homepageMarkdown from './content/homepage.md?raw';
 
-const LIVE_FETCH_UA_RE =
-  /(?<![A-Za-z0-9])(?:Claude-User|Claude-Web|ChatGPT-User|PerplexityBot)(?![A-Za-z0-9-])/i;
-
-function isLiveFetchAgent(request: Request): boolean {
-  const ua = (request.headers.get('user-agent') ?? '').slice(0, 512);
-  return LIVE_FETCH_UA_RE.test(ua);
-}
-
 function prefersMarkdownByAccept(request: Request): boolean {
   const preferred = getNegotiator(request).mediaTypes(['text/html', 'text/markdown'])[0];
   return preferred === 'text/markdown';
-}
-
-function wantsMarkdown(request: Request): boolean {
-  return isLiveFetchAgent(request) || prefersMarkdownByAccept(request);
 }
 
 function markdownResponse(body: string): Response {
@@ -40,7 +28,7 @@ const llmMiddleware = createMiddleware().server(async ({ next, request }) => {
   const explicitMarkdown = pathname.endsWith(MARKDOWN_EXT);
 
   // Explicit `.md` URLs always serve markdown; bare URLs only when the client prefers it.
-  if (!explicitMarkdown && !wantsMarkdown(request)) {
+  if (!explicitMarkdown && !prefersMarkdownByAccept(request)) {
     return next();
   }
 
