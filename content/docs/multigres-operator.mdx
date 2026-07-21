@@ -15,10 +15,10 @@ Primary-awareness ensures the operator always acts on standbys first and the pri
 A Multigres cluster is made up of several components that work together across availability zones. The operator provisions all of the following from a single `MultigresCluster` manifest:
 
 - **GlobalTopoServer** — A managed etcd cluster that records topology state: which databases exist, which cells they live in, and where every component is registered. In a multi-zone deployment, the topology splits into a global server for cluster-wide state and per-cell servers for local discovery, so a partitioned cell keeps operating against its own local view.
-- **MultiAdmin** — The management plane for the cluster, including a web UI.
-- **MultiGateway** — Speaks the Postgres wire protocol. Applications connect to a gateway, which forwards queries to the right MultiPooler over gRPC. Adding more gateways scales connection capacity horizontally.
-- **MultiOrch** — The orchestrator. One set of MultiOrch instances per shard, running across cells. Watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap. When you apply the manifest, MultiOrch runs bootstrap as a consensus-backed election — the same code path as every later failover — so there is no separate provisioning script that can race with itself.
-- **Pools** — The Postgres pods themselves, managed by pgctld (which owns the local Postgres process) and MultiPooler (which owns the connection pool). One pooler per Postgres instance.
+- **Multiadmin** — The management plane for the cluster, including a web UI.
+- **Multigateway** — Speaks the Postgres wire protocol. Applications connect to a gateway, which forwards queries to the right Multipooler over gRPC. Adding more gateways scales connection capacity horizontally.
+- **Multiorch** — The orchestrator. One set of Multiorch instances per shard, running across cells. Watches replication health, appoints leaders through a consensus protocol, runs failovers, and coordinates bootstrap. When you apply the manifest, Multiorch runs bootstrap as a consensus-backed election — the same code path as every later failover — so there is no separate provisioning script that can race with itself.
+- **Pools** — The Postgres pods themselves, managed by pgctld (which owns the local Postgres process) and Multipooler (which owns the connection pool). One pooler per Postgres instance.
 
 ### Prerequisites
 
@@ -385,7 +385,7 @@ one primary
 two replicas
 ```
 
-### Verify Query Serving via MultiGateway
+### Verify Query Serving via Multigateway
 
 ```bash
 kubectl run psql-client \
