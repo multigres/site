@@ -2,6 +2,7 @@
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useCopyButton } from '@/hooks/use-copy-button';
+import { posthogClient } from '@/lib/posthog-client';
 import { cn } from '@/lib/utils';
 import { Check, Copy } from 'lucide-react';
 import { useState, type ComponentProps, type SVGProps } from 'react';
@@ -29,7 +30,11 @@ export function MarkdownCopyButton({
   const [isLoading, setLoading] = useState(false);
   const [checked, onClick] = useCopyButton(async () => {
     const cached = markdownCache.get(markdownUrl);
-    if (cached) return navigator.clipboard.writeText(await cached);
+    if (cached) {
+      await navigator.clipboard.writeText(await cached);
+      posthogClient.capture('copy_as_markdown_clicked');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -38,6 +43,7 @@ export function MarkdownCopyButton({
       await navigator.clipboard.write([
         new ClipboardItem({ 'text/plain': promise }),
       ]);
+      posthogClient.capture('copy_as_markdown_clicked');
     } finally {
       setLoading(false);
     }
@@ -103,6 +109,7 @@ export function MarkdownActions({
         target="_blank"
         rel="noreferrer noopener"
         className={askLinkClass}
+        onClick={() => posthogClient.capture('ask_ai_clicked', { agent: 'chatgpt' })}
       >
         <OpenAiIcon />
         Ask ChatGPT
@@ -112,6 +119,7 @@ export function MarkdownActions({
         target="_blank"
         rel="noreferrer noopener"
         className={askLinkClass}
+        onClick={() => posthogClient.capture('ask_ai_clicked', { agent: 'claude' })}
       >
         <AnthropicIcon />
         Ask Claude
