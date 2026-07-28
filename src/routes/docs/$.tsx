@@ -9,14 +9,11 @@ import {
   DocsPage,
   DocsTitle,
 } from 'fumadocs-ui/layouts/docs/page';
-import {
-  MarkdownCopyButton,
-  ViewOptionsPopover,
-} from '@/components/docs-page-actions';
+import { MarkdownActions } from '@/components/markdown-actions';
 import { SiteDocsContainer } from '@/components/site-docs-container';
 import { baseOptions } from '@/lib/layout.shared';
 import { docPageHeadingClassName } from '@/lib/typography';
-import { gitConfig, siteUrl } from '@/lib/shared';
+import { siteUrl } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { useMDXComponents } from '@/components/mdx';
@@ -91,6 +88,7 @@ const serverLoader = createServerFn({
       title: page.data.title,
       description: page.data.description,
       markdownUrl: slugsToMarkdownPath(page.slugs).url,
+      pageUrl: page.url,
       pageTree: await source.serializePageTree(source.getPageTree()),
     };
   });
@@ -98,7 +96,7 @@ const serverLoader = createServerFn({
 const clientLoader = browserCollections.docs.createClientLoader({
   component(
     { toc, frontmatter, default: MDX },
-    { markdownUrl, path }: { markdownUrl: string; path: string },
+    { markdownUrl, pageUrl }: { markdownUrl: string; pageUrl: string },
   ) {
     return (
       <DocsPage toc={toc} className="max-w-[800px] pb-16">
@@ -114,10 +112,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
             ) : null}
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <MarkdownCopyButton markdownUrl={markdownUrl} />
-            <ViewOptionsPopover
+            <MarkdownActions
               markdownUrl={markdownUrl}
-              githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${path}`}
+              pageUrl={`${siteUrl}${pageUrl}`}
             />
           </div>
         </header>
@@ -130,7 +127,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
 });
 
 function Page() {
-  const { path, pageTree, markdownUrl } = useFumadocsLoader(Route.useLoaderData());
+  const { path, pageTree, markdownUrl, pageUrl } = useFumadocsLoader(
+    Route.useLoaderData(),
+  );
 
   return (
     <DocsLayout
@@ -145,7 +144,7 @@ function Page() {
         navTitle: () => null,
       }}
     >
-      <Suspense>{clientLoader.useContent(path, { markdownUrl, path })}</Suspense>
+      <Suspense>{clientLoader.useContent(path, { markdownUrl, pageUrl })}</Suspense>
     </DocsLayout>
   );
 }
