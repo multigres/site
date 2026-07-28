@@ -1,8 +1,10 @@
 "use client";
 
 import { LandingShardCanvas } from "@/components/landing-shard-canvas";
+import { MarkdownActions } from "@/components/markdown-actions";
 import { SiteNav } from "@/components/site-nav";
 import { Button } from "@/components/ui/button";
+import { siteUrl } from "@/lib/shared";
 import { pageHeadingClassName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 import { GithubIcon } from "@/components/github-icon";
@@ -135,6 +137,12 @@ export default function Home() {
               </a>
             </Button>
           </div>
+
+          <MarkdownActions
+            markdownUrl="/index.md"
+            pageUrl={siteUrl}
+            className="lg:col-start-1 lg:row-start-3"
+          />
         </div>
       </div>
 

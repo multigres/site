@@ -7,7 +7,9 @@ import { BlogLayout } from '@/components/blog-layout';
 import { BlogShardPlaceholder } from '@/components/blog-shard-placeholder';
 import { useMDXComponents } from '@/components/mdx';
 import { parseAuthorKeys, resolveAuthors } from '@/lib/authors';
+import { MarkdownActions } from '@/components/markdown-actions';
 import { blogSource } from '@/lib/blog-source.server';
+import { siteUrl } from '@/lib/shared';
 import { docPageHeadingClassName } from '@/lib/typography';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
@@ -98,7 +100,7 @@ const serverLoader = createServerFn({ method: 'GET' })
   });
 
 const clientLoader = browserCollections.blog.createClientLoader({
-  component({ default: MDX, frontmatter }) {
+  component({ default: MDX, frontmatter }, { slug }: { slug: string }) {
     const postAuthors = resolveAuthors(
       parseAuthorKeys(frontmatter.authors ?? frontmatter.author),
     );
@@ -130,6 +132,11 @@ const clientLoader = browserCollections.blog.createClientLoader({
             series={frontmatter.series}
             seriesPart={frontmatter.seriesPart}
           />
+          <MarkdownActions
+            markdownUrl={`/blog/${slug}.md`}
+            pageUrl={`${siteUrl}/blog/${slug}`}
+            className="mt-6"
+          />
         </header>
         <div className="prose prose-invert max-w-none prose-headings:font-heading">
           <MDX components={useMDXComponents()} />
@@ -141,10 +148,11 @@ const clientLoader = browserCollections.blog.createClientLoader({
 
 function BlogPostPage() {
   const { path } = useFumadocsLoader(Route.useLoaderData());
+  const { slug } = Route.useParams();
 
   return (
     <BlogLayout className="pt-0" contentClassName="py-0 md:py-0">
-      <Suspense>{clientLoader.useContent(path)}</Suspense>
+      <Suspense>{clientLoader.useContent(path, { slug })}</Suspense>
     </BlogLayout>
   );
 }
