@@ -59,7 +59,7 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground"
                 onClick={
                   item.label === 'GitHub'
-                    ? () => posthogClient.capture('github_clicked', { source: 'nav' })
+                    ? () => posthogClient.capture('multigres_github_clicked', { source: 'nav' })
                     : undefined
                 }
               >

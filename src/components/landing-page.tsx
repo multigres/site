@@ -132,7 +132,7 @@ export default function Home() {
                 href="https://github.com/multigres/multigres"
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => posthogClient.capture('github_clicked', { source: 'hero' })}
+                onClick={() => posthogClient.capture('multigres_github_clicked', { source: 'hero' })}
               >
                 <GithubIcon className="size-4" />
                 GitHub

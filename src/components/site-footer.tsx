@@ -42,7 +42,7 @@ export function SiteFooter({ className }: SiteFooterProps) {
                 className="inline-flex items-center gap-1.5 hover:text-foreground"
                 onClick={
                   item.label === 'GitHub'
-                    ? () => posthogClient.capture('github_clicked', { source: 'footer' })
+                    ? () => posthogClient.capture('multigres_github_clicked', { source: 'footer' })
                     : undefined
                 }
               >
