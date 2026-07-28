@@ -9,14 +9,11 @@ import {
   DocsPage,
   DocsTitle,
 } from 'fumadocs-ui/layouts/docs/page';
-import {
-  MarkdownCopyButton,
-  ViewOptionsPopover,
-} from '@/components/docs-page-actions';
+import { MarkdownActions } from '@/components/markdown-actions';
 import { SiteDocsContainer } from '@/components/site-docs-container';
 import { baseOptions } from '@/lib/layout.shared';
 import { docPageHeadingClassName } from '@/lib/typography';
-import { gitConfig } from '@/lib/shared';
+import { siteUrl } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { useMDXComponents } from '@/components/mdx';
@@ -48,7 +45,18 @@ export const Route = createFileRoute('/docs/$')({
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: '/img/og-image.png' },
       ],
-      links: [{ rel: 'canonical', href: canonicalUrl }],
+      links: [
+        { rel: 'canonical', href: canonicalUrl },
+        ...(loaderData?.markdownUrl
+          ? [
+              {
+                rel: 'alternate',
+                type: 'text/markdown',
+                href: `${siteUrl}${loaderData.markdownUrl}`,
+              },
+            ]
+          : []),
+      ],
       scripts: [
         {
           type: 'application/ld+json',
@@ -80,6 +88,7 @@ const serverLoader = createServerFn({
       title: page.data.title,
       description: page.data.description,
       markdownUrl: slugsToMarkdownPath(page.slugs).url,
+      pageUrl: page.url,
       pageTree: await source.serializePageTree(source.getPageTree()),
     };
   });
@@ -87,7 +96,7 @@ const serverLoader = createServerFn({
 const clientLoader = browserCollections.docs.createClientLoader({
   component(
     { toc, frontmatter, default: MDX },
-    { markdownUrl, path }: { markdownUrl: string; path: string },
+    { markdownUrl, pageUrl }: { markdownUrl: string; pageUrl: string },
   ) {
     return (
       <DocsPage toc={toc} className="max-w-[800px] pb-16">
@@ -102,13 +111,11 @@ const clientLoader = browserCollections.docs.createClientLoader({
               </DocsDescription>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <MarkdownCopyButton markdownUrl={markdownUrl} />
-            <ViewOptionsPopover
-              markdownUrl={markdownUrl}
-              githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${path}`}
-            />
-          </div>
+          <MarkdownActions
+            markdownUrl={markdownUrl}
+            pageUrl={`${siteUrl}${pageUrl}`}
+            className="shrink-0"
+          />
         </header>
         <DocsBody className="text-muted-foreground prose-code:text-primary">
           <MDX components={useMDXComponents()} />
@@ -119,7 +126,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
 });
 
 function Page() {
-  const { path, pageTree, markdownUrl } = useFumadocsLoader(Route.useLoaderData());
+  const { path, pageTree, markdownUrl, pageUrl } = useFumadocsLoader(
+    Route.useLoaderData(),
+  );
 
   return (
     <DocsLayout
@@ -134,7 +143,7 @@ function Page() {
         navTitle: () => null,
       }}
     >
-      <Suspense>{clientLoader.useContent(path, { markdownUrl, path })}</Suspense>
+      <Suspense>{clientLoader.useContent(path, { markdownUrl, pageUrl })}</Suspense>
     </DocsLayout>
   );
 }

@@ -35,7 +35,9 @@ export const Route = createFileRoute('/llms.txt')({
 
         const body = `# Multigres\n\n> ${TAGLINE}\n\n${docsIndex}\n\n${blogSection}\n`;
 
-        return new Response(body);
+        return new Response(body, {
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        });
       },
     },
   },

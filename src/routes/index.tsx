@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import LandingPage from '@/components/landing-page';
 import { serializeJsonLd } from '@/lib/json-ld';
+import { siteUrl } from '@/lib/shared';
 
 const description =
   'A horizontally scalable Postgres architecture supporting multi-tenant, highly available, and globally distributed deployments.';
@@ -71,6 +72,11 @@ export const Route = createFileRoute('/')({
       {
         rel: 'canonical',
         href: 'https://multigres.com/',
+      },
+      {
+        rel: 'alternate',
+        type: 'text/markdown',
+        href: `${siteUrl}/index.md`,
       },
     ],
     scripts: [
