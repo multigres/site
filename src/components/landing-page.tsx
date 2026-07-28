@@ -4,6 +4,7 @@ import { LandingShardCanvas } from "@/components/landing-shard-canvas";
 import { MarkdownActions } from "@/components/markdown-actions";
 import { SiteNav } from "@/components/site-nav";
 import { Button } from "@/components/ui/button";
+import { posthogClient } from "@/lib/posthog-client";
 import { siteUrl } from "@/lib/shared";
 import { pageHeadingClassName } from "@/lib/typography";
 import { cn } from "@/lib/utils";
@@ -131,6 +132,7 @@ export default function Home() {
                 href="https://github.com/multigres/multigres"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => posthogClient.capture('github_clicked', { source: 'hero' })}
               >
                 <GithubIcon className="size-4" />
                 GitHub

@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { GithubIcon } from '@/components/github-icon';
+import { posthogClient } from '@/lib/posthog-client';
 import { appName, blogRoute, docsRoute, gitConfig } from '@/lib/shared';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +40,11 @@ export function SiteFooter({ className }: SiteFooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 hover:text-foreground"
+                onClick={
+                  item.label === 'GitHub'
+                    ? () => posthogClient.capture('github_clicked', { source: 'footer' })
+                    : undefined
+                }
               >
                 {item.label === 'GitHub' ? <GithubIcon className="size-4" /> : null}
                 {item.label}

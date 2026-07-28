@@ -2,6 +2,7 @@
 
 import { GithubIcon } from '@/components/github-icon';
 import { MultigresLogo } from '@/components/multigres-logo';
+import { posthogClient } from '@/lib/posthog-client';
 import { cn } from '@/lib/utils';
 import { appName } from '@/lib/shared';
 import { siteNavLinks } from '@/lib/site-nav';
@@ -56,6 +57,11 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground"
+                onClick={
+                  item.label === 'GitHub'
+                    ? () => posthogClient.capture('github_clicked', { source: 'nav' })
+                    : undefined
+                }
               >
                 {item.label === 'GitHub' ? (
                   <GithubIcon className="size-4" />
