@@ -34,7 +34,7 @@ const llmMiddleware = createMiddleware().server(async ({ next, request }) => {
 
   const path = explicitMarkdown ? pathname.slice(0, -MARKDOWN_EXT.length) : pathname;
 
-  if (path === '/' || path === '') {
+  if (path === '/' || path === '' || path === '/index') {
     return markdownResponse(homepageMarkdown);
   }
 

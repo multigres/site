@@ -60,7 +60,10 @@ export const Route = createFileRoute('/blog/$slug')({
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: image },
       ],
-      links: [{ rel: 'canonical', href: canonicalUrl }],
+      links: [
+        { rel: 'canonical', href: canonicalUrl },
+        { rel: 'alternate', type: 'text/markdown', href: `${canonicalUrl}.md` },
+      ],
       scripts: [
         {
           type: 'application/ld+json',

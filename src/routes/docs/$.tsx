@@ -16,7 +16,7 @@ import {
 import { SiteDocsContainer } from '@/components/site-docs-container';
 import { baseOptions } from '@/lib/layout.shared';
 import { docPageHeadingClassName } from '@/lib/typography';
-import { gitConfig } from '@/lib/shared';
+import { gitConfig, siteUrl } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { useMDXComponents } from '@/components/mdx';
@@ -48,7 +48,18 @@ export const Route = createFileRoute('/docs/$')({
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: '/img/og-image.png' },
       ],
-      links: [{ rel: 'canonical', href: canonicalUrl }],
+      links: [
+        { rel: 'canonical', href: canonicalUrl },
+        ...(loaderData?.markdownUrl
+          ? [
+              {
+                rel: 'alternate',
+                type: 'text/markdown',
+                href: `${siteUrl}${loaderData.markdownUrl}`,
+              },
+            ]
+          : []),
+      ],
       scripts: [
         {
           type: 'application/ld+json',
