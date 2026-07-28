@@ -111,12 +111,11 @@ const clientLoader = browserCollections.docs.createClientLoader({
               </DocsDescription>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <MarkdownActions
-              markdownUrl={markdownUrl}
-              pageUrl={`${siteUrl}${pageUrl}`}
-            />
-          </div>
+          <MarkdownActions
+            markdownUrl={markdownUrl}
+            pageUrl={`${siteUrl}${pageUrl}`}
+            className="shrink-0"
+          />
         </header>
         <DocsBody className="text-muted-foreground prose-code:text-primary">
           <MDX components={useMDXComponents()} />

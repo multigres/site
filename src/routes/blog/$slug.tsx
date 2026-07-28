@@ -96,11 +96,16 @@ const serverLoader = createServerFn({ method: 'GET' })
       image: page.data.image,
       datePublished: page.data.date ? page.data.date.toISOString() : undefined,
       authorName: firstAuthor?.name,
+      markdownUrl: `${page.url}.md`,
+      pageUrl: page.url,
     };
   });
 
 const clientLoader = browserCollections.blog.createClientLoader({
-  component({ default: MDX, frontmatter }, { slug }: { slug: string }) {
+  component(
+    { default: MDX, frontmatter },
+    { markdownUrl, pageUrl }: { markdownUrl: string; pageUrl: string },
+  ) {
     const postAuthors = resolveAuthors(
       parseAuthorKeys(frontmatter.authors ?? frontmatter.author),
     );
@@ -133,8 +138,8 @@ const clientLoader = browserCollections.blog.createClientLoader({
             seriesPart={frontmatter.seriesPart}
           />
           <MarkdownActions
-            markdownUrl={`/blog/${slug}.md`}
-            pageUrl={`${siteUrl}/blog/${slug}`}
+            markdownUrl={markdownUrl}
+            pageUrl={`${siteUrl}${pageUrl}`}
             className="mt-6"
           />
         </header>
@@ -147,12 +152,13 @@ const clientLoader = browserCollections.blog.createClientLoader({
 });
 
 function BlogPostPage() {
-  const { path } = useFumadocsLoader(Route.useLoaderData());
-  const { slug } = Route.useParams();
+  const { path, markdownUrl, pageUrl } = useFumadocsLoader(
+    Route.useLoaderData(),
+  );
 
   return (
     <BlogLayout className="pt-0" contentClassName="py-0 md:py-0">
-      <Suspense>{clientLoader.useContent(path, { slug })}</Suspense>
+      <Suspense>{clientLoader.useContent(path, { markdownUrl, pageUrl })}</Suspense>
     </BlogLayout>
   );
 }
