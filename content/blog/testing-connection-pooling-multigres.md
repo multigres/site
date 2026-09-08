@@ -33,12 +33,12 @@ Here are the list of tests that we run against Multigres -
 
 We run all of these test scripts against Multigres, occasionally making changes to the test harness itself during installation phase.
 
-| Suite | Score |
-| --- | --- |
+| Suite          | Score   |
+| -------------- | ------- |
 | **Regression** | 222/222 |
-| **Isolation** | 117/117 |
-| **Contrib** | 103/103 |
-| **External** | 539/539 |
+| **Isolation**  | 117/117 |
+| **Contrib**    | 103/103 |
+| **External**   | 539/539 |
 
 ## What "Pass" really means
 
@@ -218,6 +218,6 @@ The harness normalizes these specific internal values before comparing so that o
 
 ## Summary
 
-In this post we looked at how Multigres reached 100% test pass rate against `pg_regress`, `pg_isolation`, `contrib` and `extension` test suites, and what that 100% means. It doesn't mean Multigres is byte-identical to Postgres, and it doesn't mean all the features of Postgres work through Multigres. There are some that we block by design. What it does mean is that we have documented exactly where Multigres differs from Postgres and we check explicitly that only those divergences exist. And that we have also ensured that there are no cases where the behaviour is undefined. Each case is either supported or gracefully rejected. If you want to know more about how we support the features we do support, please read the blog series starting at https://multigres.com/blog/two-jobs-two-processes
+In this post we looked at how Multigres reached 100% test pass rate against `pg_regress`, `pg_isolation`, `contrib` and `extension` test suites, and what that 100% means. It doesn't mean Multigres is byte-identical to Postgres, and it doesn't mean all the features of Postgres work through Multigres. There are some that we block by design. What it does mean is that we have documented exactly where Multigres differs from Postgres and we check explicitly that only those divergences exist. And that we have also ensured that there are no cases where the behaviour is undefined. Each case is either supported or gracefully rejected. If you want to know more about how we support the features we do support, please read the blog series starting at [Two jobs, two processes](/blog/two-jobs-two-processes)
 
-If you want the more exhaustive version of known divergences and harness accommodations we've allowed, please read the full write up at testing-strategy.md and see the patch files we carry in the repo. In case you find any bugs or undefined behaviour, please report them on https://github.com/multigres/multigres
+If you want the more exhaustive version of known divergences and harness accommodations we've allowed, please read the full write up at [testing_strategy.md](https://github.com/multigres/multigres/blob/main/docs/query_serving/testing_strategy.md) and see the patch files we carry in the repo. In case you find any bugs or undefined behaviour, please report them on [GitHub](https://github.com/multigres/multigres).
