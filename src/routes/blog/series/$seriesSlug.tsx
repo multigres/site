@@ -11,6 +11,7 @@ import {
   getBlogPostSummaries,
   getBlogPostsInSeries,
 } from '@/lib/blog-source.server';
+import { defaultOgImage, siteUrl } from '@/lib/shared';
 import { pageHeadingClassName } from '@/lib/typography';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +49,9 @@ export const Route = createFileRoute('/blog/series/$seriesSlug')({
     const description =
       loaderData?.description ??
       'Notes on Multigres, Postgres, consensus, and distributed databases.';
+    const pageUrl = loaderData?.seriesSlug
+      ? `${siteUrl}/blog/series/${loaderData.seriesSlug}`
+      : undefined;
 
     return {
       meta: [
@@ -55,17 +59,13 @@ export const Route = createFileRoute('/blog/series/$seriesSlug')({
         { name: 'description', content: description },
         { property: 'og:title', content: title },
         { property: 'og:description', content: description },
-        { property: 'og:image', content: '/img/og-image.png' },
-        { name: 'twitter:image', content: '/img/og-image.png' },
+        ...(pageUrl ? [{ property: 'og:url', content: pageUrl }] : []),
+        { property: 'og:image', content: defaultOgImage },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: defaultOgImage },
       ],
-      links: loaderData?.seriesSlug
-        ? [
-            {
-              rel: 'canonical',
-              href: `https://multigres.com/blog/series/${loaderData.seriesSlug}`,
-            },
-          ]
-        : [],
+      links: pageUrl ? [{ rel: 'canonical', href: pageUrl }] : [],
     };
   },
 });

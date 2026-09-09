@@ -10,7 +10,13 @@ import {
   getBlogPostSummaries,
   getBlogPosts,
 } from '@/lib/blog-source.server';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { defaultOgImage, siteUrl } from '@/lib/shared';
+
 const FEATURED_COUNT = 3;
+const title = 'Blog | Multigres';
+const description = 'Notes on Multigres, Postgres, consensus, and distributed databases.';
+const blogUrl = `${siteUrl}/blog`;
 
 const loadBlogIndex = createServerFn({ method: 'GET' }).handler(() => {
   const posts = getBlogPosts();
@@ -27,34 +33,28 @@ export const Route = createFileRoute('/blog/')({
   loader: () => loadBlogIndex(),
   head: () => ({
     meta: [
-      {
-        title: 'Blog | Multigres',
-      },
-      {
-        name: 'description',
-        content: 'Notes on Multigres, Postgres, consensus, and distributed databases.',
-      },
-      {
-        property: 'og:title',
-        content: 'Blog | Multigres',
-      },
-      {
-        property: 'og:description',
-        content: 'Notes on Multigres, Postgres, consensus, and distributed databases.',
-      },
-      {
-        property: 'og:image',
-        content: '/img/og-image.png',
-      },
-      {
-        name: 'twitter:image',
-        content: '/img/og-image.png',
-      },
+      { title },
+      { name: 'description', content: description },
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
+      { property: 'og:url', content: blogUrl },
+      { property: 'og:image', content: defaultOgImage },
+      { name: 'twitter:title', content: title },
+      { name: 'twitter:description', content: description },
+      { name: 'twitter:image', content: defaultOgImage },
     ],
-    links: [
+    links: [{ rel: 'canonical', href: blogUrl }],
+    scripts: [
       {
-        rel: 'canonical',
-        href: 'https://multigres.com/blog',
+        type: 'application/ld+json',
+        children: serializeJsonLd({
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'Multigres Blog',
+          description,
+          url: blogUrl,
+          publisher: { '@type': 'Organization', name: 'Multigres' },
+        }),
       },
     ],
   }),
@@ -65,6 +65,7 @@ function BlogIndexPage() {
 
   return (
     <BlogLayout contentClassName="max-w-6xl">
+      <h1 className="sr-only">Multigres Blog</h1>
       <BlogFeaturedGrid posts={featured} />
       <BlogPostList posts={rest} />
     </BlogLayout>

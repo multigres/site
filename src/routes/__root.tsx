@@ -4,6 +4,7 @@ import appCss from '@/styles/app.css?url';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { usePostHog } from '@/hooks/use-posthog';
 import { SiteFooter } from '@/components/site-footer';
+import { defaultOgImage, siteUrl } from '@/lib/shared';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -38,12 +39,8 @@ export const Route = createRootRoute({
         content: 'website',
       },
       {
-        property: 'og:url',
-        content: 'https://multigres.com',
-      },
-      {
         property: 'og:image',
-        content: '/img/og-image.png',
+        content: defaultOgImage,
       },
       {
         property: 'og:site_name',
@@ -65,7 +62,7 @@ export const Route = createRootRoute({
       },
       {
         name: 'twitter:image',
-        content: '/img/og-image.png',
+        content: defaultOgImage,
       },
       {
         name: 'twitter:site',
@@ -106,8 +103,10 @@ export const Route = createRootRoute({
         href: '/site.webmanifest',
       },
       {
-        rel: 'canonical',
-        href: 'https://multigres.com',
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'Multigres Blog',
+        href: `${siteUrl}/blog/rss.xml`,
       },
     ],
   }),

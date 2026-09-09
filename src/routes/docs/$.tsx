@@ -13,7 +13,7 @@ import { MarkdownActions } from '@/components/markdown-actions';
 import { SiteDocsContainer } from '@/components/site-docs-container';
 import { baseOptions } from '@/lib/layout.shared';
 import { docPageHeadingClassName } from '@/lib/typography';
-import { siteUrl } from '@/lib/shared';
+import { defaultOgImage, siteUrl } from '@/lib/shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { useMDXComponents } from '@/components/mdx';
@@ -30,7 +30,7 @@ export const Route = createFileRoute('/docs/$')({
   head: ({ loaderData, params }) => {
     const title = loaderData?.title ? `${loaderData.title} | Multigres Docs` : 'Docs | Multigres';
     const description = loaderData?.description || 'Multigres documentation.';
-    const canonicalUrl = `https://multigres.com/docs/${params._splat}`;
+    const canonicalUrl = params._splat ? `${siteUrl}/docs/${params._splat}` : `${siteUrl}/docs`;
 
     return {
       meta: [
@@ -40,10 +40,10 @@ export const Route = createFileRoute('/docs/$')({
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'article' },
         { property: 'og:url', content: canonicalUrl },
-        { property: 'og:image', content: '/img/og-image.png' },
+        { property: 'og:image', content: defaultOgImage },
         { name: 'twitter:title', content: title },
         { name: 'twitter:description', content: description },
-        { name: 'twitter:image', content: '/img/og-image.png' },
+        { name: 'twitter:image', content: defaultOgImage },
       ],
       links: [
         { rel: 'canonical', href: canonicalUrl },

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { BlogLayout } from '@/components/blog-layout';
+import { siteUrl } from '@/lib/shared';
 import { docPageHeadingClassName } from '@/lib/typography';
 
 export const Route = createFileRoute('/privacy')({
@@ -11,6 +12,26 @@ export const Route = createFileRoute('/privacy')({
       },
       {
         name: 'description',
+        content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
+      },
+      {
+        property: 'og:title',
+        content: 'Privacy Policy | Multigres',
+      },
+      {
+        property: 'og:description',
+        content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
+      },
+      {
+        property: 'og:url',
+        content: `${siteUrl}/privacy`,
+      },
+      {
+        name: 'twitter:title',
+        content: 'Privacy Policy | Multigres',
+      },
+      {
+        name: 'twitter:description',
         content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
       },
     ],
