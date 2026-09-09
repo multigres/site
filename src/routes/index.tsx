@@ -1,12 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import LandingPage from '@/components/landing-page';
 import { serializeJsonLd } from '@/lib/json-ld';
-import { siteUrl } from '@/lib/shared';
+import { defaultOgImage, siteUrl } from '@/lib/shared';
 
 const description =
   'A horizontally scalable Postgres architecture supporting multi-tenant, highly available, and globally distributed deployments.';
-
-const logoUrl = 'https://multigres.com/img/og-image.png';
 
 const jsonLd = [
   {
@@ -15,7 +13,7 @@ const jsonLd = [
     '@id': 'https://multigres.com/#organization',
     name: 'Multigres',
     url: 'https://multigres.com',
-    logo: logoUrl,
+    logo: defaultOgImage,
     sameAs: ['https://github.com/multigres/multigres', 'https://twitter.com/multigres'],
   },
   {
@@ -60,12 +58,16 @@ export const Route = createFileRoute('/')({
         content: description,
       },
       {
+        property: 'og:url',
+        content: `${siteUrl}/`,
+      },
+      {
         property: 'og:image',
-        content: '/img/og-image.png',
+        content: defaultOgImage,
       },
       {
         name: 'twitter:image',
-        content: '/img/og-image.png',
+        content: defaultOgImage,
       },
     ],
     links: [

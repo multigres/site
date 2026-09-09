@@ -9,13 +9,11 @@ import { useMDXComponents } from '@/components/mdx';
 import { parseAuthorKeys, resolveAuthors } from '@/lib/authors';
 import { MarkdownActions } from '@/components/markdown-actions';
 import { blogSource } from '@/lib/blog-source.server';
-import { siteUrl } from '@/lib/shared';
+import { absoluteUrl, defaultOgImage, siteUrl } from '@/lib/shared';
 import { docPageHeadingClassName } from '@/lib/typography';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { serializeJsonLd } from '@/lib/json-ld';
-
-const logoUrl = 'https://multigres.com/img/og-image.png';
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPage,
@@ -27,7 +25,7 @@ export const Route = createFileRoute('/blog/$slug')({
   head: ({ loaderData, params }) => {
     const title = loaderData?.title ? `${loaderData.title} | Blog | Multigres` : 'Blog | Multigres';
     const description = loaderData?.description || 'Notes on Multigres, Postgres, consensus, and distributed databases.';
-    const image = loaderData?.image || '/img/og-image.png';
+    const image = loaderData?.image ? absoluteUrl(loaderData.image) : defaultOgImage;
     const canonicalUrl = `https://multigres.com/blog/${params.slug}`;
 
     const jsonLd: Record<string, unknown> = {
@@ -39,11 +37,11 @@ export const Route = createFileRoute('/blog/$slug')({
       publisher: {
         '@type': 'Organization',
         name: 'Multigres',
-        logo: { '@type': 'ImageObject', url: logoUrl },
+        logo: { '@type': 'ImageObject', url: defaultOgImage },
       },
     };
 
-    jsonLd['image'] = image.startsWith('http') ? image : `https://multigres.com${image}`;
+    jsonLd['image'] = image;
     if (loaderData?.datePublished) jsonLd['datePublished'] = loaderData.datePublished;
     if (loaderData?.authorName) {
       jsonLd['author'] = { '@type': 'Person', name: loaderData.authorName };
