@@ -6,7 +6,7 @@ export const blogRoute = '/blog';
 export const docsImageRoute = '/og/docs';
 
 export function absoluteUrl(pathOrUrl: string) {
-  return pathOrUrl.startsWith('http') ? pathOrUrl : `${siteUrl}${pathOrUrl}`;
+  return new URL(pathOrUrl, siteUrl).href;
 }
 
 export const gitConfig = {

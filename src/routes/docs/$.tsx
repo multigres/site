@@ -30,7 +30,7 @@ export const Route = createFileRoute('/docs/$')({
   head: ({ loaderData, params }) => {
     const title = loaderData?.title ? `${loaderData.title} | Multigres Docs` : 'Docs | Multigres';
     const description = loaderData?.description || 'Multigres documentation.';
-    const canonicalUrl = `https://multigres.com/docs/${params._splat}`;
+    const canonicalUrl = params._splat ? `${siteUrl}/docs/${params._splat}` : `${siteUrl}/docs`;
 
     return {
       meta: [

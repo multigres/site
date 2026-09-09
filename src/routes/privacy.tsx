@@ -15,6 +15,14 @@ export const Route = createFileRoute('/privacy')({
         content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
       },
       {
+        property: 'og:title',
+        content: 'Privacy Policy | Multigres',
+      },
+      {
+        property: 'og:description',
+        content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
+      },
+      {
         property: 'og:url',
         content: `${siteUrl}/privacy`,
       },
