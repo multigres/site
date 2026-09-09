@@ -26,6 +26,14 @@ export const Route = createFileRoute('/privacy')({
         property: 'og:url',
         content: `${siteUrl}/privacy`,
       },
+      {
+        name: 'twitter:title',
+        content: 'Privacy Policy | Multigres',
+      },
+      {
+        name: 'twitter:description',
+        content: 'Multigres Privacy Policy - Last Modified September 11, 2025',
+      },
     ],
     links: [
       {
