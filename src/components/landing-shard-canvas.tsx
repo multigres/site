@@ -150,7 +150,8 @@ export function LandingShardCanvas({
       }
     };
 
-    render();
+    // Read theme colors after the provider has updated the document class.
+    animationFrameRef.current = requestAnimationFrame(render);
 
     return clearScheduledRender;
   }, [gridDimensions, phase, reduceMotion, themeRevision]);

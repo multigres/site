@@ -10,6 +10,7 @@ import {
   FullSearchTrigger,
   SearchTrigger,
 } from 'fumadocs-ui/layouts/shared/slots/search-trigger';
+import { ThemeSwitch } from 'fumadocs-ui/layouts/shared/slots/theme-switch';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
@@ -32,7 +33,7 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
           className="inline-flex items-center gap-2 justify-self-start font-heading text-lg font-bold text-foreground"
         >
           <MultigresLogo className="size-8" />
-          <span>{appName}</span>
+          <span className="sr-only sm:not-sr-only">{appName}</span>
         </Link>
 
         <div className="flex w-full min-w-0 justify-center justify-self-stretch px-2">
@@ -48,7 +49,7 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
           />
         </div>
 
-        <div className="flex items-center justify-end gap-6 justify-self-end">
+        <div className="flex items-center justify-end gap-1.5 justify-self-end sm:gap-6">
           {siteNavLinks.map((item) =>
             item.external ? (
               <a
@@ -66,7 +67,9 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
                 {item.label === 'GitHub' ? (
                   <GithubIcon className="size-4" />
                 ) : null}
-                {item.label}
+                <span className={item.label === 'GitHub' ? 'sr-only sm:not-sr-only' : undefined}>
+                  {item.label}
+                </span>
               </a>
             ) : item.href.startsWith('/') ? (
               <Link
@@ -86,6 +89,7 @@ export function SiteNav({ trailing, className }: SiteNavProps) {
               </a>
             ),
           )}
+          <ThemeSwitch className="shrink-0" />
           {trailing}
         </div>
       </nav>
