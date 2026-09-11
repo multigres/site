@@ -124,8 +124,8 @@ function RootComponent() {
           search={{ options: { api: '/api/search' } }}
           theme={{
             storageKey: 'multigres-ui-theme',
-            defaultTheme: 'dark',
-            enableSystem: false,
+            defaultTheme: 'system',
+            enableSystem: true,
           }}
           className="flex min-h-dvh flex-1 flex-col"
         >
