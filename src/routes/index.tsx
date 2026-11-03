@@ -69,6 +69,19 @@ export const Route = createFileRoute('/')({
         name: 'twitter:image',
         content: defaultOgImage,
       },
+      // Meta tags for webmaster verification. Don't remove
+      {
+        name: 'msvalidate.01',
+        content: '92FBA8A0D370D71480454DBEAB37D0AE',
+      },
+      {
+        name: 'google-site-verification',
+        content: 'mgM_lC--XvQRYgM94hp4hzM9lqvrlt13MV75b0_Sflw',
+      },
+      {
+        name: 'yandex-verification',
+        content: '0630e8b46f441635',
+      },
     ],
     links: [
       {
